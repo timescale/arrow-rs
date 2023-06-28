@@ -2844,7 +2844,6 @@
 <a href="#2844" id="2844">2844</a>
 <a href="#2845" id="2845">2845</a>
 <a href="#2846" id="2846">2846</a>
-<a href="#2847" id="2847">2847</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -3537,11 +3536,10 @@
                     }
                 }
             }
-
-            <span class="comment">// update the offset index
-            </span><span class="self">self</span>.offset_index_builder
-                .append_row_count(<span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>i64);
         }
+        <span class="comment">// update the offset index
+        </span><span class="self">self</span>.offset_index_builder
+            .append_row_count(<span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>i64);
     }
 
     <span class="kw">fn </span>truncate_min_value(<span class="kw-2">&amp;</span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; Vec&lt;u8&gt; {
