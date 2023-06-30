@@ -354,18 +354,19 @@
 
 <span class="doccomment">/// Encode dictionary values not preserving the dictionary encoding
 </span><span class="kw">pub fn </span>encode_dictionary_values&lt;K: ArrowDictionaryKeyType&gt;(
-    out: <span class="kw-2">&amp;mut </span>Rows,
+    data: <span class="kw-2">&amp;mut </span>[u8],
+    offsets: <span class="kw-2">&amp;mut </span>[usize],
     column: <span class="kw-2">&amp;</span>DictionaryArray&lt;K&gt;,
     values: <span class="kw-2">&amp;</span>Rows,
     null: <span class="kw-2">&amp;</span>Row&lt;<span class="lifetime">&#39;_</span>&gt;,
 ) {
-    <span class="kw">for </span>(offset, k) <span class="kw">in </span>out.offsets.iter_mut().skip(<span class="number">1</span>).zip(column.keys()) {
+    <span class="kw">for </span>(offset, k) <span class="kw">in </span>offsets.iter_mut().skip(<span class="number">1</span>).zip(column.keys()) {
         <span class="kw">let </span>row = <span class="kw">match </span>k {
             <span class="prelude-val">Some</span>(k) =&gt; values.row(k.as_usize()).data,
             <span class="prelude-val">None </span>=&gt; null.data,
         };
         <span class="kw">let </span>end_offset = <span class="kw-2">*</span>offset + row.len();
-        out.buffer[<span class="kw-2">*</span>offset..end_offset].copy_from_slice(row);
+        data[<span class="kw-2">*</span>offset..end_offset].copy_from_slice(row);
         <span class="kw-2">*</span>offset = end_offset;
     }
 }
@@ -375,27 +376,26 @@
 /// - single `0_u8` if null
 /// - the bytes of the corresponding normalized key including the null terminator
 </span><span class="kw">pub fn </span>encode_dictionary&lt;K: ArrowDictionaryKeyType&gt;(
-    out: <span class="kw-2">&amp;mut </span>Rows,
+    data: <span class="kw-2">&amp;mut </span>[u8],
+    offsets: <span class="kw-2">&amp;mut </span>[usize],
     column: <span class="kw-2">&amp;</span>DictionaryArray&lt;K&gt;,
     normalized_keys: <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;],
     opts: SortOptions,
 ) {
-    <span class="kw">for </span>(offset, k) <span class="kw">in </span>out.offsets.iter_mut().skip(<span class="number">1</span>).zip(column.keys()) {
+    <span class="kw">for </span>(offset, k) <span class="kw">in </span>offsets.iter_mut().skip(<span class="number">1</span>).zip(column.keys()) {
         <span class="kw">match </span>k.and_then(|k| normalized_keys[k.as_usize()]) {
             <span class="prelude-val">Some</span>(normalized_key) =&gt; {
                 <span class="kw">let </span>end_offset = <span class="kw-2">*</span>offset + <span class="number">1 </span>+ normalized_key.len();
-                out.buffer[<span class="kw-2">*</span>offset] = <span class="number">1</span>;
-                out.buffer[<span class="kw-2">*</span>offset + <span class="number">1</span>..end_offset].copy_from_slice(normalized_key);
+                data[<span class="kw-2">*</span>offset] = <span class="number">1</span>;
+                data[<span class="kw-2">*</span>offset + <span class="number">1</span>..end_offset].copy_from_slice(normalized_key);
                 <span class="comment">// Negate if descending
                 </span><span class="kw">if </span>opts.descending {
-                    out.buffer[<span class="kw-2">*</span>offset..end_offset]
-                        .iter_mut()
-                        .for_each(|v| <span class="kw-2">*</span>v = !<span class="kw-2">*</span>v)
+                    data[<span class="kw-2">*</span>offset..end_offset].iter_mut().for_each(|v| <span class="kw-2">*</span>v = !<span class="kw-2">*</span>v)
                 }
                 <span class="kw-2">*</span>offset = end_offset;
             }
             <span class="prelude-val">None </span>=&gt; {
-                out.buffer[<span class="kw-2">*</span>offset] = null_sentinel(opts);
+                data[<span class="kw-2">*</span>offset] = null_sentinel(opts);
                 <span class="kw-2">*</span>offset += <span class="number">1</span>;
             }
         }

@@ -233,23 +233,23 @@
 ///
 /// `rows` should contain the encoded child elements
 </span><span class="kw">pub fn </span>encode&lt;O: OffsetSizeTrait&gt;(
-    out: <span class="kw-2">&amp;mut </span>Rows,
+    data: <span class="kw-2">&amp;mut </span>[u8],
+    offsets: <span class="kw-2">&amp;mut </span>[usize],
     rows: <span class="kw-2">&amp;</span>Rows,
     opts: SortOptions,
     array: <span class="kw-2">&amp;</span>GenericListArray&lt;O&gt;,
 ) {
     <span class="kw">let </span><span class="kw-2">mut </span>temporary = <span class="macro">vec!</span>[];
-    <span class="kw">let </span>offsets = array.value_offsets().windows(<span class="number">2</span>);
-    out.offsets
+    offsets
         .iter_mut()
         .skip(<span class="number">1</span>)
-        .zip(offsets)
+        .zip(array.value_offsets().windows(<span class="number">2</span>))
         .enumerate()
         .for_each(|(idx, (offset, offsets))| {
             <span class="kw">let </span>start = offsets[<span class="number">0</span>].as_usize();
             <span class="kw">let </span>end = offsets[<span class="number">1</span>].as_usize();
             <span class="kw">let </span>range = array.is_valid(idx).then_some(start..end);
-            <span class="kw">let </span>out = <span class="kw-2">&amp;mut </span>out.buffer[<span class="kw-2">*</span>offset..];
+            <span class="kw">let </span>out = <span class="kw-2">&amp;mut </span>data[<span class="kw-2">*</span>offset..];
             <span class="kw-2">*</span>offset += encode_one(out, <span class="kw-2">&amp;mut </span>temporary, rows, range, opts)
         });
 }

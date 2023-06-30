@@ -382,6 +382,8 @@
 <a href="#382" id="382">382</a>
 <a href="#383" id="383">383</a>
 <a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -400,7 +402,7 @@
 // under the License.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::array::PrimitiveArray;
-<span class="kw">use crate</span>::{null_sentinel, Rows};
+<span class="kw">use </span><span class="kw">crate</span>::null_sentinel;
 <span class="kw">use </span>arrow_array::builder::BufferBuilder;
 <span class="kw">use </span>arrow_array::{ArrowPrimitiveType, BooleanArray, FixedSizeBinaryArray};
 <span class="kw">use </span>arrow_buffer::{bit_util, i256, ArrowNativeType, Buffer, MutableBuffer};
@@ -561,14 +563,15 @@
 /// - 1 byte `0` if null or `1` if valid
 /// - bytes of [`FixedLengthEncoding`]
 </span><span class="kw">pub fn </span>encode&lt;T: FixedLengthEncoding, I: IntoIterator&lt;Item = <span class="prelude-ty">Option</span>&lt;T&gt;&gt;&gt;(
-    out: <span class="kw-2">&amp;mut </span>Rows,
+    data: <span class="kw-2">&amp;mut </span>[u8],
+    offsets: <span class="kw-2">&amp;mut </span>[usize],
     i: I,
     opts: SortOptions,
 ) {
-    <span class="kw">for </span>(offset, maybe_val) <span class="kw">in </span>out.offsets.iter_mut().skip(<span class="number">1</span>).zip(i) {
+    <span class="kw">for </span>(offset, maybe_val) <span class="kw">in </span>offsets.iter_mut().skip(<span class="number">1</span>).zip(i) {
         <span class="kw">let </span>end_offset = <span class="kw-2">*</span>offset + T::ENCODED_LEN;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = maybe_val {
-            <span class="kw">let </span>to_write = <span class="kw-2">&amp;mut </span>out.buffer[<span class="kw-2">*</span>offset..end_offset];
+            <span class="kw">let </span>to_write = <span class="kw-2">&amp;mut </span>data[<span class="kw-2">*</span>offset..end_offset];
             to_write[<span class="number">0</span>] = <span class="number">1</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>encoded = val.encode();
             <span class="kw">if </span>opts.descending {
@@ -577,22 +580,23 @@
             }
             to_write[<span class="number">1</span>..].copy_from_slice(encoded.as_ref())
         } <span class="kw">else </span>{
-            out.buffer[<span class="kw-2">*</span>offset] = null_sentinel(opts);
+            data[<span class="kw-2">*</span>offset] = null_sentinel(opts);
         }
         <span class="kw-2">*</span>offset = end_offset;
     }
 }
 
 <span class="kw">pub fn </span>encode_fixed_size_binary(
-    out: <span class="kw-2">&amp;mut </span>Rows,
+    data: <span class="kw-2">&amp;mut </span>[u8],
+    offsets: <span class="kw-2">&amp;mut </span>[usize],
     array: <span class="kw-2">&amp;</span>FixedSizeBinaryArray,
     opts: SortOptions,
 ) {
     <span class="kw">let </span>len = array.value_length() <span class="kw">as </span>usize;
-    <span class="kw">for </span>(offset, maybe_val) <span class="kw">in </span>out.offsets.iter_mut().skip(<span class="number">1</span>).zip(array.iter()) {
+    <span class="kw">for </span>(offset, maybe_val) <span class="kw">in </span>offsets.iter_mut().skip(<span class="number">1</span>).zip(array.iter()) {
         <span class="kw">let </span>end_offset = <span class="kw-2">*</span>offset + len + <span class="number">1</span>;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = maybe_val {
-            <span class="kw">let </span>to_write = <span class="kw-2">&amp;mut </span>out.buffer[<span class="kw-2">*</span>offset..end_offset];
+            <span class="kw">let </span>to_write = <span class="kw-2">&amp;mut </span>data[<span class="kw-2">*</span>offset..end_offset];
             to_write[<span class="number">0</span>] = <span class="number">1</span>;
             to_write[<span class="number">1</span>..].copy_from_slice(<span class="kw-2">&amp;</span>val[..len]);
             <span class="kw">if </span>opts.descending {
@@ -600,7 +604,7 @@
                 </span>to_write[<span class="number">1</span>..<span class="number">1 </span>+ len].iter_mut().for_each(|v| <span class="kw-2">*</span>v = !<span class="kw-2">*</span>v)
             }
         } <span class="kw">else </span>{
-            out.buffer[<span class="kw-2">*</span>offset] = null_sentinel(opts);
+            data[<span class="kw-2">*</span>offset] = null_sentinel(opts);
         }
         <span class="kw-2">*</span>offset = end_offset;
     }
