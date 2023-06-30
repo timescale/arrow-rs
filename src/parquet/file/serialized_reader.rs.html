@@ -1757,6 +1757,8 @@
 <a href="#1757" id="1757">1757</a>
 <a href="#1758" id="1758">1758</a>
 <a href="#1759" id="1759">1759</a>
+<a href="#1760" id="1760">1760</a>
+<a href="#1761" id="1761">1761</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2569,7 +2571,9 @@
         <span class="kw">let </span>file_iter = read_from_file.get_row_iter(<span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>cursor_iter = read_from_cursor.get_row_iter(<span class="prelude-val">None</span>).unwrap();
 
-        <span class="macro">assert!</span>(file_iter.eq(cursor_iter));
+        <span class="kw">for </span>(a, b) <span class="kw">in </span>file_iter.zip(cursor_iter) {
+            <span class="macro">assert_eq!</span>(a.unwrap(), b.unwrap())
+        }
     }
 
     <span class="attr">#[test]

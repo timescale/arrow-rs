@@ -163,20 +163,6 @@
 <a href="#163" id="163">163</a>
 <a href="#164" id="164">164</a>
 <a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
-<a href="#175" id="175">175</a>
-<a href="#176" id="176">176</a>
-<a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a>
-<a href="#179" id="179">179</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -202,7 +188,10 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;arrow&quot;</span>)]
 </span><span class="kw">use </span>arrow_schema::ArrowError;
 
-<span class="attr">#[derive(Debug)]
+<span class="doccomment">/// Parquet error enumeration
+</span><span class="comment">// Note: we don&#39;t implement PartialEq as the semantics for the
+// external variant are not well defined (#4469)
+</span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>ParquetError {
     <span class="doccomment">/// General Parquet error.
     /// Returned when code violates normal workflow of working with Parquet files.
@@ -221,23 +210,6 @@
     IndexOutOfBound(usize, usize),
     <span class="doccomment">/// An external error variant
     </span>External(Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;),
-}
-
-<span class="kw">impl </span>PartialEq <span class="kw">for </span>ParquetError {
-    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="kw">match </span>(<span class="self">self</span>, other) {
-            (<span class="self">Self</span>::General(l0), <span class="self">Self</span>::General(r0)) =&gt; l0 == r0,
-            (<span class="self">Self</span>::NYI(l0), <span class="self">Self</span>::NYI(r0)) =&gt; l0 == r0,
-            (<span class="self">Self</span>::EOF(l0), <span class="self">Self</span>::EOF(r0)) =&gt; l0 == r0,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;arrow&quot;</span>)]
-            </span>(<span class="self">Self</span>::ArrowError(l0), <span class="self">Self</span>::ArrowError(r0)) =&gt; l0 == r0,
-            (<span class="self">Self</span>::IndexOutOfBound(l0, l1), <span class="self">Self</span>::IndexOutOfBound(r0, r1)) =&gt; {
-                l0 == r0 &amp;&amp; l1 == r1
-            }
-            (<span class="self">Self</span>::External(l0), <span class="self">Self</span>::External(r0)) =&gt; l0.to_string() == r0.to_string(),
-            <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
-        }
-    }
 }
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>ParquetError {
