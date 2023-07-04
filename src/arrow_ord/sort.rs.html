@@ -4466,6 +4466,70 @@
 <a href="#4466" id="4466">4466</a>
 <a href="#4467" id="4467">4467</a>
 <a href="#4468" id="4468">4468</a>
+<a href="#4469" id="4469">4469</a>
+<a href="#4470" id="4470">4470</a>
+<a href="#4471" id="4471">4471</a>
+<a href="#4472" id="4472">4472</a>
+<a href="#4473" id="4473">4473</a>
+<a href="#4474" id="4474">4474</a>
+<a href="#4475" id="4475">4475</a>
+<a href="#4476" id="4476">4476</a>
+<a href="#4477" id="4477">4477</a>
+<a href="#4478" id="4478">4478</a>
+<a href="#4479" id="4479">4479</a>
+<a href="#4480" id="4480">4480</a>
+<a href="#4481" id="4481">4481</a>
+<a href="#4482" id="4482">4482</a>
+<a href="#4483" id="4483">4483</a>
+<a href="#4484" id="4484">4484</a>
+<a href="#4485" id="4485">4485</a>
+<a href="#4486" id="4486">4486</a>
+<a href="#4487" id="4487">4487</a>
+<a href="#4488" id="4488">4488</a>
+<a href="#4489" id="4489">4489</a>
+<a href="#4490" id="4490">4490</a>
+<a href="#4491" id="4491">4491</a>
+<a href="#4492" id="4492">4492</a>
+<a href="#4493" id="4493">4493</a>
+<a href="#4494" id="4494">4494</a>
+<a href="#4495" id="4495">4495</a>
+<a href="#4496" id="4496">4496</a>
+<a href="#4497" id="4497">4497</a>
+<a href="#4498" id="4498">4498</a>
+<a href="#4499" id="4499">4499</a>
+<a href="#4500" id="4500">4500</a>
+<a href="#4501" id="4501">4501</a>
+<a href="#4502" id="4502">4502</a>
+<a href="#4503" id="4503">4503</a>
+<a href="#4504" id="4504">4504</a>
+<a href="#4505" id="4505">4505</a>
+<a href="#4506" id="4506">4506</a>
+<a href="#4507" id="4507">4507</a>
+<a href="#4508" id="4508">4508</a>
+<a href="#4509" id="4509">4509</a>
+<a href="#4510" id="4510">4510</a>
+<a href="#4511" id="4511">4511</a>
+<a href="#4512" id="4512">4512</a>
+<a href="#4513" id="4513">4513</a>
+<a href="#4514" id="4514">4514</a>
+<a href="#4515" id="4515">4515</a>
+<a href="#4516" id="4516">4516</a>
+<a href="#4517" id="4517">4517</a>
+<a href="#4518" id="4518">4518</a>
+<a href="#4519" id="4519">4519</a>
+<a href="#4520" id="4520">4520</a>
+<a href="#4521" id="4521">4521</a>
+<a href="#4522" id="4522">4522</a>
+<a href="#4523" id="4523">4523</a>
+<a href="#4524" id="4524">4524</a>
+<a href="#4525" id="4525">4525</a>
+<a href="#4526" id="4526">4526</a>
+<a href="#4527" id="4527">4527</a>
+<a href="#4528" id="4528">4528</a>
+<a href="#4529" id="4529">4529</a>
+<a href="#4530" id="4530">4530</a>
+<a href="#4531" id="4531">4531</a>
+<a href="#4532" id="4532">4532</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -4490,6 +4554,7 @@
 <span class="kw">use </span>arrow_array::cast::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::types::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
+<span class="kw">use </span>arrow_buffer::BooleanBufferBuilder;
 <span class="kw">use </span>arrow_buffer::{ArrowNativeType, MutableBuffer, NullBuffer};
 <span class="kw">use </span>arrow_data::ArrayData;
 <span class="kw">use </span>arrow_data::ArrayDataBuilder;
@@ -4525,11 +4590,74 @@
     values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
     options: <span class="prelude-ty">Option</span>&lt;SortOptions&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    <span class="kw">if let </span>DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) = values.data_type() {
-        <span class="kw">return </span>sort_run(values, options, <span class="prelude-val">None</span>);
+    <span class="macro">downcast_primitive_array!</span>(
+        values =&gt; sort_native_type(values, options),
+        DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; sort_run(values, options, <span class="prelude-val">None</span>),
+        <span class="kw">_ </span>=&gt; {
+            <span class="kw">let </span>indices = sort_to_indices(values, options, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+            take(values, <span class="kw-2">&amp;</span>indices, <span class="prelude-val">None</span>)
+        }
+    )
+}
+
+<span class="kw">fn </span>sort_native_type&lt;T&gt;(
+    primitive_values: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
+    options: <span class="prelude-ty">Option</span>&lt;SortOptions&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;
+<span class="kw">where
+    </span>T: ArrowPrimitiveType,
+{
+    <span class="kw">let </span>sort_options = options.unwrap_or_default();
+
+    <span class="kw">let </span><span class="kw-2">mut </span>mutable_buffer = <span class="macro">vec!</span>[T::default_value(); primitive_values.len()];
+    <span class="kw">let </span>mutable_slice = <span class="kw-2">&amp;mut </span>mutable_buffer;
+
+    <span class="kw">let </span>input_values = primitive_values.values().as_ref();
+
+    <span class="kw">let </span>nulls_count = primitive_values.null_count();
+    <span class="kw">let </span>valid_count = primitive_values.len() - nulls_count;
+
+    <span class="kw">let </span>null_bit_buffer = <span class="kw">match </span>nulls_count &gt; <span class="number">0 </span>{
+        <span class="bool-val">true </span>=&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>validity_buffer = BooleanBufferBuilder::new(primitive_values.len());
+            <span class="kw">if </span>sort_options.nulls_first {
+                validity_buffer.append_n(nulls_count, <span class="bool-val">false</span>);
+                validity_buffer.append_n(valid_count, <span class="bool-val">true</span>);
+            } <span class="kw">else </span>{
+                validity_buffer.append_n(valid_count, <span class="bool-val">true</span>);
+                validity_buffer.append_n(nulls_count, <span class="bool-val">false</span>);
+            }
+            <span class="prelude-val">Some</span>(validity_buffer.finish().into())
+        }
+        <span class="bool-val">false </span>=&gt; <span class="prelude-val">None</span>,
+    };
+
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(nulls) = primitive_values.nulls().filter(|n| n.null_count() &gt; <span class="number">0</span>) {
+        <span class="kw">let </span>values_slice = <span class="kw">match </span>sort_options.nulls_first {
+            <span class="bool-val">true </span>=&gt; <span class="kw-2">&amp;mut </span>mutable_slice[nulls_count..],
+            <span class="bool-val">false </span>=&gt; <span class="kw-2">&amp;mut </span>mutable_slice[..valid_count],
+        };
+
+        <span class="kw">for </span>(write_index, index) <span class="kw">in </span>nulls.valid_indices().enumerate() {
+            values_slice[write_index] = primitive_values.value(index);
+        }
+
+        values_slice.sort_unstable_by(|a, b| a.compare(<span class="kw-2">*</span>b));
+        <span class="kw">if </span>sort_options.descending {
+            values_slice.reverse();
+        }
+    } <span class="kw">else </span>{
+        mutable_slice.copy_from_slice(input_values);
+        mutable_slice.sort_unstable_by(|a, b| a.compare(<span class="kw-2">*</span>b));
+        <span class="kw">if </span>sort_options.descending {
+            mutable_slice.reverse();
+        }
     }
-    <span class="kw">let </span>indices = sort_to_indices(values, options, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-    take(values, <span class="kw-2">&amp;</span>indices, <span class="prelude-val">None</span>)
+
+    <span class="prelude-val">Ok</span>(Arc::new(
+        PrimitiveArray::&lt;T&gt;::new(mutable_buffer.into(), null_bit_buffer)
+            .with_data_type(primitive_values.data_type().clone()),
+    ))
 }
 
 <span class="doccomment">/// Sort the `ArrayRef` partially.
