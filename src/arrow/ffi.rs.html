@@ -1162,6 +1162,8 @@
 <a href="#1162" id="1162">1162</a>
 <a href="#1163" id="1163">1163</a>
 <a href="#1164" id="1164">1164</a>
+<a href="#1165" id="1165">1165</a>
+<a href="#1166" id="1166">1166</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1269,6 +1271,8 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
 
 </span><span class="kw">use </span>std::{mem::size_of, ptr::NonNull, sync::Arc};
 
+<span class="kw">pub use </span>arrow_data::ffi::FFI_ArrowArray;
+<span class="kw">pub use </span>arrow_schema::ffi::{FFI_ArrowSchema, Flags};
 <span class="kw">use </span>arrow_schema::UnionMode;
 
 <span class="kw">use </span><span class="kw">crate</span>::array::{layout, ArrayData};
@@ -1276,9 +1280,6 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
 <span class="kw">use </span><span class="kw">crate</span>::datatypes::DataType;
 <span class="kw">use </span><span class="kw">crate</span>::error::{ArrowError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::util::bit_util;
-
-<span class="kw">pub use </span>arrow_data::ffi::FFI_ArrowArray;
-<span class="kw">pub use </span>arrow_schema::ffi::{FFI_ArrowSchema, Flags};
 
 <span class="comment">// returns the number of bits that buffer `i` (in the C data interface) is expected to have.
 // This is set by the Arrow specification
@@ -1576,7 +1577,16 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span>std::collections::HashMap;
+    <span class="kw">use </span>std::convert::TryFrom;
+    <span class="kw">use </span>std::mem::ManuallyDrop;
+    <span class="kw">use </span>std::ptr::addr_of_mut;
+
+    <span class="kw">use </span>arrow_array::builder::UnionBuilder;
+    <span class="kw">use </span>arrow_array::cast::AsArray;
+    <span class="kw">use </span>arrow_array::types::{Float64Type, Int32Type};
+    <span class="kw">use </span>arrow_array::{StructArray, UnionArray};
+
     <span class="kw">use </span><span class="kw">crate</span>::array::{
         make_array, Array, ArrayData, BooleanArray, Decimal128Array, DictionaryArray,
         DurationSecondArray, FixedSizeBinaryArray, FixedSizeListArray,
@@ -1585,14 +1595,8 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
     };
     <span class="kw">use </span><span class="kw">crate</span>::compute::kernels;
     <span class="kw">use </span><span class="kw">crate</span>::datatypes::{Field, Int8Type};
-    <span class="kw">use </span>arrow_array::builder::UnionBuilder;
-    <span class="kw">use </span>arrow_array::cast::AsArray;
-    <span class="kw">use </span>arrow_array::types::{Float64Type, Int32Type};
-    <span class="kw">use </span>arrow_array::{StructArray, UnionArray};
-    <span class="kw">use </span>std::collections::HashMap;
-    <span class="kw">use </span>std::convert::TryFrom;
-    <span class="kw">use </span>std::mem::ManuallyDrop;
-    <span class="kw">use </span>std::ptr::addr_of_mut;
+
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_round_trip() {
@@ -1604,10 +1608,10 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
 
         <span class="comment">// (simulate consumer) import it
         </span><span class="kw">let </span>array = Int32Array::from(from_ffi(array, <span class="kw-2">&amp;</span>schema).unwrap());
-        <span class="kw">let </span>array = kernels::arithmetic::add(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>array).unwrap();
+        <span class="kw">let </span>array = kernels::numeric::add(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>array).unwrap();
 
         <span class="comment">// verify
-        </span><span class="macro">assert_eq!</span>(array, Int32Array::from(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>]));
+        </span><span class="macro">assert_eq!</span>(array.as_ref(), <span class="kw-2">&amp;</span>Int32Array::from(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>]));
     }
 
     <span class="attr">#[test]
@@ -1655,10 +1659,10 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
         </span><span class="kw">let </span>array = array.as_any().downcast_ref::&lt;Int32Array&gt;().unwrap();
         <span class="macro">assert_eq!</span>(array, <span class="kw-2">&amp;</span>Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>]));
 
-        <span class="kw">let </span>array = kernels::arithmetic::add(array, array).unwrap();
+        <span class="kw">let </span>array = kernels::numeric::add(array, array).unwrap();
 
         <span class="comment">// verify
-        </span><span class="macro">assert_eq!</span>(array, Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]));
+        </span><span class="macro">assert_eq!</span>(array.as_ref(), <span class="kw-2">&amp;</span>Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]));
 
         <span class="comment">// (drop/release)
         </span><span class="prelude-val">Ok</span>(())
