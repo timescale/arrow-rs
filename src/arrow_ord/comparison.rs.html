@@ -6327,6 +6327,32 @@
 <a href="#6327" id="6327">6327</a>
 <a href="#6328" id="6328">6328</a>
 <a href="#6329" id="6329">6329</a>
+<a href="#6330" id="6330">6330</a>
+<a href="#6331" id="6331">6331</a>
+<a href="#6332" id="6332">6332</a>
+<a href="#6333" id="6333">6333</a>
+<a href="#6334" id="6334">6334</a>
+<a href="#6335" id="6335">6335</a>
+<a href="#6336" id="6336">6336</a>
+<a href="#6337" id="6337">6337</a>
+<a href="#6338" id="6338">6338</a>
+<a href="#6339" id="6339">6339</a>
+<a href="#6340" id="6340">6340</a>
+<a href="#6341" id="6341">6341</a>
+<a href="#6342" id="6342">6342</a>
+<a href="#6343" id="6343">6343</a>
+<a href="#6344" id="6344">6344</a>
+<a href="#6345" id="6345">6345</a>
+<a href="#6346" id="6346">6346</a>
+<a href="#6347" id="6347">6347</a>
+<a href="#6348" id="6348">6348</a>
+<a href="#6349" id="6349">6349</a>
+<a href="#6350" id="6350">6350</a>
+<a href="#6351" id="6351">6351</a>
+<a href="#6352" id="6352">6352</a>
+<a href="#6353" id="6353">6353</a>
+<a href="#6354" id="6354">6354</a>
+<a href="#6355" id="6355">6355</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -7170,9 +7196,13 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;BooleanArray, ArrowError&gt; {
     <span class="kw">match </span>left.data_type() {
         DataType::Binary =&gt; eq_binary_scalar(left.as_binary::&lt;i32&gt;(), right),
+        DataType::FixedSizeBinary(<span class="kw">_</span>) =&gt; {
+            <span class="kw">let </span>left = left.as_any().downcast_ref::&lt;FixedSizeBinaryArray&gt;().unwrap();
+            compare_op_scalar(left, |a| a == right)
+        }
         DataType::LargeBinary =&gt; eq_binary_scalar(left.as_binary::&lt;i64&gt;(), right),
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ComputeError(
-            <span class="string">&quot;eq_dyn_binary_scalar only supports Binary or LargeBinary arrays&quot;</span>.to_string(),
+            <span class="string">&quot;eq_dyn_binary_scalar only supports Binary / FixedSizeBinary / LargeBinary arrays&quot;</span>.to_string(),
         )),
     }
 }
@@ -7186,8 +7216,12 @@
     <span class="kw">match </span>left.data_type() {
         DataType::Binary =&gt; neq_binary_scalar(left.as_binary::&lt;i32&gt;(), right),
         DataType::LargeBinary =&gt; neq_binary_scalar(left.as_binary::&lt;i64&gt;(), right),
+        DataType::FixedSizeBinary(<span class="kw">_</span>) =&gt; {
+            <span class="kw">let </span>left = left.as_any().downcast_ref::&lt;FixedSizeBinaryArray&gt;().unwrap();
+            compare_op_scalar(left, |a| a != right)
+        }
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ComputeError(
-            <span class="string">&quot;neq_dyn_binary_scalar only supports Binary or LargeBinary arrays&quot;
+            <span class="string">&quot;neq_dyn_binary_scalar only supports Binary / FixedSizeBinary / LargeBinary arrays&quot;
                 </span>.to_string(),
         )),
     }
@@ -10605,6 +10639,15 @@
             eq_dyn_binary_scalar(<span class="kw-2">&amp;</span>large_array, scalar).unwrap(),
             expected
         );
+
+        <span class="kw">let </span>fsb_array = FixedSizeBinaryArray::try_from_iter(
+            <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">0u8</span>], <span class="macro">vec!</span>[<span class="number">0u8</span>], <span class="macro">vec!</span>[<span class="number">0u8</span>], <span class="macro">vec!</span>[<span class="number">1u8</span>]].into_iter(),
+        )
+        .unwrap();
+        <span class="kw">let </span>scalar = <span class="kw-2">&amp;</span>[<span class="number">1u8</span>];
+        <span class="kw">let </span>expected =
+            BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)]);
+        <span class="macro">assert_eq!</span>(eq_dyn_binary_scalar(<span class="kw-2">&amp;</span>fsb_array, scalar).unwrap(), expected);
     }
 
     <span class="attr">#[test]
@@ -10622,6 +10665,15 @@
             neq_dyn_binary_scalar(<span class="kw-2">&amp;</span>large_array, scalar).unwrap(),
             expected
         );
+
+        <span class="kw">let </span>fsb_array = FixedSizeBinaryArray::try_from_iter(
+            <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">0u8</span>], <span class="macro">vec!</span>[<span class="number">0u8</span>], <span class="macro">vec!</span>[<span class="number">0u8</span>], <span class="macro">vec!</span>[<span class="number">1u8</span>]].into_iter(),
+        )
+        .unwrap();
+        <span class="kw">let </span>scalar = <span class="kw-2">&amp;</span>[<span class="number">1u8</span>];
+        <span class="kw">let </span>expected =
+            BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>)]);
+        <span class="macro">assert_eq!</span>(neq_dyn_binary_scalar(<span class="kw-2">&amp;</span>fsb_array, scalar).unwrap(), expected);
     }
 
     <span class="attr">#[test]
