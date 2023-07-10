@@ -4691,7 +4691,7 @@
         <span class="kw">let </span>c = c.as_any().downcast_ref::&lt;Date32Array&gt;().unwrap();
         <span class="macro">assert_eq!</span>(
             c.value(<span class="number">0</span>),
-            Date32Type::from_naive_date(NaiveDate::from_ymd_opt(<span class="number">2023</span>, <span class="number">3</span>, <span class="number">27</span>).unwrap())
+            Date32Type::from_naive_date(NaiveDate::from_ymd_opt(<span class="number">2023</span>, <span class="number">3</span>, <span class="number">28</span>).unwrap())
         );
     }
 
@@ -4738,7 +4738,7 @@
         <span class="kw">let </span>c = c.as_any().downcast_ref::&lt;Date64Array&gt;().unwrap();
         <span class="macro">assert_eq!</span>(
             c.value(<span class="number">0</span>),
-            Date64Type::from_naive_date(NaiveDate::from_ymd_opt(<span class="number">2023</span>, <span class="number">3</span>, <span class="number">27</span>).unwrap())
+            Date64Type::from_naive_date(NaiveDate::from_ymd_opt(<span class="number">2023</span>, <span class="number">3</span>, <span class="number">28</span>).unwrap())
         );
     }
 

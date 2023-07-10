@@ -2222,17 +2222,17 @@
         timestamp: &lt;TimestampSecondType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
         delta: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;&lt;TimestampSecondType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native, ArrowError&gt; {
-        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(-delta);
+        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(delta);
         <span class="kw">let </span>res = NaiveDateTime::from_timestamp_opt(timestamp, <span class="number">0</span>).ok_or_else(|| {
             ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::microseconds(ms <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2256,12 +2256,12 @@
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = shift_months(res, -months);
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(-days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::nanoseconds(-nanos))
+            .checked_sub_signed(Duration::nanoseconds(nanos))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2381,17 +2381,17 @@
         delta: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;&lt;TimestampMicrosecondType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native, ArrowError&gt;
     {
-        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(-delta);
+        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(delta);
         <span class="kw">let </span>res = NaiveDateTime::from_timestamp_micros(timestamp).ok_or_else(|| {
             ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2416,12 +2416,12 @@
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = shift_months(res, -months);
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(-days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::nanoseconds(-nanos))
+            .checked_sub_signed(Duration::nanoseconds(nanos))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2541,17 +2541,17 @@
         delta: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;&lt;TimestampMillisecondType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native, ArrowError&gt;
     {
-        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(-delta);
+        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(delta);
         <span class="kw">let </span>res = NaiveDateTime::from_timestamp_millis(timestamp).ok_or_else(|| {
             ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2576,12 +2576,12 @@
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = shift_months(res, -months);
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(-days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::nanoseconds(-nanos))
+            .checked_sub_signed(Duration::nanoseconds(nanos))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2711,14 +2711,14 @@
             || ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string()),
         )<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(-delta);
+        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(delta);
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::milliseconds(ms <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2745,12 +2745,12 @@
         <span class="kw">let </span>(months, days, nanos) = IntervalMonthDayNanoType::to_parts(delta);
         <span class="kw">let </span>res = shift_months(res, -months);
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::days(-days <span class="kw">as </span>i64))
+            .checked_sub_signed(Duration::days(days <span class="kw">as </span>i64))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
         <span class="kw">let </span>res = res
-            .checked_add_signed(Duration::nanoseconds(-nanos))
+            .checked_sub_signed(Duration::nanoseconds(nanos))
             .ok_or_else(|| {
                 ArrowError::ComputeError(<span class="string">&quot;Timestamp out of range&quot;</span>.to_string())
             })<span class="question-mark">?</span>;
@@ -2977,10 +2977,10 @@
         date: &lt;Date32Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
         delta: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; &lt;Date32Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native {
-        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(-delta);
+        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(delta);
         <span class="kw">let </span>res = Date32Type::to_naive_date(date);
-        <span class="kw">let </span>res = res.add(Duration::days(days <span class="kw">as </span>i64));
-        <span class="kw">let </span>res = res.add(Duration::milliseconds(ms <span class="kw">as </span>i64));
+        <span class="kw">let </span>res = res.sub(Duration::days(days <span class="kw">as </span>i64));
+        <span class="kw">let </span>res = res.sub(Duration::milliseconds(ms <span class="kw">as </span>i64));
         Date32Type::from_naive_date(res)
     }
 
@@ -2997,8 +2997,8 @@
         <span class="kw">let </span>(months, days, nanos) = IntervalMonthDayNanoType::to_parts(delta);
         <span class="kw">let </span>res = Date32Type::to_naive_date(date);
         <span class="kw">let </span>res = shift_months(res, -months);
-        <span class="kw">let </span>res = res.add(Duration::days(-days <span class="kw">as </span>i64));
-        <span class="kw">let </span>res = res.add(Duration::nanoseconds(-nanos));
+        <span class="kw">let </span>res = res.sub(Duration::days(days <span class="kw">as </span>i64));
+        <span class="kw">let </span>res = res.sub(Duration::nanoseconds(nanos));
         Date32Type::from_naive_date(res)
     }
 }
@@ -3101,10 +3101,10 @@
         date: &lt;Date64Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
         delta: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; &lt;Date64Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native {
-        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(-delta);
+        <span class="kw">let </span>(days, ms) = IntervalDayTimeType::to_parts(delta);
         <span class="kw">let </span>res = Date64Type::to_naive_date(date);
-        <span class="kw">let </span>res = res.add(Duration::days(days <span class="kw">as </span>i64));
-        <span class="kw">let </span>res = res.add(Duration::milliseconds(ms <span class="kw">as </span>i64));
+        <span class="kw">let </span>res = res.sub(Duration::days(days <span class="kw">as </span>i64));
+        <span class="kw">let </span>res = res.sub(Duration::milliseconds(ms <span class="kw">as </span>i64));
         Date64Type::from_naive_date(res)
     }
 
@@ -3121,8 +3121,8 @@
         <span class="kw">let </span>(months, days, nanos) = IntervalMonthDayNanoType::to_parts(delta);
         <span class="kw">let </span>res = Date64Type::to_naive_date(date);
         <span class="kw">let </span>res = shift_months(res, -months);
-        <span class="kw">let </span>res = res.add(Duration::days(-days <span class="kw">as </span>i64));
-        <span class="kw">let </span>res = res.add(Duration::nanoseconds(-nanos));
+        <span class="kw">let </span>res = res.sub(Duration::days(days <span class="kw">as </span>i64));
+        <span class="kw">let </span>res = res.sub(Duration::nanoseconds(nanos));
         Date64Type::from_naive_date(res)
     }
 }
