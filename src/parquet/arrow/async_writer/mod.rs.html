@@ -365,6 +365,16 @@
 <a href="#365" id="365">365</a>
 <a href="#366" id="366">366</a>
 <a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -444,12 +454,16 @@
 
     <span class="doccomment">/// The inner buffer shared by the `sync_writer` and the `async_writer`
     </span>shared_buffer: SharedBuffer,
+
+    <span class="doccomment">/// Trigger forced flushing once buffer size reaches this value
+    </span>buffer_size: usize,
 }
 
 <span class="kw">impl</span>&lt;W: AsyncWrite + Unpin + Send&gt; AsyncArrowWriter&lt;W&gt; {
     <span class="doccomment">/// Try to create a new Async Arrow Writer.
     ///
-    /// `buffer_size` determines the initial size of the intermediate buffer.
+    /// `buffer_size` determines the number of bytes to buffer before flushing
+    /// to the underlying [`AsyncWrite`]
     ///
     /// The intermediate buffer will automatically be resized if necessary
     ///
@@ -469,6 +483,7 @@
             sync_writer,
             async_writer: writer,
             shared_buffer,
+            buffer_size,
         })
     }
 
@@ -478,7 +493,12 @@
     /// checked and flush if at least half full
     </span><span class="kw">pub async fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, batch: <span class="kw-2">&amp;</span>RecordBatch) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.sync_writer.write(batch)<span class="question-mark">?</span>;
-        <span class="self">Self</span>::try_flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>.shared_buffer, <span class="kw-2">&amp;mut </span><span class="self">self</span>.async_writer, <span class="bool-val">false</span>).<span class="kw">await
+        <span class="self">Self</span>::try_flush(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>.shared_buffer,
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>.async_writer,
+            <span class="self">self</span>.buffer_size,
+        )
+        .<span class="kw">await
     </span>}
 
     <span class="doccomment">/// Append [`KeyValue`] metadata in addition to those in [`WriterProperties`]
@@ -495,7 +515,7 @@
         <span class="kw">let </span>metadata = <span class="self">self</span>.sync_writer.close()<span class="question-mark">?</span>;
 
         <span class="comment">// Force to flush the remaining data.
-        </span><span class="self">Self</span>::try_flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>.shared_buffer, <span class="kw-2">&amp;mut </span><span class="self">self</span>.async_writer, <span class="bool-val">true</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        </span><span class="self">Self</span>::try_flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>.shared_buffer, <span class="kw-2">&amp;mut </span><span class="self">self</span>.async_writer, <span class="number">0</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="self">self</span>.async_writer.shutdown().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(metadata)
@@ -506,10 +526,10 @@
     </span><span class="kw">async fn </span>try_flush(
         shared_buffer: <span class="kw-2">&amp;mut </span>SharedBuffer,
         async_writer: <span class="kw-2">&amp;mut </span>W,
-        force: bool,
+        buffer_size: usize,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = shared_buffer.buffer.try_lock().unwrap();
-        <span class="kw">if </span>!force &amp;&amp; buffer.len() &lt; buffer.capacity() / <span class="number">2 </span>{
+        <span class="kw">if </span>buffer.is_empty() || buffer.len() &lt; buffer_size {
             <span class="comment">// no need to flush
             </span><span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
