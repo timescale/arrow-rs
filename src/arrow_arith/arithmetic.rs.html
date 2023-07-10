@@ -3370,6 +3370,8 @@
 <a href="#3370" id="3370">3370</a>
 <a href="#3371" id="3371">3371</a>
 <a href="#3372" id="3372">3372</a>
+<a href="#3373" id="3373">3373</a>
+<a href="#3374" id="3374">3374</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -3882,6 +3884,7 @@
 ///
 /// This doesn&#39;t detect overflow. Once overflowing, the result will wrap around.
 /// For an overflow-checking variant, use `negate_checked` instead.
+</span><span class="attr">#[deprecated(note = <span class="string">&quot;Use arrow_arith::numeric::neg_wrapping&quot;</span>)]
 </span><span class="kw">pub fn </span>negate&lt;T: ArrowNumericType&gt;(
     array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;PrimitiveArray&lt;T&gt;, ArrowError&gt; {
@@ -3892,6 +3895,7 @@
 ///
 /// This detects overflow and returns an `Err` for that. For an non-overflow-checking variant,
 /// use `negate` instead.
+</span><span class="attr">#[deprecated(note = <span class="string">&quot;Use arrow_arith::numeric::neg&quot;</span>)]
 </span><span class="kw">pub fn </span>negate_checked&lt;T: ArrowNumericType&gt;(
     array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;PrimitiveArray&lt;T&gt;, ArrowError&gt; {

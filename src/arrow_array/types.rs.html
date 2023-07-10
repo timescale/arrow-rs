@@ -1757,6 +1757,12 @@
 <a href="#1757" id="1757">1757</a>
 <a href="#1758" id="1758">1758</a>
 <a href="#1759" id="1759">1759</a>
+<a href="#1760" id="1760">1760</a>
+<a href="#1761" id="1761">1761</a>
+<a href="#1762" id="1762">1762</a>
+<a href="#1763" id="1763">1763</a>
+<a href="#1764" id="1764">1764</a>
+<a href="#1765" id="1765">1765</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2760,6 +2766,7 @@
     ///
     /// * `years` - The number of years (+/-) represented in this interval
     /// * `months` - The number of months (+/-) represented in this interval
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>make_value(
         years: i32,
         months: i32,
@@ -2774,6 +2781,7 @@
     /// # Arguments
     ///
     /// * `i` - The IntervalYearMonthType::Native to convert
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>to_months(i: &lt;IntervalYearMonthType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native) -&gt; i32 {
         i
     }
@@ -2786,6 +2794,7 @@
     ///
     /// * `days` - The number of days (+/-) represented in this interval
     /// * `millis` - The number of milliseconds (+/-) represented in this interval
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>make_value(
         days: i32,
         millis: i32,
@@ -2812,6 +2821,7 @@
     /// # Arguments
     ///
     /// * `i` - The IntervalDayTimeType to convert
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>to_parts(
         i: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; (i32, i32) {
@@ -2829,6 +2839,7 @@
     /// * `months` - The number of months (+/-) represented in this interval
     /// * `days` - The number of days (+/-) represented in this interval
     /// * `nanos` - The number of nanoseconds (+/-) represented in this interval
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>make_value(
         months: i32,
         days: i32,
@@ -2857,6 +2868,7 @@
     /// # Arguments
     ///
     /// * `i` - The IntervalMonthDayNanoType to convert
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>to_parts(
         i: &lt;IntervalMonthDayNanoType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
     ) -&gt; (i32, i32, i64) {
