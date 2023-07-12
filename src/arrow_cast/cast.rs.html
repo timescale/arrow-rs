@@ -9438,17 +9438,6 @@
 <a href="#9438" id="9438">9438</a>
 <a href="#9439" id="9439">9439</a>
 <a href="#9440" id="9440">9440</a>
-<a href="#9441" id="9441">9441</a>
-<a href="#9442" id="9442">9442</a>
-<a href="#9443" id="9443">9443</a>
-<a href="#9444" id="9444">9444</a>
-<a href="#9445" id="9445">9445</a>
-<a href="#9446" id="9446">9446</a>
-<a href="#9447" id="9447">9447</a>
-<a href="#9448" id="9448">9448</a>
-<a href="#9449" id="9449">9449</a>
-<a href="#9450" id="9450">9450</a>
-<a href="#9451" id="9451">9451</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -9500,7 +9489,7 @@
 <span class="kw">use </span>arrow_array::{
     builder::<span class="kw-2">*</span>, cast::<span class="kw-2">*</span>, temporal_conversions::<span class="kw-2">*</span>, timezone::Tz, types::<span class="kw-2">*</span>, <span class="kw-2">*</span>,
 };
-<span class="kw">use </span>arrow_buffer::{i256, ArrowNativeType, Buffer, MutableBuffer, ScalarBuffer};
+<span class="kw">use </span>arrow_buffer::{i256, ArrowNativeType, Buffer, OffsetBuffer, ScalarBuffer};
 <span class="kw">use </span>arrow_data::ArrayData;
 <span class="kw">use </span>arrow_schema::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_select::take::take;
@@ -10300,12 +10289,8 @@
             }
         }
 
-        (<span class="kw">_</span>, List(<span class="kw-2">ref </span>to)) =&gt; {
-            cast_primitive_to_list::&lt;i32&gt;(array, to, to_type, cast_options)
-        }
-        (<span class="kw">_</span>, LargeList(<span class="kw-2">ref </span>to)) =&gt; {
-            cast_primitive_to_list::&lt;i64&gt;(array, to, to_type, cast_options)
-        }
+        (<span class="kw">_</span>, List(<span class="kw-2">ref </span>to)) =&gt; cast_values_to_list::&lt;i32&gt;(array, to, cast_options),
+        (<span class="kw">_</span>, LargeList(<span class="kw-2">ref </span>to)) =&gt; cast_values_to_list::&lt;i64&gt;(array, to, cast_options),
         (Decimal128(<span class="kw">_</span>, s1), Decimal128(p2, s2)) =&gt; {
             cast_decimal_to_decimal_same_type::&lt;Decimal128Type&gt;(
                 array.as_primitive(),
@@ -13096,39 +13081,15 @@
 }
 
 <span class="doccomment">/// Helper function that takes a primitive array and casts to a (generic) list array.
-</span><span class="kw">fn </span>cast_primitive_to_list&lt;OffsetSize: OffsetSizeTrait + NumCast&gt;(
+</span><span class="kw">fn </span>cast_values_to_list&lt;O: OffsetSizeTrait&gt;(
     array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    to: <span class="kw-2">&amp;</span>Field,
-    to_type: <span class="kw-2">&amp;</span>DataType,
+    to: <span class="kw-2">&amp;</span>FieldRef,
     cast_options: <span class="kw-2">&amp;</span>CastOptions,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    <span class="comment">// cast primitive to list&#39;s primitive
-    </span><span class="kw">let </span>cast_array = cast_with_options(array, to.data_type(), cast_options)<span class="question-mark">?</span>;
-    <span class="comment">// create offsets, where if array.len() = 2, we have [0,1,2]
-    // Safety:
-    // Length of range can be trusted.
-    // Note: could not yet create a generic range in stable Rust.
-    </span><span class="kw">let </span>offsets = <span class="kw">unsafe </span>{
-        MutableBuffer::from_trusted_len_iter(
-            (<span class="number">0</span>..=array.len()).map(|i| OffsetSize::from(i).expect(<span class="string">&quot;integer&quot;</span>)),
-        )
-    };
-
-    <span class="kw">let </span>list_data = <span class="kw">unsafe </span>{
-        ArrayData::new_unchecked(
-            to_type.clone(),
-            array.len(),
-            <span class="prelude-val">Some</span>(cast_array.null_count()),
-            cast_array.nulls().map(|b| b.inner().sliced()),
-            <span class="number">0</span>,
-            <span class="macro">vec!</span>[offsets.into()],
-            <span class="macro">vec!</span>[cast_array.into_data()],
-        )
-    };
-    <span class="kw">let </span>list_array =
-        Arc::new(GenericListArray::&lt;OffsetSize&gt;::from(list_data)) <span class="kw">as </span>ArrayRef;
-
-    <span class="prelude-val">Ok</span>(list_array)
+    <span class="kw">let </span>values = cast_with_options(array, to.data_type(), cast_options)<span class="question-mark">?</span>;
+    <span class="kw">let </span>offsets = OffsetBuffer::from_lengths(std::iter::repeat(<span class="number">1</span>).take(values.len()));
+    <span class="kw">let </span>list = GenericListArray::&lt;O&gt;::new(to.clone(), offsets, values, <span class="prelude-val">None</span>);
+    <span class="prelude-val">Ok</span>(Arc::new(list))
 }
 
 <span class="doccomment">/// Helper function that takes an Generic list container and casts the inner datatype.
@@ -14549,7 +14510,7 @@
         )
         .unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, b.len());
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.null_count());
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, b.null_count());
         <span class="kw">let </span>arr = b.as_list::&lt;i32&gt;();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], arr.value_offsets());
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, arr.value_length(<span class="number">0</span>));
@@ -14578,7 +14539,7 @@
         )
         .unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">4</span>, b.len());
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.null_count());
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, b.null_count());
         <span class="kw">let </span>arr = b.as_list::&lt;i32&gt;();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], arr.value_offsets());
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, arr.value_length(<span class="number">0</span>));
@@ -18898,6 +18859,23 @@
         <span class="macro">assert_eq!</span>(<span class="string">&quot;1900-01-03&quot;</span>, string_array.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="string">&quot;1969-12-31&quot;</span>, string_array.value(<span class="number">1</span>));
         <span class="macro">assert_eq!</span>(<span class="string">&quot;1989-12-31&quot;</span>, string_array.value(<span class="number">2</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_nested_list() {
+        <span class="kw">let </span><span class="kw-2">mut </span>list = ListBuilder::new(Int32Builder::new());
+        list.append_value([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>)]);
+        list.append_value([<span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">6</span>)]);
+        <span class="kw">let </span>list = list.finish();
+
+        <span class="kw">let </span>to_field = Field::new(<span class="string">&quot;nested&quot;</span>, list.data_type().clone(), <span class="bool-val">false</span>);
+        <span class="kw">let </span>to = DataType::List(Arc::new(to_field));
+        <span class="kw">let </span>out = cast(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>to).unwrap();
+        <span class="kw">let </span>opts = FormatOptions::default().with_null(<span class="string">&quot;null&quot;</span>);
+        <span class="kw">let </span>formatted = ArrayFormatter::try_new(out.as_ref(), <span class="kw-2">&amp;</span>opts).unwrap();
+
+        <span class="macro">assert_eq!</span>(formatted.value(<span class="number">0</span>).to_string(), <span class="string">&quot;[[1], [2], [3]]&quot;</span>);
+        <span class="macro">assert_eq!</span>(formatted.value(<span class="number">1</span>).to_string(), <span class="string">&quot;[[4], [null], [6]]&quot;</span>);
     }
 }
 </code></pre></div></section></main></body></html>
