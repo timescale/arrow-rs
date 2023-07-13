@@ -700,7 +700,7 @@
     }
 
     <span class="kw">pub fn </span>get_schema(<span class="kw-2">&amp;mut </span><span class="self">self</span>, out: <span class="kw-2">*mut </span>FFI_ArrowSchema) -&gt; i32 {
-        <span class="kw">let </span><span class="kw-2">mut </span>private_data = <span class="self">self</span>.get_private_data();
+        <span class="kw">let </span>private_data = <span class="self">self</span>.get_private_data();
         <span class="kw">let </span>reader = <span class="kw-2">&amp;</span>private_data.batch_reader;
 
         <span class="kw">let </span>schema = FFI_ArrowSchema::try_from(reader.schema().as_ref());
@@ -719,7 +719,7 @@
     }
 
     <span class="kw">pub fn </span>get_next(<span class="kw-2">&amp;mut </span><span class="self">self</span>, out: <span class="kw-2">*mut </span>FFI_ArrowArray) -&gt; i32 {
-        <span class="kw">let </span><span class="kw-2">mut </span>private_data = <span class="self">self</span>.get_private_data();
+        <span class="kw">let </span>private_data = <span class="self">self</span>.get_private_data();
         <span class="kw">let </span>reader = <span class="kw-2">&amp;mut </span>private_data.batch_reader;
 
         <span class="kw">match </span>reader.next() {
