@@ -1,4 +1,4 @@
-var sourcesIndex = JSON.parse('{\
+var srcIndex = JSON.parse('{\
 "arrow":["",[["array",[],["ffi.rs","mod.rs"]],["compute",[["kernels",[],["limit.rs","mod.rs"]]],["mod.rs"]],["datatypes",[],["ffi.rs","mod.rs"]],["util",[],["bench_util.rs","data_gen.rs","mod.rs","string_writer.rs","test_util.rs"]]],["error.rs","ffi.rs","ffi_stream.rs","lib.rs","pyarrow.rs","tensor.rs"]],\
 "arrow_arith":["",[],["aggregate.rs","arithmetic.rs","arity.rs","bitwise.rs","boolean.rs","lib.rs","numeric.rs","temporal.rs"]],\
 "arrow_array":["",[["array",[],["binary_array.rs","boolean_array.rs","byte_array.rs","dictionary_array.rs","fixed_size_binary_array.rs","fixed_size_list_array.rs","list_array.rs","map_array.rs","mod.rs","null_array.rs","primitive_array.rs","run_array.rs","string_array.rs","struct_array.rs","union_array.rs"]],["builder",[],["boolean_builder.rs","buffer_builder.rs","fixed_size_binary_builder.rs","fixed_size_list_builder.rs","generic_byte_run_builder.rs","generic_bytes_builder.rs","generic_bytes_dictionary_builder.rs","generic_list_builder.rs","map_builder.rs","mod.rs","null_builder.rs","primitive_builder.rs","primitive_dictionary_builder.rs","primitive_run_builder.rs","struct_builder.rs","union_builder.rs"]]],["arithmetic.rs","cast.rs","delta.rs","iterator.rs","lib.rs","numeric.rs","record_batch.rs","run_iterator.rs","scalar.rs","temporal_conversions.rs","timezone.rs","trusted_len.rs","types.rs"]],\
@@ -36,4 +36,4 @@ var sourcesIndex = JSON.parse('{\
 "parquet_schema":["",[],["parquet-schema.rs"]],\
 "parquet_show_bloom_filter":["",[],["parquet-show-bloom-filter.rs"]]\
 }');
-createSourceSidebar();
+createSrcSidebar();
