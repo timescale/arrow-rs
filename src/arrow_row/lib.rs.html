@@ -2376,6 +2376,73 @@
 <a href="#2376" id="2376">2376</a>
 <a href="#2377" id="2377">2377</a>
 <a href="#2378" id="2378">2378</a>
+<a href="#2379" id="2379">2379</a>
+<a href="#2380" id="2380">2380</a>
+<a href="#2381" id="2381">2381</a>
+<a href="#2382" id="2382">2382</a>
+<a href="#2383" id="2383">2383</a>
+<a href="#2384" id="2384">2384</a>
+<a href="#2385" id="2385">2385</a>
+<a href="#2386" id="2386">2386</a>
+<a href="#2387" id="2387">2387</a>
+<a href="#2388" id="2388">2388</a>
+<a href="#2389" id="2389">2389</a>
+<a href="#2390" id="2390">2390</a>
+<a href="#2391" id="2391">2391</a>
+<a href="#2392" id="2392">2392</a>
+<a href="#2393" id="2393">2393</a>
+<a href="#2394" id="2394">2394</a>
+<a href="#2395" id="2395">2395</a>
+<a href="#2396" id="2396">2396</a>
+<a href="#2397" id="2397">2397</a>
+<a href="#2398" id="2398">2398</a>
+<a href="#2399" id="2399">2399</a>
+<a href="#2400" id="2400">2400</a>
+<a href="#2401" id="2401">2401</a>
+<a href="#2402" id="2402">2402</a>
+<a href="#2403" id="2403">2403</a>
+<a href="#2404" id="2404">2404</a>
+<a href="#2405" id="2405">2405</a>
+<a href="#2406" id="2406">2406</a>
+<a href="#2407" id="2407">2407</a>
+<a href="#2408" id="2408">2408</a>
+<a href="#2409" id="2409">2409</a>
+<a href="#2410" id="2410">2410</a>
+<a href="#2411" id="2411">2411</a>
+<a href="#2412" id="2412">2412</a>
+<a href="#2413" id="2413">2413</a>
+<a href="#2414" id="2414">2414</a>
+<a href="#2415" id="2415">2415</a>
+<a href="#2416" id="2416">2416</a>
+<a href="#2417" id="2417">2417</a>
+<a href="#2418" id="2418">2418</a>
+<a href="#2419" id="2419">2419</a>
+<a href="#2420" id="2420">2420</a>
+<a href="#2421" id="2421">2421</a>
+<a href="#2422" id="2422">2422</a>
+<a href="#2423" id="2423">2423</a>
+<a href="#2424" id="2424">2424</a>
+<a href="#2425" id="2425">2425</a>
+<a href="#2426" id="2426">2426</a>
+<a href="#2427" id="2427">2427</a>
+<a href="#2428" id="2428">2428</a>
+<a href="#2429" id="2429">2429</a>
+<a href="#2430" id="2430">2430</a>
+<a href="#2431" id="2431">2431</a>
+<a href="#2432" id="2432">2432</a>
+<a href="#2433" id="2433">2433</a>
+<a href="#2434" id="2434">2434</a>
+<a href="#2435" id="2435">2435</a>
+<a href="#2436" id="2436">2436</a>
+<a href="#2437" id="2437">2437</a>
+<a href="#2438" id="2438">2438</a>
+<a href="#2439" id="2439">2439</a>
+<a href="#2440" id="2440">2440</a>
+<a href="#2441" id="2441">2441</a>
+<a href="#2442" id="2442">2442</a>
+<a href="#2443" id="2443">2443</a>
+<a href="#2444" id="2444">2444</a>
+<a href="#2445" id="2445">2445</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -3058,6 +3125,52 @@
     ///
     /// Panics if the schema of `columns` does not match that provided to [`RowConverter::new`]
     </span><span class="kw">pub fn </span>convert_columns(<span class="kw-2">&amp;mut </span><span class="self">self</span>, columns: <span class="kw-2">&amp;</span>[ArrayRef]) -&gt; <span class="prelude-ty">Result</span>&lt;Rows, ArrowError&gt; {
+        <span class="kw">let </span>num_rows = columns.first().map(|x| x.len()).unwrap_or(<span class="number">0</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>rows = <span class="self">self</span>.empty_rows(num_rows, <span class="number">0</span>);
+        <span class="self">self</span>.append(<span class="kw-2">&amp;mut </span>rows, columns)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(rows)
+    }
+
+    <span class="doccomment">/// Convert [`ArrayRef`] columns appending to an existing [`Rows`]
+    ///
+    /// See [`Row`] for information on when [`Row`] can be compared
+    ///
+    /// # Panics
+    ///
+    /// Panics if
+    /// * The schema of `columns` does not match that provided to [`RowConverter::new`]
+    /// * The provided [`Rows`] were not created by this [`RowConverter`]
+    ///
+    /// ```
+    /// # use std::sync::Arc;
+    /// # use std::collections::HashSet;
+    /// # use arrow_array::cast::AsArray;
+    /// # use arrow_array::StringArray;
+    /// # use arrow_row::{Row, RowConverter, SortField};
+    /// # use arrow_schema::DataType;
+    /// #
+    /// let mut converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
+    /// let a1 = StringArray::from(vec![&quot;hello&quot;, &quot;world&quot;]);
+    /// let a2 = StringArray::from(vec![&quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
+    ///
+    /// let mut rows = converter.empty_rows(5, 128);
+    /// converter.append(&amp;mut rows, &amp;[Arc::new(a1)]).unwrap();
+    /// converter.append(&amp;mut rows, &amp;[Arc::new(a2)]).unwrap();
+    ///
+    /// let back = converter.convert_rows(&amp;rows).unwrap();
+    /// let values: Vec&lt;_&gt; = back[0].as_string::&lt;i32&gt;().iter().map(Option::unwrap).collect();
+    /// assert_eq!(&amp;values, &amp;[&quot;hello&quot;, &quot;world&quot;, &quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
+    /// ```
+    </span><span class="kw">pub fn </span>append(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        rows: <span class="kw-2">&amp;mut </span>Rows,
+        columns: <span class="kw-2">&amp;</span>[ArrayRef],
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+        <span class="macro">assert!</span>(
+            Arc::ptr_eq(<span class="kw-2">&amp;</span>rows.config.fields, <span class="kw-2">&amp;</span><span class="self">self</span>.fields),
+            <span class="string">&quot;rows were not produced by this RowConverter&quot;
+        </span>);
+
         <span class="kw">if </span>columns.len() != <span class="self">self</span>.fields.len() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
                 <span class="string">&quot;Incorrect number of arrays provided to RowConverter, expected {} got {}&quot;</span>,
@@ -3082,12 +3195,35 @@
             })
             .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>config = RowConfig {
-            fields: Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.fields),
-            <span class="comment">// Don&#39;t need to validate UTF-8 as came from arrow array
-            </span>validate_utf8: <span class="bool-val">false</span>,
-        };
-        <span class="kw">let </span><span class="kw-2">mut </span>rows = new_empty_rows(columns, <span class="kw-2">&amp;</span>encoders, config);
+        <span class="kw">let </span>write_offset = rows.num_rows();
+        <span class="kw">let </span>lengths = row_lengths(columns, <span class="kw-2">&amp;</span>encoders);
+
+        <span class="comment">// We initialize the offsets shifted down by one row index.
+        //
+        // As the rows are appended to the offsets will be incremented to match
+        //
+        // For example, consider the case of 3 rows of length 3, 4, and 6 respectively.
+        // The offsets would be initialized to `0, 0, 3, 7`
+        //
+        // Writing the first row entirely would yield `0, 3, 3, 7`
+        // The second, `0, 3, 7, 7`
+        // The third, `0, 3, 7, 13`
+        //
+        // This would be the final offsets for reading
+        //
+        // In this way offsets tracks the position during writing whilst eventually serving
+        // as identifying the offsets of the written rows
+        </span>rows.offsets.reserve(lengths.len());
+        <span class="kw">let </span><span class="kw-2">mut </span>cur_offset = rows.offsets[write_offset];
+        <span class="kw">for </span>l <span class="kw">in </span>lengths {
+            rows.offsets.push(cur_offset);
+            cur_offset = cur_offset.checked_add(l).expect(<span class="string">&quot;overflow&quot;</span>);
+        }
+
+        <span class="comment">// Note this will not zero out any trailing data in `rows.buffer`,
+        // e.g. resulting from a call to `Rows::clear`, relying instead on the
+        // encoders not assuming a zero-initialized buffer
+        </span>rows.buffer.resize(cur_offset, <span class="number">0</span>);
 
         <span class="kw">for </span>((column, field), encoder) <span class="kw">in
             </span>columns.iter().zip(<span class="self">self</span>.fields.iter()).zip(encoders)
@@ -3095,7 +3231,7 @@
             <span class="comment">// We encode a column at a time to minimise dispatch overheads
             </span>encode_column(
                 <span class="kw-2">&amp;mut </span>rows.buffer,
-                <span class="kw-2">&amp;mut </span>rows.offsets,
+                <span class="kw-2">&amp;mut </span>rows.offsets[write_offset..],
                 column.as_ref(),
                 field.options,
                 <span class="kw-2">&amp;</span>encoder,
@@ -3109,7 +3245,7 @@
                 .for_each(|w| <span class="macro">assert!</span>(w[<span class="number">0</span>] &lt;= w[<span class="number">1</span>], <span class="string">&quot;offsets should be monotonic&quot;</span>));
         }
 
-        <span class="prelude-val">Ok</span>(rows)
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Convert [`Rows`] columns into [`ArrayRef`]
@@ -3277,7 +3413,8 @@
         <span class="self">self</span>.offsets.push(<span class="self">self</span>.buffer.len())
     }
 
-    <span class="kw">pub fn </span>row(<span class="kw-2">&amp;</span><span class="self">self</span>, row: usize) -&gt; Row&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="doccomment">/// Returns the row at index `row`
+    </span><span class="kw">pub fn </span>row(<span class="kw-2">&amp;</span><span class="self">self</span>, row: usize) -&gt; Row&lt;<span class="lifetime">&#39;_</span>&gt; {
         <span class="kw">let </span>end = <span class="self">self</span>.offsets[row + <span class="number">1</span>];
         <span class="kw">let </span>start = <span class="self">self</span>.offsets[row];
         Row {
@@ -3286,11 +3423,18 @@
         }
     }
 
-    <span class="kw">pub fn </span>num_rows(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Sets the length of this [`Rows`] to 0
+    </span><span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.offsets.truncate(<span class="number">1</span>);
+    }
+
+    <span class="doccomment">/// Returns the number of [`Row`] in this [`Rows`]
+    </span><span class="kw">pub fn </span>num_rows(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.offsets.len() - <span class="number">1
     </span>}
 
-    <span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RowsIter&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="doccomment">/// Returns an iterator over the [`Row`] in this [`Rows`]
+    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RowsIter&lt;<span class="lifetime">&#39;_</span>&gt; {
         <span class="self">self</span>.into_iter()
     }
 
@@ -3494,7 +3638,7 @@
 }
 
 <span class="doccomment">/// Computes the length of each encoded [`Rows`] and returns an empty [`Rows`]
-</span><span class="kw">fn </span>new_empty_rows(cols: <span class="kw-2">&amp;</span>[ArrayRef], encoders: <span class="kw-2">&amp;</span>[Encoder], config: RowConfig) -&gt; Rows {
+</span><span class="kw">fn </span>row_lengths(cols: <span class="kw-2">&amp;</span>[ArrayRef], encoders: <span class="kw-2">&amp;</span>[Encoder]) -&gt; Vec&lt;usize&gt; {
     <span class="kw">use </span>fixed::FixedLengthEncoding;
 
     <span class="kw">let </span>num_rows = cols.first().map(|x| x.len()).unwrap_or(<span class="number">0</span>);
@@ -3581,37 +3725,7 @@
         }
     }
 
-    <span class="kw">let </span><span class="kw-2">mut </span>offsets = Vec::with_capacity(num_rows + <span class="number">1</span>);
-    offsets.push(<span class="number">0</span>);
-
-    <span class="comment">// We initialize the offsets shifted down by one row index.
-    //
-    // As the rows are appended to the offsets will be incremented to match
-    //
-    // For example, consider the case of 3 rows of length 3, 4, and 6 respectively.
-    // The offsets would be initialized to `0, 0, 3, 7`
-    //
-    // Writing the first row entirely would yield `0, 3, 3, 7`
-    // The second, `0, 3, 7, 7`
-    // The third, `0, 3, 7, 13`
-    //
-    // This would be the final offsets for reading
-    //
-    // In this way offsets tracks the position during writing whilst eventually serving
-    // as identifying the offsets of the written rows
-    </span><span class="kw">let </span><span class="kw-2">mut </span>cur_offset = <span class="number">0_usize</span>;
-    <span class="kw">for </span>l <span class="kw">in </span>lengths {
-        offsets.push(cur_offset);
-        cur_offset = cur_offset.checked_add(l).expect(<span class="string">&quot;overflow&quot;</span>);
-    }
-
-    <span class="kw">let </span>buffer = <span class="macro">vec!</span>[<span class="number">0_u8</span>; cur_offset];
-
-    Rows {
-        buffer,
-        offsets,
-        config,
-    }
+    lengths
 }
 
 <span class="doccomment">/// Encodes a column to the provided [`Rows`] incrementing the offsets as it progresses
@@ -4751,6 +4865,26 @@
                 actual.to_data().validate_full().unwrap();
                 dictionary_eq(preserve, actual, expected)
             }
+        }
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_clear() {
+        <span class="kw">let </span><span class="kw-2">mut </span>converter =
+            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>rows = converter.empty_rows(<span class="number">3</span>, <span class="number">128</span>);
+
+        <span class="kw">let </span>arrays = [
+            Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)]),
+            Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>)]),
+        ];
+
+        <span class="kw">for </span>array <span class="kw">in </span>arrays {
+            rows.clear();
+            <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
+            converter.append(<span class="kw-2">&amp;mut </span>rows, <span class="kw-2">&amp;</span>[array.clone()]).unwrap();
+            <span class="kw">let </span>back = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
+            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>back[<span class="number">0</span>], <span class="kw-2">&amp;</span>array);
         }
     }
 }
