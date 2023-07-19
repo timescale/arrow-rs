@@ -485,11 +485,6 @@
 <a href="#485" id="485">485</a>
 <a href="#486" id="486">486</a>
 <a href="#487" id="487">487</a>
-<a href="#488" id="488">488</a>
-<a href="#489" id="489">489</a>
-<a href="#490" id="490">490</a>
-<a href="#491" id="491">491</a>
-<a href="#492" id="492">492</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -679,11 +674,6 @@
     <span class="doccomment">/// Returns the number of binary slots in the builder
     </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.null_buffer_builder.len()
-    }
-
-    <span class="doccomment">/// Returns whether the number of binary slots is zero
-    </span><span class="kw">fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.null_buffer_builder.is_empty()
     }
 
     <span class="doccomment">/// Builds the array and reset this builder.

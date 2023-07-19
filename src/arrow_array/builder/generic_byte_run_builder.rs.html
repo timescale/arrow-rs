@@ -519,11 +519,6 @@
 <a href="#519" id="519">519</a>
 <a href="#520" id="520">520</a>
 <a href="#521" id="521">521</a>
-<a href="#522" id="522">522</a>
-<a href="#523" id="523">523</a>
-<a href="#524" id="524">524</a>
-<a href="#525" id="525">525</a>
-<a href="#526" id="526">526</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -675,11 +670,6 @@
     </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.current_run_end_index
     }
-
-    <span class="doccomment">/// Returns whether the number of array slots is zero
-    </span><span class="kw">fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.current_run_end_index == <span class="number">0
-    </span>}
 
     <span class="doccomment">/// Builds the array and reset this builder.
     </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ArrayRef {
