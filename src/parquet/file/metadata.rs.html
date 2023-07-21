@@ -1097,6 +1097,8 @@
 <a href="#1097" id="1097">1097</a>
 <a href="#1098" id="1098">1098</a>
 <a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1329,7 +1331,9 @@
         <span class="self">self</span>.key_value_metadata.as_ref()
     }
 
-    <span class="doccomment">/// Returns Parquet [&#39;Type`] that describes schema in this file.
+    <span class="doccomment">/// Returns Parquet [`Type`] that describes schema in this file.
+    ///
+    /// [`Type`]: crate::schema::types::Type
     </span><span class="kw">pub fn </span>schema(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SchemaType {
         <span class="self">self</span>.schema_descr.root_schema()
     }
