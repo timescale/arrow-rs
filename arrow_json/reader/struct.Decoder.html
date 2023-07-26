@@ -46,7 +46,7 @@ integration with arbitrary byte streams, such as that yielded by <a href="https:
 <p>Custom conversion logic as described in [arrow_array::builder] will likely outperform this,
 especially where the schema is known at compile-time, however, this provides a mechanism
 to get something up and running quickly</p>
-<p>It can be used with <a href="https://docs.rs/serde_json/1.0.103/serde_json/value/enum.Value.html" title="enum serde_json::value::Value"><code>serde_json::Value</code></a></p>
+<p>It can be used with <a href="https://docs.rs/serde_json/1.0.104/serde_json/value/enum.Value.html" title="enum serde_json::value::Value"><code>serde_json::Value</code></a></p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>json = <span class="macro">vec!</span>[<span class="macro">json!</span>({<span class="string">&quot;float&quot;</span>: <span class="number">2.3</span>}), <span class="macro">json!</span>({<span class="string">&quot;float&quot;</span>: <span class="number">5.7</span>})];
 
