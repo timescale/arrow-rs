@@ -632,43 +632,6 @@
 <a href="#632" id="632">632</a>
 <a href="#633" id="633">633</a>
 <a href="#634" id="634">634</a>
-<a href="#635" id="635">635</a>
-<a href="#636" id="636">636</a>
-<a href="#637" id="637">637</a>
-<a href="#638" id="638">638</a>
-<a href="#639" id="639">639</a>
-<a href="#640" id="640">640</a>
-<a href="#641" id="641">641</a>
-<a href="#642" id="642">642</a>
-<a href="#643" id="643">643</a>
-<a href="#644" id="644">644</a>
-<a href="#645" id="645">645</a>
-<a href="#646" id="646">646</a>
-<a href="#647" id="647">647</a>
-<a href="#648" id="648">648</a>
-<a href="#649" id="649">649</a>
-<a href="#650" id="650">650</a>
-<a href="#651" id="651">651</a>
-<a href="#652" id="652">652</a>
-<a href="#653" id="653">653</a>
-<a href="#654" id="654">654</a>
-<a href="#655" id="655">655</a>
-<a href="#656" id="656">656</a>
-<a href="#657" id="657">657</a>
-<a href="#658" id="658">658</a>
-<a href="#659" id="659">659</a>
-<a href="#660" id="660">660</a>
-<a href="#661" id="661">661</a>
-<a href="#662" id="662">662</a>
-<a href="#663" id="663">663</a>
-<a href="#664" id="664">664</a>
-<a href="#665" id="665">665</a>
-<a href="#666" id="666">666</a>
-<a href="#667" id="667">667</a>
-<a href="#668" id="668">668</a>
-<a href="#669" id="669">669</a>
-<a href="#670" id="670">670</a>
-<a href="#671" id="671">671</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -688,8 +651,6 @@
 
 </span><span class="kw">use </span><span class="kw">crate</span>::types::GenericStringType;
 <span class="kw">use crate</span>::{GenericBinaryArray, GenericByteArray, GenericListArray, OffsetSizeTrait};
-<span class="kw">use </span>arrow_buffer::MutableBuffer;
-<span class="kw">use </span>arrow_data::ArrayData;
 <span class="kw">use </span>arrow_schema::{ArrowError, DataType};
 
 <span class="doccomment">/// A [`GenericByteArray`] for storing `str`
@@ -709,42 +670,6 @@
     /// please use the function [`value_length`](#method.value_length) which has O(1) time complexity.
     </span><span class="kw">pub fn </span>num_chars(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; usize {
         <span class="self">self</span>.value(i).chars().count()
-    }
-
-    <span class="doccomment">/// Creates a [`GenericStringArray`] based on an iterator of values without nulls
-    </span><span class="kw">pub fn </span>from_iter_values&lt;Ptr, I&gt;(iter: I) -&gt; <span class="self">Self
-    </span><span class="kw">where
-        </span>Ptr: AsRef&lt;str&gt;,
-        I: IntoIterator&lt;Item = Ptr&gt;,
-    {
-        <span class="kw">let </span>iter = iter.into_iter();
-        <span class="kw">let </span>(<span class="kw">_</span>, data_len) = iter.size_hint();
-        <span class="kw">let </span>data_len = data_len.expect(<span class="string">&quot;Iterator must be sized&quot;</span>); <span class="comment">// panic if no upper bound.
-
-        </span><span class="kw">let </span><span class="kw-2">mut </span>offsets =
-            MutableBuffer::new((data_len + <span class="number">1</span>) * std::mem::size_of::&lt;OffsetSize&gt;());
-        <span class="kw">let </span><span class="kw-2">mut </span>values = MutableBuffer::new(<span class="number">0</span>);
-
-        <span class="kw">let </span><span class="kw-2">mut </span>length_so_far = OffsetSize::zero();
-        offsets.push(length_so_far);
-
-        <span class="kw">for </span>i <span class="kw">in </span>iter {
-            <span class="kw">let </span>s = i.as_ref();
-            length_so_far += OffsetSize::from_usize(s.len()).unwrap();
-            offsets.push(length_so_far);
-            values.extend_from_slice(s.as_bytes());
-        }
-
-        <span class="comment">// iterator size hint may not be correct so compute the actual number of offsets
-        </span><span class="macro">assert!</span>(!offsets.is_empty()); <span class="comment">// wrote at least one
-        </span><span class="kw">let </span>actual_len = (offsets.len() / std::mem::size_of::&lt;OffsetSize&gt;()) - <span class="number">1</span>;
-
-        <span class="kw">let </span>array_data = ArrayData::builder(<span class="self">Self</span>::DATA_TYPE)
-            .len(actual_len)
-            .add_buffer(offsets.into())
-            .add_buffer(values.into());
-        <span class="kw">let </span>array_data = <span class="kw">unsafe </span>{ array_data.build_unchecked() };
-        <span class="self">Self</span>::from(array_data)
     }
 
     <span class="doccomment">/// Returns an iterator that returns the values of `array.value(i)` for an iterator with each element `i`
@@ -881,6 +806,7 @@
     <span class="kw">use </span><span class="kw">crate</span>::types::UInt8Type;
     <span class="kw">use </span><span class="kw">crate</span>::Array;
     <span class="kw">use </span>arrow_buffer::Buffer;
+    <span class="kw">use </span>arrow_data::ArrayData;
     <span class="kw">use </span>arrow_schema::Field;
     <span class="kw">use </span>std::sync::Arc;
 

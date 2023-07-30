@@ -581,6 +581,41 @@
 <a href="#581" id="581">581</a>
 <a href="#582" id="582">582</a>
 <a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -762,6 +797,41 @@
             value_offsets: OffsetBuffer::new_zeroed(len),
             value_data: MutableBuffer::new(<span class="number">0</span>).into(),
             nulls: <span class="prelude-val">Some</span>(NullBuffer::new_null(len)),
+        }
+    }
+
+    <span class="doccomment">/// Creates a [`GenericByteArray`] based on an iterator of values without nulls
+    </span><span class="kw">pub fn </span>from_iter_values&lt;Ptr, I&gt;(iter: I) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>Ptr: AsRef&lt;T::Native&gt;,
+        I: IntoIterator&lt;Item = Ptr&gt;,
+    {
+        <span class="kw">let </span>iter = iter.into_iter();
+        <span class="kw">let </span>(<span class="kw">_</span>, data_len) = iter.size_hint();
+        <span class="kw">let </span>data_len = data_len.expect(<span class="string">&quot;Iterator must be sized&quot;</span>); <span class="comment">// panic if no upper bound.
+
+        </span><span class="kw">let </span><span class="kw-2">mut </span>offsets =
+            MutableBuffer::new((data_len + <span class="number">1</span>) * std::mem::size_of::&lt;T::Offset&gt;());
+        offsets.push(T::Offset::usize_as(<span class="number">0</span>));
+
+        <span class="kw">let </span><span class="kw-2">mut </span>values = MutableBuffer::new(<span class="number">0</span>);
+        <span class="kw">for </span>s <span class="kw">in </span>iter {
+            <span class="kw">let </span>s: <span class="kw-2">&amp;</span>[u8] = s.as_ref().as_ref();
+            values.extend_from_slice(s);
+            offsets.push(T::Offset::usize_as(values.len()));
+        }
+
+        T::Offset::from_usize(values.len()).expect(<span class="string">&quot;offset overflow&quot;</span>);
+        <span class="kw">let </span>offsets = Buffer::from(offsets);
+
+        <span class="comment">// Safety: valid by construction
+        </span><span class="kw">let </span>value_offsets = <span class="kw">unsafe </span>{ OffsetBuffer::new_unchecked(offsets.into()) };
+
+        <span class="self">Self </span>{
+            data_type: T::DATA_TYPE,
+            value_data: values.into(),
+            value_offsets,
+            nulls: <span class="prelude-val">None</span>,
         }
     }
 
