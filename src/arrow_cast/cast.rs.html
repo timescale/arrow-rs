@@ -8960,6 +8960,16 @@
 <a href="#8960" id="8960">8960</a>
 <a href="#8961" id="8961">8961</a>
 <a href="#8962" id="8962">8962</a>
+<a href="#8963" id="8963">8963</a>
+<a href="#8964" id="8964">8964</a>
+<a href="#8965" id="8965">8965</a>
+<a href="#8966" id="8966">8966</a>
+<a href="#8967" id="8967">8967</a>
+<a href="#8968" id="8968">8968</a>
+<a href="#8969" id="8969">8969</a>
+<a href="#8970" id="8970">8970</a>
+<a href="#8971" id="8971">8971</a>
+<a href="#8972" id="8972">8972</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17920,6 +17930,16 @@
 
         <span class="macro">assert_eq!</span>(formatted.value(<span class="number">0</span>).to_string(), <span class="string">&quot;[[1], [2], [3]]&quot;</span>);
         <span class="macro">assert_eq!</span>(formatted.value(<span class="number">1</span>).to_string(), <span class="string">&quot;[[4], [null], [6]]&quot;</span>);
+    }
+
+    <span class="kw">const </span>CAST_OPTIONS: CastOptions&lt;<span class="lifetime">&#39;static</span>&gt; = CastOptions {
+        safe: <span class="bool-val">true</span>,
+        format_options: FormatOptions::new(),
+    };
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_const_options() {
+        <span class="macro">assert!</span>(CAST_OPTIONS.safe)
     }
 }
 </code></pre></div></section></main></body></html>
