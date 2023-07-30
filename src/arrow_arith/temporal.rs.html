@@ -1140,25 +1140,6 @@
 <a href="#1140" id="1140">1140</a>
 <a href="#1141" id="1141">1141</a>
 <a href="#1142" id="1142">1142</a>
-<a href="#1143" id="1143">1143</a>
-<a href="#1144" id="1144">1144</a>
-<a href="#1145" id="1145">1145</a>
-<a href="#1146" id="1146">1146</a>
-<a href="#1147" id="1147">1147</a>
-<a href="#1148" id="1148">1148</a>
-<a href="#1149" id="1149">1149</a>
-<a href="#1150" id="1150">1150</a>
-<a href="#1151" id="1151">1151</a>
-<a href="#1152" id="1152">1152</a>
-<a href="#1153" id="1153">1153</a>
-<a href="#1154" id="1154">1154</a>
-<a href="#1155" id="1155">1155</a>
-<a href="#1156" id="1156">1156</a>
-<a href="#1157" id="1157">1157</a>
-<a href="#1158" id="1158">1158</a>
-<a href="#1159" id="1159">1159</a>
-<a href="#1160" id="1160">1160</a>
-<a href="#1161" id="1161">1161</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1342,26 +1323,7 @@
 /// the range of [0, 23]. If the given array isn&#39;t temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>hour_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    <span class="kw">match </span>array.data_type().clone() {
-        DataType::Dictionary(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-            <span class="macro">downcast_dictionary_array!</span>(
-                array =&gt; {
-                    <span class="kw">let </span>hour_values = hour_dyn(array.values())<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(Arc::new(array.with_values(<span class="kw-2">&amp;</span>hour_values)))
-                }
-                dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="string">&quot;hour does not support&quot;</span>, dt),
-            )
-        }
-        <span class="kw">_ </span>=&gt; {
-            <span class="macro">downcast_temporal_array!</span>(
-                array =&gt; {
-                   hour(array)
-                    .map(|a| Arc::new(a) <span class="kw">as </span>ArrayRef)
-                }
-                dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="string">&quot;hour does not support&quot;</span>, dt),
-            )
-        }
-    }
+    time_fraction_dyn(array, <span class="string">&quot;hour&quot;</span>, |t| t.hour() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the hours of a given temporal primitive array as an array of integers within

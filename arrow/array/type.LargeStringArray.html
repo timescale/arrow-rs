@@ -8,7 +8,7 @@
 </span><span class="kw">let </span>arr = LargeStringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>]);
 <span class="comment">// Create from iter/collect (requires Option&lt;&amp;str&gt;)
 </span><span class="kw">let </span>arr: LargeStringArray = std::iter::repeat(<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)).take(<span class="number">10</span>).collect();</code></pre></div>
-<p>Constructon and Access</p>
+<p>Construction and Access</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>arrow_array::LargeStringArray;
 <span class="kw">let </span>array = LargeStringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)]);
