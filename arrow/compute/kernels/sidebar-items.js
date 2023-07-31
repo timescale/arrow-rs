@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["cast"],"mod":["aggregate","arity","bitwise","boolean","cast","cast_utils","comparison","concat","concat_elements","filter","interleave","length","limit","nullif","numeric","partition","regexp","sort","substring","take","temporal","window","zip"]};
+window.SIDEBAR_ITEMS = {"fn":["cast"],"mod":["aggregate","arity","bitwise","boolean","cast","cast_utils","comparison","concat","concat_elements","filter","interleave","length","nullif","numeric","partition","regexp","sort","substring","take","temporal","window","zip"]};
