@@ -2054,6 +2054,9 @@
 <a href="#2054" id="2054">2054</a>
 <a href="#2055" id="2055">2055</a>
 <a href="#2056" id="2056">2056</a>
+<a href="#2057" id="2057">2057</a>
+<a href="#2058" id="2058">2058</a>
+<a href="#2059" id="2059">2059</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2690,9 +2693,12 @@
                     <span class="kw">let </span>children = f
                         .iter()
                         .enumerate()
-                        .map(|(idx, (<span class="kw">_</span>, f))| <span class="kw">match </span>idx {
-                            <span class="number">0 </span>=&gt; <span class="self">Self</span>::new_null(f.data_type(), len),
-                            <span class="kw">_ </span>=&gt; <span class="self">Self</span>::new_empty(f.data_type()),
+                        .map(|(idx, (<span class="kw">_</span>, f))| {
+                            <span class="kw">if </span>idx == <span class="number">0 </span>|| <span class="kw-2">*</span>mode == UnionMode::Sparse {
+                                <span class="self">Self</span>::new_null(f.data_type(), len)
+                            } <span class="kw">else </span>{
+                                <span class="self">Self</span>::new_empty(f.data_type())
+                            }
                         })
                         .collect();
 
