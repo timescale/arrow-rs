@@ -1998,7 +1998,7 @@
         <span class="kw">let </span>end_pos = <span class="self">self</span>.buf.bytes_written();
 
         <span class="comment">// Write footer
-        </span><span class="kw">let </span>metadata_len = (end_pos - start_pos) <span class="kw">as </span>u32;
+        </span><span class="kw">let </span>metadata_len = (end_pos - start_pos) <span class="kw">as </span>i32;
 
         <span class="self">self</span>.buf.write_all(<span class="kw-2">&amp;</span>metadata_len.to_le_bytes())<span class="question-mark">?</span>;
         <span class="self">self</span>.buf.write_all(<span class="kw-2">&amp;</span>PARQUET_MAGIC)<span class="question-mark">?</span>;
