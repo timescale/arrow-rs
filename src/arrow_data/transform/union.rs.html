@@ -68,13 +68,6 @@
 <a href="#68" id="68">68</a>
 <a href="#69" id="69">69</a>
 <a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -116,9 +109,6 @@
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>build_extend_dense(array: <span class="kw-2">&amp;</span>ArrayData) -&gt; Extend {
     <span class="kw">let </span>type_ids = array.buffer::&lt;i8&gt;(<span class="number">0</span>);
     <span class="kw">let </span>offsets = array.buffer::&lt;i32&gt;(<span class="number">1</span>);
-    <span class="kw">let </span>arrow_schema::DataType::Union(src_fields, <span class="kw">_</span>) = array.data_type() <span class="kw">else </span>{
-        <span class="macro">unreachable!</span>();
-    };
 
     Box::new(
         <span class="kw">move </span>|mutable: <span class="kw-2">&amp;mut </span>_MutableArrayData, index: usize, start: usize, len: usize| {
@@ -128,18 +118,14 @@
                 .extend_from_slice(<span class="kw-2">&amp;</span>type_ids[start..start + len]);
 
             (start..start + len).for_each(|i| {
-                <span class="kw">let </span>type_id = type_ids[i];
-                <span class="kw">let </span>child_index = src_fields
-                    .iter()
-                    .position(|(r, <span class="kw">_</span>)| r == type_id)
-                    .expect(<span class="string">&quot;invalid union type ID&quot;</span>);
+                <span class="kw">let </span>type_id = type_ids[i] <span class="kw">as </span>usize;
                 <span class="kw">let </span>src_offset = offsets[i] <span class="kw">as </span>usize;
-                <span class="kw">let </span>child_data = <span class="kw-2">&amp;mut </span>mutable.child_data[child_index];
+                <span class="kw">let </span>child_data = <span class="kw-2">&amp;mut </span>mutable.child_data[type_id];
                 <span class="kw">let </span>dst_offset = child_data.len();
 
                 <span class="comment">// Extend offsets
                 </span>mutable.buffer2.push(dst_offset <span class="kw">as </span>i32);
-                mutable.child_data[child_index].extend(index, src_offset, src_offset + <span class="number">1</span>)
+                mutable.child_data[type_id].extend(index, src_offset, src_offset + <span class="number">1</span>)
             })
         },
     )
