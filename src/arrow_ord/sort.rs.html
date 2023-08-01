@@ -4489,47 +4489,6 @@
 <a href="#4489" id="4489">4489</a>
 <a href="#4490" id="4490">4490</a>
 <a href="#4491" id="4491">4491</a>
-<a href="#4492" id="4492">4492</a>
-<a href="#4493" id="4493">4493</a>
-<a href="#4494" id="4494">4494</a>
-<a href="#4495" id="4495">4495</a>
-<a href="#4496" id="4496">4496</a>
-<a href="#4497" id="4497">4497</a>
-<a href="#4498" id="4498">4498</a>
-<a href="#4499" id="4499">4499</a>
-<a href="#4500" id="4500">4500</a>
-<a href="#4501" id="4501">4501</a>
-<a href="#4502" id="4502">4502</a>
-<a href="#4503" id="4503">4503</a>
-<a href="#4504" id="4504">4504</a>
-<a href="#4505" id="4505">4505</a>
-<a href="#4506" id="4506">4506</a>
-<a href="#4507" id="4507">4507</a>
-<a href="#4508" id="4508">4508</a>
-<a href="#4509" id="4509">4509</a>
-<a href="#4510" id="4510">4510</a>
-<a href="#4511" id="4511">4511</a>
-<a href="#4512" id="4512">4512</a>
-<a href="#4513" id="4513">4513</a>
-<a href="#4514" id="4514">4514</a>
-<a href="#4515" id="4515">4515</a>
-<a href="#4516" id="4516">4516</a>
-<a href="#4517" id="4517">4517</a>
-<a href="#4518" id="4518">4518</a>
-<a href="#4519" id="4519">4519</a>
-<a href="#4520" id="4520">4520</a>
-<a href="#4521" id="4521">4521</a>
-<a href="#4522" id="4522">4522</a>
-<a href="#4523" id="4523">4523</a>
-<a href="#4524" id="4524">4524</a>
-<a href="#4525" id="4525">4525</a>
-<a href="#4526" id="4526">4526</a>
-<a href="#4527" id="4527">4527</a>
-<a href="#4528" id="4528">4528</a>
-<a href="#4529" id="4529">4529</a>
-<a href="#4530" id="4530">4530</a>
-<a href="#4531" id="4531">4531</a>
-<a href="#4532" id="4532">4532</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -4922,28 +4881,15 @@
                 descending: <span class="bool-val">false</span>,
                 nulls_first: value_null_first,
             });
-            <span class="macro">downcast_dictionary_array!</span>(
-                values =&gt; <span class="kw">match </span>values.values().data_type() {
-                    dt <span class="kw">if </span>DataType::is_primitive(dt) =&gt; {
-                        <span class="kw">let </span>dict_values = values.values();
-                        <span class="kw">let </span>sorted_value_indices = sort_to_indices(dict_values, value_options, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-                        <span class="kw">let </span>value_indices_map = sorted_rank(<span class="kw-2">&amp;</span>sorted_value_indices);
-                        sort_primitive_dictionary::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(values, <span class="kw-2">&amp;</span>value_indices_map, v, n, options, limit, cmp)
-                    },
-                    DataType::Utf8 =&gt; {
-                        <span class="kw">let </span>dict_values = values.values();
-                        <span class="kw">let </span>sorted_value_indices = sort_to_indices(dict_values, value_options, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-                        <span class="kw">let </span>value_indices_map = sorted_rank(<span class="kw-2">&amp;</span>sorted_value_indices);
-                        sort_string_dictionary::&lt;<span class="kw">_</span>&gt;(values, <span class="kw-2">&amp;</span>value_indices_map, v, n, <span class="kw-2">&amp;</span>options, limit)
-                    },
-                    t =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unsupported dictionary value type {t}&quot;
-                    </span>))),
-                },
-                t =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Unsupported datatype {t}&quot;
-                </span>))),
-            )
+            <span class="macro">downcast_dictionary_array! </span>{
+                values =&gt; {
+                    <span class="kw">let </span>dict_values = values.values();
+                    <span class="kw">let </span>sorted_value_indices = sort_to_indices(dict_values, value_options, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>rank = sorted_rank(<span class="kw-2">&amp;</span>sorted_value_indices);
+                    sort_dictionary(values, <span class="kw-2">&amp;</span>rank, v, n, options, limit)
+                }
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+            }
         }
         DataType::Binary | DataType::FixedSizeBinary(<span class="kw">_</span>) =&gt; {
             sort_binary::&lt;i32&gt;(values, v, n, <span class="kw-2">&amp;</span>options, limit)
@@ -5095,28 +5041,23 @@
     out
 }
 
-<span class="doccomment">/// Sort dictionary encoded primitive values
-</span><span class="kw">fn </span>sort_primitive_dictionary&lt;K, F&gt;(
-    values: <span class="kw-2">&amp;</span>DictionaryArray&lt;K&gt;,
-    value_indices_map: <span class="kw-2">&amp;</span>[u32],
+<span class="doccomment">/// Sort dictionary given the sorted rank of each key
+</span><span class="kw">fn </span>sort_dictionary&lt;K: ArrowDictionaryKeyType&gt;(
+    dict: <span class="kw-2">&amp;</span>DictionaryArray&lt;K&gt;,
+    rank: <span class="kw-2">&amp;</span>[u32],
     value_indices: Vec&lt;u32&gt;,
     null_indices: Vec&lt;u32&gt;,
     options: SortOptions,
     limit: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-    cmp: F,
-) -&gt; UInt32Array
-<span class="kw">where
-    </span>K: ArrowDictionaryKeyType,
-    F: Fn(u32, u32) -&gt; Ordering,
-{
-    <span class="kw">let </span>keys: <span class="kw-2">&amp;</span>PrimitiveArray&lt;K&gt; = values.keys();
+) -&gt; UInt32Array {
+    <span class="kw">let </span>keys: <span class="kw-2">&amp;</span>PrimitiveArray&lt;K&gt; = dict.keys();
 
     <span class="comment">// create tuples that are used for sorting
     </span><span class="kw">let </span>valids = value_indices
         .into_iter()
         .map(|index| {
             <span class="kw">let </span>key: K::Native = keys.value(index <span class="kw">as </span>usize);
-            (index, value_indices_map[key.as_usize()])
+            (index, rank[key.as_usize()])
         })
         .collect::&lt;Vec&lt;(u32, u32)&gt;&gt;();
 
@@ -5407,29 +5348,6 @@
         limit,
         |array, idx| array.value(idx <span class="kw">as </span>usize),
     )
-}
-
-<span class="doccomment">/// Sort dictionary encoded strings
-</span><span class="kw">fn </span>sort_string_dictionary&lt;T: ArrowDictionaryKeyType&gt;(
-    values: <span class="kw-2">&amp;</span>DictionaryArray&lt;T&gt;,
-    value_indices_map: <span class="kw-2">&amp;</span>[u32],
-    value_indices: Vec&lt;u32&gt;,
-    null_indices: Vec&lt;u32&gt;,
-    options: <span class="kw-2">&amp;</span>SortOptions,
-    limit: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-) -&gt; UInt32Array {
-    <span class="kw">let </span>keys: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt; = values.keys();
-
-    <span class="comment">// create tuples that are used for sorting
-    </span><span class="kw">let </span>valids = value_indices
-        .into_iter()
-        .map(|index| {
-            <span class="kw">let </span>key: T::Native = keys.value(index <span class="kw">as </span>usize);
-            (index, value_indices_map[key.as_usize()])
-        })
-        .collect::&lt;Vec&lt;(u32, u32)&gt;&gt;();
-
-    sort_primitive_inner::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(keys.len(), null_indices, cmp, options, limit, valids)
 }
 
 <span class="doccomment">/// shared implementation between dictionary encoded and plain string arrays
