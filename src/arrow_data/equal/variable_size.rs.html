@@ -94,11 +94,6 @@
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
 <a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -116,7 +111,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-</span><span class="kw">use </span><span class="kw">crate</span>::data::{count_nulls, ArrayData};
+</span><span class="kw">use </span><span class="kw">crate</span>::data::{contains_nulls, ArrayData};
 <span class="kw">use </span>arrow_buffer::ArrowNativeType;
 <span class="kw">use </span>num::Integer;
 
@@ -160,14 +155,9 @@
     </span><span class="kw">let </span>lhs_values = lhs.buffers()[<span class="number">1</span>].as_slice();
     <span class="kw">let </span>rhs_values = rhs.buffers()[<span class="number">1</span>].as_slice();
 
-    <span class="kw">let </span>lhs_null_count = count_nulls(lhs.nulls(), lhs_start, len);
-    <span class="kw">let </span>rhs_null_count = count_nulls(rhs.nulls(), rhs_start, len);
-
-    <span class="kw">if </span>lhs_null_count == <span class="number">0
-        </span>&amp;&amp; rhs_null_count == <span class="number">0
-        </span>&amp;&amp; !lhs_values.is_empty()
-        &amp;&amp; !rhs_values.is_empty()
-    {
+    <span class="comment">// Only checking one null mask here because by the time the control flow reaches
+    // this point, the equality of the two masks would have already been verified.
+    </span><span class="kw">if </span>!contains_nulls(lhs.nulls(), lhs_start, len) {
         offset_value_equal(
             lhs_values,
             rhs_values,
