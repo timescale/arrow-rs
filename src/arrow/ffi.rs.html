@@ -1164,6 +1164,7 @@
 <a href="#1164" id="1164">1164</a>
 <a href="#1165" id="1165">1165</a>
 <a href="#1166" id="1166">1166</a>
+<a href="#1167" id="1167">1167</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1197,10 +1198,11 @@
 //! # use std::sync::Arc;
 //! # use arrow::array::{Int32Array, Array, ArrayData, make_array};
 //! # use arrow::error::Result;
-//! # use arrow::compute::kernels::arithmetic;
+//! # use arrow_arith::numeric::add;
 //! # use arrow::ffi::{to_ffi, from_ffi};
 //! # fn main() -&gt; Result&lt;()&gt; {
 //! // create an array natively
+//!
 //! let array = Int32Array::from(vec![Some(1), None, Some(3)]);
 //! let data = array.into_data();
 //!
@@ -1212,10 +1214,10 @@
 //! let array = Int32Array::from(data);
 //!
 //! // perform some operation
-//! let array = arithmetic::add(&amp;array, &amp;array)?;
+//! let array = add(&amp;array, &amp;array)?;
 //!
 //! // verify
-//! assert_eq!(array, Int32Array::from(vec![Some(2), None, Some(6)]));
+//! assert_eq!(array.as_ref(), &amp;Int32Array::from(vec![Some(2), None, Some(6)]));
 //! #
 //! # Ok(())
 //! # }
@@ -2114,10 +2116,10 @@ To export an array, create an `ArrowArray` using [ArrowArray::try_new].
 
         <span class="comment">// perform some operation
         </span><span class="kw">let </span>array = array.as_any().downcast_ref::&lt;Int32Array&gt;().unwrap();
-        <span class="kw">let </span>array = kernels::arithmetic::add(array, array).unwrap();
+        <span class="kw">let </span>array = kernels::numeric::add(array, array).unwrap();
 
         <span class="comment">// verify
-        </span><span class="macro">assert_eq!</span>(array, Int32Array::from(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>]));
+        </span><span class="macro">assert_eq!</span>(array.as_ref(), <span class="kw-2">&amp;</span>Int32Array::from(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>]));
         <span class="prelude-val">Ok</span>(())
     }
 
