@@ -695,6 +695,9 @@
 <a href="#695" id="695">695</a>
 <a href="#696" id="696">696</a>
 <a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -858,7 +861,7 @@
             ))
         })<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>len = values.len() / s;
+        <span class="kw">let </span>len = values.len() / s.max(<span class="number">1</span>);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(n) = nulls.as_ref() {
             <span class="kw">if </span>n.len() != len {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
@@ -1372,6 +1375,9 @@
             err.to_string(),
             <span class="string">&quot;Invalid argument error: Size cannot be negative, got -1&quot;
         </span>);
+
+        <span class="kw">let </span>list = FixedSizeListArray::new(field.clone(), <span class="number">0</span>, values.clone(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(list.len(), <span class="number">6</span>);
 
         <span class="kw">let </span>nulls = NullBuffer::new_null(<span class="number">2</span>);
         <span class="kw">let </span>err = FixedSizeListArray::try_new(field, <span class="number">2</span>, values.clone(), <span class="prelude-val">Some</span>(nulls))
