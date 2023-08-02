@@ -192,6 +192,42 @@
 <a href="#192" id="192">192</a>
 <a href="#193" id="193">193</a>
 <a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -213,7 +249,43 @@
 <span class="kw">use crate</span>::{ArrowNativeType, MutableBuffer};
 <span class="kw">use </span>std::ops::Deref;
 
-<span class="doccomment">/// A non-empty buffer of monotonically increasing, positive integers
+<span class="doccomment">/// A non-empty buffer of monotonically increasing, positive integers.
+///
+/// [`OffsetBuffer`] are used to represent ranges of offsets. An
+/// `OffsetBuffer` of `N+1` items contains `N` such ranges. The start
+/// offset for element `i` is `offsets[i]` and the end offset is
+/// `offsets[i+1]`. Equal offsets represent an empty range.
+///
+/// # Example
+///
+/// This example shows how 5 distinct ranges, are represented using a
+/// 6 entry `OffsetBuffer`. The first entry `(0, 3)` represents the
+/// three offsets `0, 1, 2`. The entry `(3,3)` represent no offsets
+/// (e.g. an empty list).
+///
+/// ```text
+///   ┌───────┐                ┌───┐
+///   │ (0,3) │                │ 0 │
+///   ├───────┤                ├───┤
+///   │ (3,3) │                │ 3 │
+///   ├───────┤                ├───┤
+///   │ (3,4) │                │ 3 │
+///   ├───────┤                ├───┤
+///   │ (4,5) │                │ 4 │
+///   ├───────┤                ├───┤
+///   │ (5,7) │                │ 5 │
+///   └───────┘                ├───┤
+///                            │ 7 │
+///                            └───┘
+///
+///                        Offsets Buffer
+///    Logical
+///    Offsets
+///
+///  (offsets[i],
+///   offsets[i+1])
+/// ```
+
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>OffsetBuffer&lt;O: ArrowNativeType&gt;(ScalarBuffer&lt;O&gt;);
 
