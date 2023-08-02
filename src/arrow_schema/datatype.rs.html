@@ -899,6 +899,11 @@
 <a href="#899" id="899">899</a>
 <a href="#900" id="900">900</a>
 <a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a>
+<a href="#906" id="906">906</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -919,7 +924,7 @@
 </span><span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::sync::Arc;
 
-<span class="kw">use crate</span>::{FieldRef, Fields, UnionFields};
+<span class="kw">use crate</span>::{Field, FieldRef, Fields, UnionFields};
 
 <span class="doccomment">/// The set of datatypes that are supported by this implementation of Apache Arrow.
 ///
@@ -1476,6 +1481,11 @@
             }
             <span class="kw">_ </span>=&gt; <span class="self">self </span>== other,
         }
+    }
+
+    <span class="doccomment">/// Create a List DataType default name is &quot;item&quot;
+    </span><span class="kw">pub fn </span>new_list(data_type: DataType, nullable: bool) -&gt; <span class="self">Self </span>{
+        DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, data_type, nullable)))
     }
 }
 
