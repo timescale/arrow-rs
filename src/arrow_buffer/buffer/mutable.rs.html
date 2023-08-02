@@ -986,6 +986,21 @@
 <a href="#986" id="986">986</a>
 <a href="#987" id="987">987</a>
 <a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1759,6 +1774,14 @@
     }
 }
 
+<span class="kw">impl</span>&lt;T: ArrowNativeType&gt; std::iter::FromIterator&lt;T&gt; <span class="kw">for </span>MutableBuffer {
+    <span class="kw">fn </span>from_iter&lt;I: IntoIterator&lt;Item = T&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="self">Self</span>::default();
+        buffer.extend_from_iter(iter.into_iter());
+        buffer
+    }
+}
+
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -1972,6 +1995,13 @@
     </span><span class="kw">fn </span>test_mutable_set_null_bits_oob_by_overflow() {
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = MutableBuffer::new(<span class="number">0</span>);
         buffer.set_null_bits(<span class="number">1</span>, usize::MAX);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>from_iter() {
+        <span class="kw">let </span>buffer = [<span class="number">1u16</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().collect::&lt;MutableBuffer&gt;();
+        <span class="macro">assert_eq!</span>(buffer.len(), <span class="number">4 </span>* mem::size_of::&lt;u16&gt;());
+        <span class="macro">assert_eq!</span>(buffer.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>]);
     }
 }
 </code></pre></div></section></main></body></html>
