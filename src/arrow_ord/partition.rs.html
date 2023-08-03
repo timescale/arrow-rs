@@ -330,116 +330,6 @@
 <a href="#330" id="330">330</a>
 <a href="#331" id="331">331</a>
 <a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
-<a href="#334" id="334">334</a>
-<a href="#335" id="335">335</a>
-<a href="#336" id="336">336</a>
-<a href="#337" id="337">337</a>
-<a href="#338" id="338">338</a>
-<a href="#339" id="339">339</a>
-<a href="#340" id="340">340</a>
-<a href="#341" id="341">341</a>
-<a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
-<a href="#344" id="344">344</a>
-<a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a>
-<a href="#379" id="379">379</a>
-<a href="#380" id="380">380</a>
-<a href="#381" id="381">381</a>
-<a href="#382" id="382">382</a>
-<a href="#383" id="383">383</a>
-<a href="#384" id="384">384</a>
-<a href="#385" id="385">385</a>
-<a href="#386" id="386">386</a>
-<a href="#387" id="387">387</a>
-<a href="#388" id="388">388</a>
-<a href="#389" id="389">389</a>
-<a href="#390" id="390">390</a>
-<a href="#391" id="391">391</a>
-<a href="#392" id="392">392</a>
-<a href="#393" id="393">393</a>
-<a href="#394" id="394">394</a>
-<a href="#395" id="395">395</a>
-<a href="#396" id="396">396</a>
-<a href="#397" id="397">397</a>
-<a href="#398" id="398">398</a>
-<a href="#399" id="399">399</a>
-<a href="#400" id="400">400</a>
-<a href="#401" id="401">401</a>
-<a href="#402" id="402">402</a>
-<a href="#403" id="403">403</a>
-<a href="#404" id="404">404</a>
-<a href="#405" id="405">405</a>
-<a href="#406" id="406">406</a>
-<a href="#407" id="407">407</a>
-<a href="#408" id="408">408</a>
-<a href="#409" id="409">409</a>
-<a href="#410" id="410">410</a>
-<a href="#411" id="411">411</a>
-<a href="#412" id="412">412</a>
-<a href="#413" id="413">413</a>
-<a href="#414" id="414">414</a>
-<a href="#415" id="415">415</a>
-<a href="#416" id="416">416</a>
-<a href="#417" id="417">417</a>
-<a href="#418" id="418">418</a>
-<a href="#419" id="419">419</a>
-<a href="#420" id="420">420</a>
-<a href="#421" id="421">421</a>
-<a href="#422" id="422">422</a>
-<a href="#423" id="423">423</a>
-<a href="#424" id="424">424</a>
-<a href="#425" id="425">425</a>
-<a href="#426" id="426">426</a>
-<a href="#427" id="427">427</a>
-<a href="#428" id="428">428</a>
-<a href="#429" id="429">429</a>
-<a href="#430" id="430">430</a>
-<a href="#431" id="431">431</a>
-<a href="#432" id="432">432</a>
-<a href="#433" id="433">433</a>
-<a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
-<a href="#438" id="438">438</a>
-<a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -459,21 +349,63 @@
 
 </span><span class="doccomment">//! Defines partition kernel for `ArrayRef`
 
-</span><span class="kw">use </span><span class="kw">crate</span>::sort::{LexicographicalComparator, SortColumn};
-<span class="kw">use </span>arrow_schema::ArrowError;
-<span class="kw">use </span>std::cmp::Ordering;
-<span class="kw">use </span>std::ops::Range;
+</span><span class="kw">use </span>std::ops::Range;
 
-<span class="doccomment">/// Given a list of already sorted columns, returns [`Range`]es that
-/// partition the input such that each partition has equal values
-/// across sort columns.
+<span class="kw">use </span>arrow_array::{Array, ArrayRef};
+<span class="kw">use </span>arrow_buffer::BooleanBuffer;
+<span class="kw">use </span>arrow_schema::ArrowError;
+
+<span class="kw">use </span><span class="kw">crate</span>::comparison::neq_dyn;
+<span class="kw">use </span><span class="kw">crate</span>::sort::SortColumn;
+
+<span class="doccomment">/// A computed set of partitions, see [`partition`]
+</span><span class="attr">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>Partitions(<span class="prelude-ty">Option</span>&lt;BooleanBuffer&gt;);
+
+<span class="kw">impl </span>Partitions {
+    <span class="doccomment">/// Returns the range of each partition
+    ///
+    /// Consecutive ranges will be contiguous: i.e [`(a, b)` and `(b, c)`], and
+    /// `start = 0` and `end = self.len()` for the first and last range respectively
+    </span><span class="kw">pub fn </span>ranges(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Range&lt;usize&gt;&gt; {
+        <span class="kw">let </span>boundaries = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+            <span class="prelude-val">Some</span>(boundaries) =&gt; boundaries,
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="macro">vec!</span>[],
+        };
+
+        <span class="kw">let </span><span class="kw-2">mut </span>out = <span class="macro">vec!</span>[];
+        <span class="kw">let </span><span class="kw-2">mut </span>current = <span class="number">0</span>;
+        <span class="kw">for </span>idx <span class="kw">in </span>boundaries.set_indices() {
+            <span class="kw">let </span>t = current;
+            current = idx + <span class="number">1</span>;
+            out.push(t..current)
+        }
+        <span class="kw">let </span>last = boundaries.len() + <span class="number">1</span>;
+        <span class="kw">if </span>current != last {
+            out.push(current..last)
+        }
+        out
+    }
+
+    <span class="doccomment">/// Returns the number of partitions
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+            <span class="prelude-val">Some</span>(b) =&gt; b.count_set_bits() + <span class="number">1</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="number">0</span>,
+        }
+    }
+
+    <span class="doccomment">/// Returns true if this contains no partitions
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_none()
+    }
+}
+
+<span class="doccomment">/// Given a list of lexicographically sorted columns, computes the [`Partitions`],
+/// where a partition consists of the set of consecutive rows with equal values
 ///
 /// Returns an error if no columns are specified or all columns do not
 /// have the same number of rows.
-///
-/// Returns an iterator with `k` items where `k` is cardinality of the
-/// sort values: Consecutive values will be connected: `(a, b)` and `(b,
-/// c)`, where `start = 0` and `end = n` for the first and last range.
 ///
 /// # Example:
 ///
@@ -496,8 +428,7 @@
 ///     │ 3 │    │ 1 │    │ F │        Range: 5..6 (x=3, y=1)
 /// └ ─ ┴───┴ ─ ─└───┘─ ─ ┴───┴ ─ ─ ┘
 ///
-///       x        y        z     lexicographical_partition_ranges
-///                               by (x,y)
+///       x        y        z     partition(&amp;[x, y])
 /// ```
 ///
 /// # Example Code
@@ -506,27 +437,15 @@
 /// # use std::{sync::Arc, ops::Range};
 /// # use arrow_array::{RecordBatch, Int64Array, StringArray, ArrayRef};
 /// # use arrow_ord::sort::{SortColumn, SortOptions};
-/// # use arrow_ord::partition::lexicographical_partition_ranges;
+/// # use arrow_ord::partition::partition;
 /// let batch = RecordBatch::try_from_iter(vec![
 ///     (&quot;x&quot;, Arc::new(Int64Array::from(vec![1, 1, 1, 1, 2, 3])) as ArrayRef),
 ///     (&quot;y&quot;, Arc::new(Int64Array::from(vec![1, 2, 2, 2, 1, 1])) as ArrayRef),
 ///     (&quot;z&quot;, Arc::new(StringArray::from(vec![&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;])) as ArrayRef),
 /// ]).unwrap();
 ///
-/// // Lexographically partition on (x, y)
-/// let sort_columns = vec![
-///     SortColumn {
-///         values: batch.column(0).clone(),
-///         options: Some(SortOptions::default()),
-///     },
-///     SortColumn {
-///         values: batch.column(1).clone(),
-///         options: Some(SortOptions::default()),
-///  },
-/// ];
-/// let ranges:Vec&lt;Range&lt;usize&gt;&gt; = lexicographical_partition_ranges(&amp;sort_columns)
-///   .unwrap()
-///   .collect();
+/// // Partition on first two columns
+/// let ranges = partition(&amp;batch.columns()[..2]).unwrap().ranges();
 ///
 /// let expected = vec![
 ///     (0..1),
@@ -537,348 +456,209 @@
 ///
 /// assert_eq!(ranges, expected);
 /// ```
-</span><span class="kw">pub fn </span>lexicographical_partition_ranges(
-    columns: <span class="kw-2">&amp;</span>[SortColumn],
-) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">impl </span>Iterator&lt;Item = Range&lt;usize&gt;&gt; + <span class="lifetime">&#39;_</span>, ArrowError&gt; {
-    LexicographicalPartitionIterator::try_new(columns)
+</span><span class="kw">pub fn </span>partition(columns: <span class="kw-2">&amp;</span>[ArrayRef]) -&gt; <span class="prelude-ty">Result</span>&lt;Partitions, ArrowError&gt; {
+    <span class="kw">if </span>columns.is_empty() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
+            <span class="string">&quot;Partition requires at least one column&quot;</span>.to_string(),
+        ));
+    }
+    <span class="kw">let </span>num_rows = columns[<span class="number">0</span>].len();
+    <span class="kw">if </span>columns.iter().any(|item| item.len() != num_rows) {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
+            <span class="string">&quot;Partition columns have different row counts&quot;</span>.to_string(),
+        ));
+    };
+
+    <span class="kw">match </span>num_rows {
+        <span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Partitions(<span class="prelude-val">None</span>)),
+        <span class="number">1 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Partitions(<span class="prelude-val">Some</span>(BooleanBuffer::new_unset(<span class="number">0</span>)))),
+        <span class="kw">_ </span>=&gt; {}
+    }
+
+    <span class="kw">let </span>acc = find_boundaries(<span class="kw-2">&amp;</span>columns[<span class="number">0</span>])<span class="question-mark">?</span>;
+    <span class="kw">let </span>acc = columns
+        .iter()
+        .skip(<span class="number">1</span>)
+        .try_fold(acc, |acc, c| find_boundaries(c.as_ref()).map(|b| <span class="kw-2">&amp;</span>acc | <span class="kw-2">&amp;</span>b))<span class="question-mark">?</span>;
+
+    <span class="prelude-val">Ok</span>(Partitions(<span class="prelude-val">Some</span>(acc)))
 }
 
-<span class="kw">struct </span>LexicographicalPartitionIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    comparator: LexicographicalComparator&lt;<span class="lifetime">&#39;a</span>&gt;,
-    num_rows: usize,
-    previous_partition_point: usize,
-    partition_point: usize,
-}
+<span class="doccomment">/// Returns a mask with bits set whenever the value or nullability changes
+</span><span class="kw">fn </span>find_boundaries(v: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;BooleanBuffer, ArrowError&gt; {
+    <span class="kw">let </span>slice_len = v.len() - <span class="number">1</span>;
+    <span class="kw">let </span>v1 = v.slice(<span class="number">0</span>, slice_len);
+    <span class="kw">let </span>v2 = v.slice(<span class="number">1</span>, slice_len);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LexicographicalPartitionIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>try_new(
-        columns: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[SortColumn],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;LexicographicalPartitionIterator, ArrowError&gt; {
-        <span class="kw">if </span>columns.is_empty() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                <span class="string">&quot;Sort requires at least one column&quot;</span>.to_string(),
-            ));
+    <span class="kw">let </span>array_ne = neq_dyn(v1.as_ref(), v2.as_ref())<span class="question-mark">?</span>;
+    <span class="comment">// Set if values have different non-NULL values
+    </span><span class="kw">let </span>values_ne = <span class="kw">match </span>array_ne.nulls().filter(|n| n.null_count() &gt; <span class="number">0</span>) {
+        <span class="prelude-val">Some</span>(n) =&gt; n.inner() &amp; array_ne.values(),
+        <span class="prelude-val">None </span>=&gt; array_ne.values().clone(),
+    };
+
+    <span class="prelude-val">Ok</span>(<span class="kw">match </span>v.nulls().filter(|x| x.null_count() &gt; <span class="number">0</span>) {
+        <span class="prelude-val">Some</span>(n) =&gt; {
+            <span class="kw">let </span>n1 = n.inner().slice(<span class="number">0</span>, slice_len);
+            <span class="kw">let </span>n2 = n.inner().slice(<span class="number">1</span>, slice_len);
+            <span class="comment">// Set if values_ne or the nullability has changed
+            </span><span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>n1 ^ <span class="kw-2">&amp;</span>n2) | <span class="kw-2">&amp;</span>values_ne
         }
-        <span class="kw">let </span>num_rows = columns[<span class="number">0</span>].values.len();
-        <span class="kw">if </span>columns.iter().any(|item| item.values.len() != num_rows) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                <span class="string">&quot;Lexical sort columns have different row counts&quot;</span>.to_string(),
-            ));
-        };
-
-        <span class="kw">let </span>comparator = LexicographicalComparator::try_new(columns)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(LexicographicalPartitionIterator {
-            comparator,
-            num_rows,
-            previous_partition_point: <span class="number">0</span>,
-            partition_point: <span class="number">0</span>,
-        })
-    }
-}
-
-<span class="doccomment">/// Returns the next partition point of the range `start..end` according to the given comparator.
-/// The return value is the index of the first element of the second partition,
-/// and is guaranteed to be between `start..=end` (inclusive).
-///
-/// The values corresponding to those indices are assumed to be partitioned according to the given comparator.
-///
-/// Exponential search is to remedy for the case when array size and cardinality are both large.
-/// In these cases the partition point would be near the beginning of the range and
-/// plain binary search would be doing some unnecessary iterations on each call.
-///
-/// see &lt;https://en.wikipedia.org/wiki/Exponential_search&gt;
-</span><span class="attr">#[inline]
-</span><span class="kw">fn </span>exponential_search_next_partition_point(
-    start: usize,
-    end: usize,
-    comparator: <span class="kw-2">&amp;</span>LexicographicalComparator&lt;<span class="lifetime">&#39;_</span>&gt;,
-) -&gt; usize {
-    <span class="kw">let </span>target = start;
-    <span class="kw">let </span><span class="kw-2">mut </span>bound = <span class="number">1</span>;
-    <span class="kw">while </span>bound + start &lt; end
-        &amp;&amp; comparator.compare(bound + start, target) != Ordering::Greater
-    {
-        bound <span class="kw-2">*</span>= <span class="number">2</span>;
-    }
-
-    <span class="comment">// invariant after while loop:
-    // (start + bound / 2) &lt;= target &lt; min(end, start + bound + 1)
-    // where &lt;= and &lt; are defined by the comparator;
-    // note here we have right = min(end, start + bound + 1) because (start + bound) might
-    // actually be considered and must be included.
-    </span>partition_point(start + bound / <span class="number">2</span>, end.min(start + bound + <span class="number">1</span>), |idx| {
-        comparator.compare(idx, target) != Ordering::Greater
+        <span class="prelude-val">None </span>=&gt; values_ne,
     })
 }
 
-<span class="doccomment">/// Returns the partition point of the range `start..end` according to the given predicate.
-/// The return value is the index of the first element of the second partition,
-/// and is guaranteed to be between `start..=end` (inclusive).
+<span class="doccomment">/// Given a list of already sorted columns, find partition ranges that would partition
+/// lexicographically equal values across columns.
 ///
-/// The algorithm is similar to a binary search.
-///
-/// The values corresponding to those indices are assumed to be partitioned according to the given predicate.
-///
-/// See [`slice::partition_point`]
-</span><span class="attr">#[inline]
-</span><span class="kw">fn </span>partition_point&lt;P: Fn(usize) -&gt; bool&gt;(start: usize, end: usize, pred: P) -&gt; usize {
-    <span class="kw">let </span><span class="kw-2">mut </span>left = start;
-    <span class="kw">let </span><span class="kw-2">mut </span>right = end;
-    <span class="kw">let </span><span class="kw-2">mut </span>size = right - left;
-    <span class="kw">while </span>left &lt; right {
-        <span class="kw">let </span>mid = left + size / <span class="number">2</span>;
-
-        <span class="kw">let </span>less = pred(mid);
-
-        <span class="kw">if </span>less {
-            left = mid + <span class="number">1</span>;
-        } <span class="kw">else </span>{
-            right = mid;
-        }
-
-        size = right - left;
-    }
-    left
-}
-
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>LexicographicalPartitionIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Item = Range&lt;usize&gt;;
-
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
-        <span class="kw">if </span><span class="self">self</span>.partition_point &lt; <span class="self">self</span>.num_rows {
-            <span class="comment">// invariant:
-            // in the range [0..previous_partition_point] all values are &lt;= the value at [previous_partition_point]
-            // so in order to save time we can do binary search on the range [previous_partition_point..num_rows]
-            // and find the index where any value is greater than the value at [previous_partition_point]
-            </span><span class="self">self</span>.partition_point = exponential_search_next_partition_point(
-                <span class="self">self</span>.partition_point,
-                <span class="self">self</span>.num_rows,
-                <span class="kw-2">&amp;</span><span class="self">self</span>.comparator,
-            );
-            <span class="kw">let </span>start = <span class="self">self</span>.previous_partition_point;
-            <span class="kw">let </span>end = <span class="self">self</span>.partition_point;
-            <span class="self">self</span>.previous_partition_point = <span class="self">self</span>.partition_point;
-            <span class="prelude-val">Some</span>(Range { start, end })
-        } <span class="kw">else </span>{
-            <span class="prelude-val">None
-        </span>}
-    }
+/// The returned vec would be of size k where k is cardinality of the sorted values; Consecutive
+/// values will be connected: (a, b) and (b, c), where start = 0 and end = n for the first and last
+/// range.
+</span><span class="attr">#[deprecated(note = <span class="string">&quot;Use partition&quot;</span>)]
+</span><span class="kw">pub fn </span>lexicographical_partition_ranges(
+    columns: <span class="kw-2">&amp;</span>[SortColumn],
+) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">impl </span>Iterator&lt;Item = Range&lt;usize&gt;&gt; + <span class="lifetime">&#39;_</span>, ArrowError&gt; {
+    <span class="kw">let </span>cols: Vec&lt;<span class="kw">_</span>&gt; = columns.iter().map(|x| x.values.clone()).collect();
+    <span class="prelude-val">Ok</span>(partition(<span class="kw-2">&amp;</span>cols)<span class="question-mark">?</span>.ranges().into_iter())
 }
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-    <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use </span><span class="kw">crate</span>::sort::SortOptions;
-    <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
-    <span class="kw">use </span>arrow_schema::DataType;
     <span class="kw">use </span>std::sync::Arc;
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_partition_point() {
-        <span class="kw">let </span>input = <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>];
-        {
-            <span class="kw">let </span>median = input[input.len() / <span class="number">2</span>];
-            <span class="macro">assert_eq!</span>(
-                <span class="number">9</span>,
-                partition_point(<span class="number">0</span>, input.len(), |i: usize| input[i].cmp(<span class="kw-2">&amp;</span>median)
-                    != Ordering::Greater)
-            );
-        }
-        {
-            <span class="kw">let </span>search = input[<span class="number">9</span>];
-            <span class="macro">assert_eq!</span>(
-                <span class="number">12</span>,
-                partition_point(<span class="number">9</span>, input.len(), |i: usize| input[i].cmp(<span class="kw-2">&amp;</span>search)
-                    != Ordering::Greater)
-            );
-        }
-        {
-            <span class="kw">let </span>search = input[<span class="number">0</span>];
-            <span class="macro">assert_eq!</span>(
-                <span class="number">3</span>,
-                partition_point(<span class="number">0</span>, <span class="number">9</span>, |i: usize| input[i].cmp(<span class="kw-2">&amp;</span>search)
-                    != Ordering::Greater)
-            );
-        }
-        <span class="kw">let </span>input = <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">9</span>];
-        {
-            <span class="kw">let </span>search = input[<span class="number">5</span>];
-            <span class="macro">assert_eq!</span>(
-                <span class="number">8</span>,
-                partition_point(<span class="number">5</span>, <span class="number">9</span>, |i: usize| input[i].cmp(<span class="kw-2">&amp;</span>search)
-                    != Ordering::Greater)
-            );
-        }
-    }
+    <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
+    <span class="kw">use </span>arrow_schema::DataType;
+
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_ranges_empty() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[];
-        <span class="macro">assert!</span>(
-            lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).is_err(),
-            <span class="string">&quot;lexicographical_partition_ranges should reject columns with empty rows&quot;
+    </span><span class="kw">fn </span>test_partition_empty() {
+        <span class="kw">let </span>err = partition(<span class="kw-2">&amp;</span>[]).unwrap_err();
+        <span class="macro">assert_eq!</span>(
+            err.to_string(),
+            <span class="string">&quot;Invalid argument error: Partition requires at least one column&quot;
         </span>);
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_ranges_unaligned_rows() {
+    </span><span class="kw">fn </span>test_partition_unaligned_rows() {
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            SortColumn {
-                values: Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>)])) <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">None</span>,
-            },
-            SortColumn {
-                values: Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)])) <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">None</span>,
-            },
+            Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>)])) <span class="kw">as _</span>,
+            Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)])) <span class="kw">as _</span>,
         ];
-        <span class="macro">assert!</span>(
-            lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).is_err(),
-            <span class="string">&quot;lexicographical_partition_ranges should reject columns with different row counts&quot;
-        </span>);
+        <span class="kw">let </span>err = partition(<span class="kw-2">&amp;</span>input).unwrap_err();
+        <span class="macro">assert_eq!</span>(
+            err.to_string(),
+            <span class="string">&quot;Invalid argument error: Partition columns have different row counts&quot;
+        </span>)
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_single_column() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[SortColumn {
-            values: Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">9</span>]))
-                <span class="kw">as </span>ArrayRef,
-            options: <span class="prelude-val">Some</span>(SortOptions {
-                descending: <span class="bool-val">false</span>,
-                nulls_first: <span class="bool-val">true</span>,
-            }),
-        }];
-        <span class="kw">let </span>results = lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).unwrap();
+    </span><span class="kw">fn </span>test_partition_small() {
+        <span class="kw">let </span>results = partition(<span class="kw-2">&amp;</span>[
+            Arc::new(Int32Array::new(<span class="macro">vec!</span>[].into(), <span class="prelude-val">None</span>)) <span class="kw">as _</span>,
+            Arc::new(Int32Array::new(<span class="macro">vec!</span>[].into(), <span class="prelude-val">None</span>)) <span class="kw">as _</span>,
+            Arc::new(Int32Array::new(<span class="macro">vec!</span>[].into(), <span class="prelude-val">None</span>)) <span class="kw">as _</span>,
+        ])
+        .unwrap();
+        <span class="macro">assert_eq!</span>(results.len(), <span class="number">0</span>);
+        <span class="macro">assert!</span>(results.is_empty());
+
+        <span class="kw">let </span>results = partition(<span class="kw-2">&amp;</span>[
+            Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>])) <span class="kw">as _</span>,
+            Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>])) <span class="kw">as _</span>,
+        ])
+        .unwrap();
+        <span class="macro">assert_eq!</span>(results.ranges(), <span class="kw-2">&amp;</span>[<span class="number">0</span>..<span class="number">1</span>]);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_partition_single_column() {
+        <span class="kw">let </span>a = Int64Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">9</span>]);
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[Arc::new(a) <span class="kw">as _</span>];
         <span class="macro">assert_eq!</span>(
-            <span class="macro">vec!</span>[(<span class="number">0_usize</span>..<span class="number">1_usize</span>), (<span class="number">1_usize</span>..<span class="number">8_usize</span>), (<span class="number">8_usize</span>..<span class="number">9_usize</span>)],
-            results.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(),
+            <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1</span>), (<span class="number">1</span>..<span class="number">8</span>), (<span class="number">8</span>..<span class="number">9</span>)],
         );
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_all_equal_values() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[SortColumn {
-            values: Arc::new(Int64Array::from_value(<span class="number">1</span>, <span class="number">1000</span>)) <span class="kw">as </span>ArrayRef,
-            options: <span class="prelude-val">Some</span>(SortOptions {
-                descending: <span class="bool-val">false</span>,
-                nulls_first: <span class="bool-val">true</span>,
-            }),
-        }];
-
-        <span class="kw">let </span>results = lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).unwrap();
-        <span class="macro">assert_eq!</span>(<span class="macro">vec!</span>[(<span class="number">0_usize</span>..<span class="number">1000_usize</span>)], results.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
+    </span><span class="kw">fn </span>test_partition_all_equal_values() {
+        <span class="kw">let </span>a = Int64Array::from_value(<span class="number">1</span>, <span class="number">1000</span>);
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[Arc::new(a) <span class="kw">as _</span>];
+        <span class="macro">assert_eq!</span>(partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(), <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1000</span>)]);
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_all_null_values() {
+    </span><span class="kw">fn </span>test_partition_all_null_values() {
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            SortColumn {
-                values: new_null_array(<span class="kw-2">&amp;</span>DataType::Int8, <span class="number">1000</span>),
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">false</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
-            SortColumn {
-                values: new_null_array(<span class="kw-2">&amp;</span>DataType::UInt16, <span class="number">1000</span>),
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">false</span>,
-                    nulls_first: <span class="bool-val">false</span>,
-                }),
-            },
+            new_null_array(<span class="kw-2">&amp;</span>DataType::Int8, <span class="number">1000</span>),
+            new_null_array(<span class="kw-2">&amp;</span>DataType::UInt16, <span class="number">1000</span>),
         ];
-        <span class="kw">let </span>results = lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).unwrap();
-        <span class="macro">assert_eq!</span>(<span class="macro">vec!</span>[(<span class="number">0_usize</span>..<span class="number">1000_usize</span>)], results.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
+        <span class="macro">assert_eq!</span>(partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(), <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1000</span>)]);
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_unique_column_1() {
+    </span><span class="kw">fn </span>test_partition_unique_column_1() {
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            SortColumn {
-                values: Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>)])) <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">false</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
-            SortColumn {
-                values: Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)]))
-                    <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">true</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
+            Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>)])) <span class="kw">as _</span>,
+            Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)])) <span class="kw">as _</span>,
         ];
-        <span class="kw">let </span>results = lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).unwrap();
+        <span class="macro">assert_eq!</span>(partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(), <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1</span>), (<span class="number">1</span>..<span class="number">2</span>)],);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_partition_unique_column_2() {
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[
+            Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>)])) <span class="kw">as _</span>,
+            Arc::new(StringArray::from(<span class="macro">vec!</span>[
+                <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">&quot;apple&quot;</span>),
+            ])) <span class="kw">as _</span>,
+        ];
         <span class="macro">assert_eq!</span>(
-            <span class="macro">vec!</span>[(<span class="number">0_usize</span>..<span class="number">1_usize</span>), (<span class="number">1_usize</span>..<span class="number">2_usize</span>)],
-            results.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(),
+            <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1</span>), (<span class="number">1</span>..<span class="number">2</span>), (<span class="number">2</span>..<span class="number">3</span>),],
         );
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_unique_column_2() {
+    </span><span class="kw">fn </span>test_partition_non_unique_column_1() {
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            SortColumn {
-                values: Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>)]))
-                    <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">false</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
-            SortColumn {
-                values: Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;apple&quot;</span>),
-                ])) <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">true</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
+            Arc::new(Int64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>)])) <span class="kw">as _</span>,
+            Arc::new(StringArray::from(<span class="macro">vec!</span>[
+                <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
+            ])) <span class="kw">as _</span>,
         ];
-        <span class="kw">let </span>results = lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).unwrap();
         <span class="macro">assert_eq!</span>(
-            <span class="macro">vec!</span>[(<span class="number">0_usize</span>..<span class="number">1_usize</span>), (<span class="number">1_usize</span>..<span class="number">2_usize</span>), (<span class="number">2_usize</span>..<span class="number">3_usize</span>),],
-            results.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(),
+            <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1</span>), (<span class="number">1</span>..<span class="number">3</span>), (<span class="number">3</span>..<span class="number">4</span>),],
         );
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_lexicographical_partition_non_unique_column_1() {
+    </span><span class="kw">fn </span>test_partition_masked_nulls() {
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            SortColumn {
-                values: Arc::new(Int64Array::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">None</span>,
-                    <span class="prelude-val">Some</span>(-<span class="number">1</span>),
-                    <span class="prelude-val">Some</span>(-<span class="number">1</span>),
-                    <span class="prelude-val">Some</span>(<span class="number">1</span>),
-                ])) <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">false</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
-            SortColumn {
-                values: Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                ])) <span class="kw">as </span>ArrayRef,
-                options: <span class="prelude-val">Some</span>(SortOptions {
-                    descending: <span class="bool-val">true</span>,
-                    nulls_first: <span class="bool-val">true</span>,
-                }),
-            },
+            Arc::new(Int64Array::new(<span class="macro">vec!</span>[<span class="number">1</span>; <span class="number">9</span>].into(), <span class="prelude-val">None</span>)) <span class="kw">as _</span>,
+            Arc::new(Int64Array::new(
+                <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>].into(),
+                <span class="prelude-val">Some</span>(
+                    <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>].into(),
+                ),
+            )) <span class="kw">as _</span>,
+            Arc::new(Int64Array::new(
+                <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">7</span>].into(),
+                <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>].into()),
+            )) <span class="kw">as _</span>,
         ];
-        <span class="kw">let </span>results = lexicographical_partition_ranges(<span class="kw-2">&amp;</span>input).unwrap();
+
         <span class="macro">assert_eq!</span>(
-            <span class="macro">vec!</span>[(<span class="number">0_usize</span>..<span class="number">1_usize</span>), (<span class="number">1_usize</span>..<span class="number">3_usize</span>), (<span class="number">3_usize</span>..<span class="number">4_usize</span>),],
-            results.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            partition(<span class="kw-2">&amp;</span>input).unwrap().ranges(),
+            <span class="macro">vec!</span>[(<span class="number">0</span>..<span class="number">1</span>), (<span class="number">1</span>..<span class="number">2</span>), (<span class="number">2</span>..<span class="number">4</span>), (<span class="number">4</span>..<span class="number">5</span>), (<span class="number">5</span>..<span class="number">7</span>), (<span class="number">7</span>..<span class="number">8</span>), (<span class="number">8</span>..<span class="number">9</span>)],
         );
     }
 }
