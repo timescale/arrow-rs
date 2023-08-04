@@ -1717,7 +1717,7 @@
         <span class="kw">let </span>data_page_offset = col_metadata.data_page_offset;
         <span class="kw">let </span>index_page_offset = col_metadata.index_page_offset;
         <span class="kw">let </span>dictionary_page_offset = col_metadata.dictionary_page_offset;
-        <span class="kw">let </span>statistics = statistics::from_thrift(column_type, col_metadata.statistics);
+        <span class="kw">let </span>statistics = statistics::from_thrift(column_type, col_metadata.statistics)<span class="question-mark">?</span>;
         <span class="kw">let </span>encoding_stats = col_metadata
             .encoding_stats
             .as_ref()

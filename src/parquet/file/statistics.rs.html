@@ -760,6 +760,10 @@
 <a href="#760" id="760">760</a>
 <a href="#761" id="761">761</a>
 <a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -806,6 +810,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::basic::Type;
 <span class="kw">use </span><span class="kw">crate</span>::data_type::private::ParquetValueType;
 <span class="kw">use </span><span class="kw">crate</span>::data_type::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::util::bit_util::from_le_slice;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>private {
@@ -881,15 +886,18 @@
 </span><span class="kw">pub fn </span>from_thrift(
     physical_type: Type,
     thrift_stats: <span class="prelude-ty">Option</span>&lt;TStatistics&gt;,
-) -&gt; <span class="prelude-ty">Option</span>&lt;Statistics&gt; {
-    <span class="kw">match </span>thrift_stats {
+) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Statistics&gt;&gt; {
+    <span class="prelude-val">Ok</span>(<span class="kw">match </span>thrift_stats {
         <span class="prelude-val">Some</span>(stats) =&gt; {
             <span class="comment">// Number of nulls recorded, when it is not available, we just mark it as 0.
             </span><span class="kw">let </span>null_count = stats.null_count.unwrap_or(<span class="number">0</span>);
-            <span class="macro">assert!</span>(
-                null_count &gt;= <span class="number">0</span>,
-                <span class="string">&quot;Statistics null count is negative ({null_count})&quot;
-            </span>);
+
+            <span class="kw">if </span>null_count &lt; <span class="number">0 </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::General(<span class="macro">format!</span>(
+                    <span class="string">&quot;Statistics null count is negative {}&quot;</span>,
+                    null_count
+                )));
+            }
 
             <span class="comment">// Generic null count.
             </span><span class="kw">let </span>null_count = null_count <span class="kw">as </span>u64;
@@ -983,7 +991,7 @@
             <span class="prelude-val">Some</span>(res)
         }
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
-    }
+    })
 }
 
 <span class="comment">// Convert Statistics into Thrift definition.
@@ -1356,7 +1364,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Statistics null count is negative (-10)&quot;</span>)]
+    #[should_panic(expected = <span class="string">&quot;General(\&quot;Statistics null count is negative -10\&quot;)&quot;</span>)]
     </span><span class="kw">fn </span>test_statistics_negative_null_count() {
         <span class="kw">let </span>thrift_stats = TStatistics {
             max: <span class="prelude-val">None</span>,
@@ -1367,13 +1375,13 @@
             min_value: <span class="prelude-val">None</span>,
         };
 
-        from_thrift(Type::INT32, <span class="prelude-val">Some</span>(thrift_stats));
+        from_thrift(Type::INT32, <span class="prelude-val">Some</span>(thrift_stats)).unwrap();
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_statistics_thrift_none() {
-        <span class="macro">assert_eq!</span>(from_thrift(Type::INT32, <span class="prelude-val">None</span>), <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq!</span>(from_thrift(Type::BYTE_ARRAY, <span class="prelude-val">None</span>), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(from_thrift(Type::INT32, <span class="prelude-val">None</span>).unwrap(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(from_thrift(Type::BYTE_ARRAY, <span class="prelude-val">None</span>).unwrap(), <span class="prelude-val">None</span>);
     }
 
     <span class="attr">#[test]
@@ -1477,7 +1485,7 @@
         </span><span class="kw">fn </span>check_stats(stats: Statistics) {
             <span class="kw">let </span>tpe = stats.physical_type();
             <span class="kw">let </span>thrift_stats = to_thrift(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>stats));
-            <span class="macro">assert_eq!</span>(from_thrift(tpe, thrift_stats), <span class="prelude-val">Some</span>(stats));
+            <span class="macro">assert_eq!</span>(from_thrift(tpe, thrift_stats).unwrap(), <span class="prelude-val">Some</span>(stats));
         }
 
         check_stats(Statistics::boolean(<span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">None</span>, <span class="number">7</span>, <span class="bool-val">true</span>));

@@ -1709,6 +1709,8 @@
 <a href="#1709" id="1709">1709</a>
 <a href="#1710" id="1710">1710</a>
 <a href="#1711" id="1711">1711</a>
+<a href="#1712" id="1712">1712</a>
+<a href="#1713" id="1713">1713</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2846,7 +2848,8 @@
                         statistics: from_thrift(
                             physical_type,
                             to_thrift(statistics.as_ref()),
-                        ),
+                        )
+                        .unwrap(),
                     }
                 }
                 Page::DataPageV2 {
@@ -2879,7 +2882,8 @@
                         statistics: from_thrift(
                             physical_type,
                             to_thrift(statistics.as_ref()),
-                        ),
+                        )
+                        .unwrap(),
                     }
                 }
                 Page::DictionaryPage {

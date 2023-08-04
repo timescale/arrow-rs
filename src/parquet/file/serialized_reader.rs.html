@@ -2222,7 +2222,7 @@
                 encoding: Encoding::try_from(header.encoding)<span class="question-mark">?</span>,
                 def_level_encoding: Encoding::try_from(header.definition_level_encoding)<span class="question-mark">?</span>,
                 rep_level_encoding: Encoding::try_from(header.repetition_level_encoding)<span class="question-mark">?</span>,
-                statistics: statistics::from_thrift(physical_type, header.statistics),
+                statistics: statistics::from_thrift(physical_type, header.statistics)<span class="question-mark">?</span>,
             }
         }
         PageType::DATA_PAGE_V2 =&gt; {
@@ -2238,7 +2238,7 @@
                 def_levels_byte_len: header.definition_levels_byte_length <span class="kw">as </span>u32,
                 rep_levels_byte_len: header.repetition_levels_byte_length <span class="kw">as </span>u32,
                 is_compressed,
-                statistics: statistics::from_thrift(physical_type, header.statistics),
+                statistics: statistics::from_thrift(physical_type, header.statistics)<span class="question-mark">?</span>,
             }
         }
         <span class="kw">_ </span>=&gt; {
