@@ -1531,6 +1531,26 @@
 <a href="#1531" id="1531">1531</a>
 <a href="#1532" id="1532">1532</a>
 <a href="#1533" id="1533">1533</a>
+<a href="#1534" id="1534">1534</a>
+<a href="#1535" id="1535">1535</a>
+<a href="#1536" id="1536">1536</a>
+<a href="#1537" id="1537">1537</a>
+<a href="#1538" id="1538">1538</a>
+<a href="#1539" id="1539">1539</a>
+<a href="#1540" id="1540">1540</a>
+<a href="#1541" id="1541">1541</a>
+<a href="#1542" id="1542">1542</a>
+<a href="#1543" id="1543">1543</a>
+<a href="#1544" id="1544">1544</a>
+<a href="#1545" id="1545">1545</a>
+<a href="#1546" id="1546">1546</a>
+<a href="#1547" id="1547">1547</a>
+<a href="#1548" id="1548">1548</a>
+<a href="#1549" id="1549">1549</a>
+<a href="#1550" id="1550">1550</a>
+<a href="#1551" id="1551">1551</a>
+<a href="#1552" id="1552">1552</a>
+<a href="#1553" id="1553">1553</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1720,8 +1740,8 @@
         .iter()
         .map(|a| filter_array(a, <span class="kw-2">&amp;</span>filter))
         .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
-
-    RecordBatch::try_new(record_batch.schema(), filtered_arrays)
+    <span class="kw">let </span>options = RecordBatchOptions::default().with_row_count(<span class="prelude-val">Some</span>(filter.count()));
+    RecordBatch::try_new_with_options(record_batch.schema(), filtered_arrays, <span class="kw-2">&amp;</span>options)
 }
 
 <span class="doccomment">/// A builder to construct [`FilterPredicate`]
@@ -1833,6 +1853,11 @@
     <span class="doccomment">/// Selects rows from `values` based on this [`FilterPredicate`]
     </span><span class="kw">pub fn </span>filter(<span class="kw-2">&amp;</span><span class="self">self</span>, values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
         filter_array(values, <span class="self">self</span>)
+    }
+
+    <span class="doccomment">/// Number of rows being selected based on this [`FilterPredicate`]
+    </span><span class="kw">pub fn </span>count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.count
     }
 }
 
@@ -2508,6 +2533,21 @@
         <span class="kw">let </span>mask1 = BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>out = filter(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>mask1).unwrap();
         <span class="macro">assert_eq!</span>(out.as_ref(), <span class="kw-2">&amp;</span>a.slice(<span class="number">0</span>, <span class="number">2</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_filter_record_batch_no_columns() {
+        <span class="kw">let </span>pred = BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>options = RecordBatchOptions::default().with_row_count(<span class="prelude-val">Some</span>(<span class="number">100</span>));
+        <span class="kw">let </span>record_batch = RecordBatch::try_new_with_options(
+            Arc::new(Schema::empty()),
+            <span class="macro">vec!</span>[],
+            <span class="kw-2">&amp;</span>options,
+        )
+        .unwrap();
+        <span class="kw">let </span>out = filter_record_batch(<span class="kw-2">&amp;</span>record_batch, <span class="kw-2">&amp;</span>pred).unwrap();
+
+        <span class="macro">assert_eq!</span>(out.num_rows(), <span class="number">2</span>);
     }
 
     <span class="attr">#[test]
