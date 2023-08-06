@@ -886,7 +886,7 @@
     <span class="doccomment">/// Create a [`Buffer`] from the provided [`Vec`] without copying
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>from_vec&lt;T: ArrowNativeType&gt;(vec: Vec&lt;T&gt;) -&gt; <span class="self">Self </span>{
-        MutableBuffer::from_vec(vec).into()
+        MutableBuffer::from(vec).into()
     }
 
     <span class="doccomment">/// Initializes a [Buffer] from a slice of items.
