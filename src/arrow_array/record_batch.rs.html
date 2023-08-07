@@ -1300,8 +1300,7 @@
             )));
         }
 
-        <span class="comment">// check that all columns have the same row count
-        </span><span class="kw">let </span>row_count = options
+        <span class="kw">let </span>row_count = options
             .row_count
             .or_else(|| columns.first().map(|col| col.len()))
             .ok_or_else(|| {
@@ -1319,7 +1318,8 @@
             }
         }
 
-        <span class="kw">if </span>columns.iter().any(|c| c.len() != row_count) {
+        <span class="comment">// check that all columns have the same row count
+        </span><span class="kw">if </span>columns.iter().any(|c| c.len() != row_count) {
             <span class="kw">let </span>err = <span class="kw">match </span>options.row_count {
                 <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
                     <span class="string">&quot;all columns in a record batch must have the specified row count&quot;
