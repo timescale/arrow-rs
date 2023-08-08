@@ -1099,6 +1099,37 @@
 <a href="#1099" id="1099">1099</a>
 <a href="#1100" id="1100">1100</a>
 <a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a>
+<a href="#1115" id="1115">1115</a>
+<a href="#1116" id="1116">1116</a>
+<a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
+<a href="#1119" id="1119">1119</a>
+<a href="#1120" id="1120">1120</a>
+<a href="#1121" id="1121">1121</a>
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
+<a href="#1126" id="1126">1126</a>
+<a href="#1127" id="1127">1127</a>
+<a href="#1128" id="1128">1128</a>
+<a href="#1129" id="1129">1129</a>
+<a href="#1130" id="1130">1130</a>
+<a href="#1131" id="1131">1131</a>
+<a href="#1132" id="1132">1132</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1380,6 +1411,9 @@
     sorting_columns: <span class="prelude-ty">Option</span>&lt;Vec&lt;SortingColumn&gt;&gt;,
     total_byte_size: i64,
     schema_descr: SchemaDescPtr,
+    <span class="comment">// We can&#39;t infer from file offset of first column since there may empty columns in row group.
+    </span>file_offset: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+    ordinal: <span class="prelude-ty">Option</span>&lt;i16&gt;,
 }
 
 <span class="kw">impl </span>RowGroupMetaData {
@@ -1433,6 +1467,18 @@
         <span class="self">self</span>.schema_descr.clone()
     }
 
+    <span class="doccomment">/// Returns ordinal of this row group in file
+    </span><span class="attr">#[inline(always)]
+    </span><span class="kw">pub fn </span>ordinal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;i16&gt; {
+        <span class="self">self</span>.ordinal
+    }
+
+    <span class="doccomment">/// Returns file offset of this row group in file.
+    </span><span class="attr">#[inline(always)]
+    </span><span class="kw">pub fn </span>file_offset(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;i64&gt; {
+        <span class="self">self</span>.file_offset
+    }
+
     <span class="doccomment">/// Method to convert from Thrift.
     </span><span class="kw">pub fn </span>from_thrift(
         schema_descr: SchemaDescPtr,
@@ -1453,6 +1499,8 @@
             sorting_columns,
             total_byte_size,
             schema_descr,
+            file_offset: rg.file_offset,
+            ordinal: rg.ordinal,
         })
     }
 
@@ -1463,9 +1511,9 @@
             total_byte_size: <span class="self">self</span>.total_byte_size,
             num_rows: <span class="self">self</span>.num_rows,
             sorting_columns: <span class="self">self</span>.sorting_columns().cloned(),
-            file_offset: <span class="prelude-val">None</span>,
-            total_compressed_size: <span class="prelude-val">None</span>,
-            ordinal: <span class="prelude-val">None</span>,
+            file_offset: <span class="self">self</span>.file_offset(),
+            total_compressed_size: <span class="prelude-val">Some</span>(<span class="self">self</span>.compressed_size()),
+            ordinal: <span class="self">self</span>.ordinal,
         }
     }
 
@@ -1484,9 +1532,11 @@
         <span class="self">Self</span>(RowGroupMetaData {
             columns: Vec::with_capacity(schema_descr.num_columns()),
             schema_descr,
+            file_offset: <span class="prelude-val">None</span>,
             num_rows: <span class="number">0</span>,
             sorting_columns: <span class="prelude-val">None</span>,
             total_byte_size: <span class="number">0</span>,
+            ordinal: <span class="prelude-val">None</span>,
         })
     }
 
@@ -1511,6 +1561,17 @@
     <span class="doccomment">/// Sets column metadata for this row group.
     </span><span class="kw">pub fn </span>set_column_metadata(<span class="kw-2">mut </span><span class="self">self</span>, value: Vec&lt;ColumnChunkMetaData&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.<span class="number">0</span>.columns = value;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Sets ordinal for this row group.
+    </span><span class="kw">pub fn </span>set_ordinal(<span class="kw-2">mut </span><span class="self">self</span>, value: i16) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.<span class="number">0</span>.ordinal = <span class="prelude-val">Some</span>(value);
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>set_file_offset(<span class="kw-2">mut </span><span class="self">self</span>, value: i64) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.<span class="number">0</span>.file_offset = <span class="prelude-val">Some</span>(value);
         <span class="self">self
     </span>}
 
@@ -2069,6 +2130,7 @@
             .set_num_rows(<span class="number">1000</span>)
             .set_total_byte_size(<span class="number">2000</span>)
             .set_column_metadata(columns)
+            .set_ordinal(<span class="number">1</span>)
             .build()
             .unwrap();
 

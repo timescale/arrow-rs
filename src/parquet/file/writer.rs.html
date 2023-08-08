@@ -1711,6 +1711,22 @@
 <a href="#1711" id="1711">1711</a>
 <a href="#1712" id="1712">1712</a>
 <a href="#1713" id="1713">1713</a>
+<a href="#1714" id="1714">1714</a>
+<a href="#1715" id="1715">1715</a>
+<a href="#1716" id="1716">1716</a>
+<a href="#1717" id="1717">1717</a>
+<a href="#1718" id="1718">1718</a>
+<a href="#1719" id="1719">1719</a>
+<a href="#1720" id="1720">1720</a>
+<a href="#1721" id="1721">1721</a>
+<a href="#1722" id="1722">1722</a>
+<a href="#1723" id="1723">1723</a>
+<a href="#1724" id="1724">1724</a>
+<a href="#1725" id="1725">1725</a>
+<a href="#1726" id="1726">1726</a>
+<a href="#1727" id="1727">1727</a>
+<a href="#1728" id="1728">1728</a>
+<a href="#1729" id="1729">1729</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1896,6 +1912,8 @@
     /// previous row group must be finalised and closed using `RowGroupWriter::close` method.
     </span><span class="kw">pub fn </span>next_row_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;SerializedRowGroupWriter&lt;<span class="lifetime">&#39;_</span>, W&gt;&gt; {
         <span class="self">self</span>.assert_previous_writer_closed()<span class="question-mark">?</span>;
+        <span class="kw">let </span>ordinal = <span class="self">self</span>.row_group_index;
+
         <span class="self">self</span>.row_group_index += <span class="number">1</span>;
 
         <span class="kw">let </span>row_groups = <span class="kw-2">&amp;mut </span><span class="self">self</span>.row_groups;
@@ -1917,6 +1935,7 @@
             <span class="self">self</span>.descr.clone(),
             <span class="self">self</span>.props.clone(),
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.buf,
+            ordinal <span class="kw">as </span>i16,
             <span class="prelude-val">Some</span>(Box::new(on_close)),
         );
         <span class="prelude-val">Ok</span>(row_group_writer)
@@ -2122,6 +2141,8 @@
     bloom_filters: Vec&lt;<span class="prelude-ty">Option</span>&lt;Sbbf&gt;&gt;,
     column_indexes: Vec&lt;<span class="prelude-ty">Option</span>&lt;ColumnIndex&gt;&gt;,
     offset_indexes: Vec&lt;<span class="prelude-ty">Option</span>&lt;OffsetIndex&gt;&gt;,
+    row_group_index: i16,
+    file_offset: i64,
     on_close: <span class="prelude-ty">Option</span>&lt;OnCloseRowGroup&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
 }
 
@@ -2131,16 +2152,22 @@
     /// - `schema_descr` - the schema to write
     /// - `properties` - writer properties
     /// - `buf` - the buffer to write data to
+    /// - `row_group_index` - row group index in this parquet file.
+    /// - `file_offset` - file offset of this row group in this parquet file.
     /// - `on_close` - an optional callback that will invoked on [`Self::close`]
     </span><span class="kw">pub fn </span>new(
         schema_descr: SchemaDescPtr,
         properties: WriterPropertiesPtr,
         buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TrackedWrite&lt;W&gt;,
+        row_group_index: i16,
         on_close: <span class="prelude-ty">Option</span>&lt;OnCloseRowGroup&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>num_columns = schema_descr.num_columns();
+        <span class="kw">let </span>file_offset = buf.bytes_written() <span class="kw">as </span>i64;
         <span class="self">Self </span>{
             buf,
+            row_group_index,
+            file_offset,
             on_close,
             total_rows_written: <span class="prelude-val">None</span>,
             descr: schema_descr,
@@ -2316,6 +2343,8 @@
                 .set_total_byte_size(<span class="self">self</span>.total_uncompressed_bytes)
                 .set_num_rows(<span class="self">self</span>.total_rows_written.unwrap_or(<span class="number">0</span>) <span class="kw">as </span>i64)
                 .set_sorting_columns(<span class="self">self</span>.props.sorting_columns().cloned())
+                .set_ordinal(<span class="self">self</span>.row_group_index)
+                .set_file_offset(<span class="self">self</span>.file_offset)
                 .build()<span class="question-mark">?</span>;
 
             <span class="kw">let </span>metadata = Arc::new(row_group_metadata);
@@ -3029,6 +3058,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>rows: i64 = <span class="number">0</span>;
 
         <span class="kw">for </span>(idx, subset) <span class="kw">in </span>data.iter().enumerate() {
+            <span class="kw">let </span>row_group_file_offset = file_writer.buf.bytes_written();
             <span class="kw">let </span><span class="kw-2">mut </span>row_group_writer = file_writer.next_row_group().unwrap();
             <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>writer) = row_group_writer.next_column().unwrap() {
                 rows += writer
@@ -3040,6 +3070,8 @@
             <span class="kw">let </span>last_group = row_group_writer.close().unwrap();
             <span class="kw">let </span>flushed = file_writer.flushed_row_groups();
             <span class="macro">assert_eq!</span>(flushed.len(), idx + <span class="number">1</span>);
+            <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(idx <span class="kw">as </span>i16), last_group.ordinal());
+            <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(row_group_file_offset <span class="kw">as </span>i64), last_group.file_offset());
             <span class="macro">assert_eq!</span>(flushed[idx].as_ref(), last_group.as_ref());
         }
         <span class="kw">let </span>file_metadata = file_writer.close().unwrap();
