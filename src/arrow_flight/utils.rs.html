@@ -320,11 +320,11 @@
 
 <span class="doccomment">/// Convert `RecordBatch`es to wire protocol `FlightData`s
 </span><span class="kw">pub fn </span>batches_to_flight_data(
-    schema: Schema,
+    schema: <span class="kw-2">&amp;</span>Schema,
     batches: Vec&lt;RecordBatch&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;FlightData&gt;, ArrowError&gt; {
     <span class="kw">let </span>options = IpcWriteOptions::default();
-    <span class="kw">let </span>schema_flight_data: FlightData = SchemaAsIpc::new(<span class="kw-2">&amp;</span>schema, <span class="kw-2">&amp;</span>options).into();
+    <span class="kw">let </span>schema_flight_data: FlightData = SchemaAsIpc::new(schema, <span class="kw-2">&amp;</span>options).into();
     <span class="kw">let </span><span class="kw-2">mut </span>dictionaries = <span class="macro">vec!</span>[];
     <span class="kw">let </span><span class="kw-2">mut </span>flight_data = <span class="macro">vec!</span>[];
 
