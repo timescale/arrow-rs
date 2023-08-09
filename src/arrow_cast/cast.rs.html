@@ -8970,6 +8970,26 @@
 <a href="#8970" id="8970">8970</a>
 <a href="#8971" id="8971">8971</a>
 <a href="#8972" id="8972">8972</a>
+<a href="#8973" id="8973">8973</a>
+<a href="#8974" id="8974">8974</a>
+<a href="#8975" id="8975">8975</a>
+<a href="#8976" id="8976">8976</a>
+<a href="#8977" id="8977">8977</a>
+<a href="#8978" id="8978">8978</a>
+<a href="#8979" id="8979">8979</a>
+<a href="#8980" id="8980">8980</a>
+<a href="#8981" id="8981">8981</a>
+<a href="#8982" id="8982">8982</a>
+<a href="#8983" id="8983">8983</a>
+<a href="#8984" id="8984">8984</a>
+<a href="#8985" id="8985">8985</a>
+<a href="#8986" id="8986">8986</a>
+<a href="#8987" id="8987">8987</a>
+<a href="#8988" id="8988">8988</a>
+<a href="#8989" id="8989">8989</a>
+<a href="#8990" id="8990">8990</a>
+<a href="#8991" id="8991">8991</a>
+<a href="#8992" id="8992">8992</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -10192,7 +10212,7 @@
                 <span class="prelude-val">Ok</span>(Arc::new(
                     array
                         .iter()
-                        .map(|value| value.map(|value| <span class="kw">if </span>value { <span class="string">&quot;1&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;0&quot; </span>}))
+                        .map(|value| value.map(|value| <span class="kw">if </span>value { <span class="string">&quot;true&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;false&quot; </span>}))
                         .collect::&lt;StringArray&gt;(),
                 ))
             }
@@ -10201,7 +10221,7 @@
                 <span class="prelude-val">Ok</span>(Arc::new(
                     array
                         .iter()
-                        .map(|value| value.map(|value| <span class="kw">if </span>value { <span class="string">&quot;1&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;0&quot; </span>}))
+                        .map(|value| value.map(|value| <span class="kw">if </span>value { <span class="string">&quot;true&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;false&quot; </span>}))
                         .collect::&lt;LargeStringArray&gt;(),
                 ))
             }
@@ -13732,6 +13752,26 @@
         <span class="kw">let </span>c = b.as_primitive::&lt;Int32Type&gt;();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, c.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, c.value(<span class="number">1</span>));
+        <span class="macro">assert!</span>(!c.is_valid(<span class="number">2</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_cast_bool_to_utf8() {
+        <span class="kw">let </span>array = BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Utf8).unwrap();
+        <span class="kw">let </span>c = b.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;true&quot;</span>, c.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;false&quot;</span>, c.value(<span class="number">1</span>));
+        <span class="macro">assert!</span>(!c.is_valid(<span class="number">2</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_cast_bool_to_large_utf8() {
+        <span class="kw">let </span>array = BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::LargeUtf8).unwrap();
+        <span class="kw">let </span>c = b.as_any().downcast_ref::&lt;LargeStringArray&gt;().unwrap();
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;true&quot;</span>, c.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;false&quot;</span>, c.value(<span class="number">1</span>));
         <span class="macro">assert!</span>(!c.is_valid(<span class="number">2</span>));
     }
 
