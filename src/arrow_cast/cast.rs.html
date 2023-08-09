@@ -8966,30 +8966,6 @@
 <a href="#8966" id="8966">8966</a>
 <a href="#8967" id="8967">8967</a>
 <a href="#8968" id="8968">8968</a>
-<a href="#8969" id="8969">8969</a>
-<a href="#8970" id="8970">8970</a>
-<a href="#8971" id="8971">8971</a>
-<a href="#8972" id="8972">8972</a>
-<a href="#8973" id="8973">8973</a>
-<a href="#8974" id="8974">8974</a>
-<a href="#8975" id="8975">8975</a>
-<a href="#8976" id="8976">8976</a>
-<a href="#8977" id="8977">8977</a>
-<a href="#8978" id="8978">8978</a>
-<a href="#8979" id="8979">8979</a>
-<a href="#8980" id="8980">8980</a>
-<a href="#8981" id="8981">8981</a>
-<a href="#8982" id="8982">8982</a>
-<a href="#8983" id="8983">8983</a>
-<a href="#8984" id="8984">8984</a>
-<a href="#8985" id="8985">8985</a>
-<a href="#8986" id="8986">8986</a>
-<a href="#8987" id="8987">8987</a>
-<a href="#8988" id="8988">8988</a>
-<a href="#8989" id="8989">8989</a>
-<a href="#8990" id="8990">8990</a>
-<a href="#8991" id="8991">8991</a>
-<a href="#8992" id="8992">8992</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -9033,7 +9009,7 @@
 <span class="kw">use </span>std::cmp::Ordering;
 <span class="kw">use </span>std::sync::Arc;
 
-<span class="kw">use </span><span class="kw">crate</span>::display::{array_value_to_string, ArrayFormatter, FormatOptions};
+<span class="kw">use </span><span class="kw">crate</span>::display::{ArrayFormatter, FormatOptions};
 <span class="kw">use </span><span class="kw">crate</span>::parse::{
     parse_interval_day_time, parse_interval_month_day_nano, parse_interval_year_month,
     string_to_datetime, Parser,
@@ -9614,21 +9590,6 @@
     <span class="prelude-val">Ok</span>(Arc::new(array))
 }
 
-<span class="comment">// cast the List array to Utf8 array
-</span><span class="macro">macro_rules! </span>cast_list_to_string {
-    (<span class="macro-nonterminal">$ARRAY</span>:expr, <span class="macro-nonterminal">$SIZE</span>:ident) =&gt; {{
-        <span class="kw">let </span><span class="kw-2">mut </span>value_builder: GenericStringBuilder&lt;<span class="macro-nonterminal">$SIZE</span>&gt; = GenericStringBuilder::new();
-        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="macro-nonterminal">$ARRAY</span>.len() {
-            <span class="kw">if </span><span class="macro-nonterminal">$ARRAY</span>.is_null(i) {
-                value_builder.append_null();
-            } <span class="kw">else </span>{
-                value_builder.append_value(array_value_to_string(<span class="macro-nonterminal">$ARRAY</span>, i)<span class="question-mark">?</span>);
-            }
-        }
-        <span class="prelude-val">Ok</span>(Arc::new(value_builder.finish()))
-    }};
-}
-
 <span class="kw">fn </span>make_timestamp_array(
     array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;Int64Type&gt;,
     unit: TimeUnit,
@@ -9792,8 +9753,8 @@
             }
         }
         (List(<span class="kw">_</span>) | LargeList(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; <span class="kw">match </span>to_type {
-            Utf8 =&gt; <span class="macro">cast_list_to_string!</span>(array, i32),
-            LargeUtf8 =&gt; <span class="macro">cast_list_to_string!</span>(array, i64),
+            Utf8 =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
+            LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(
                 <span class="string">&quot;Cannot cast list to non-list data types&quot;</span>.to_string(),
             )),
@@ -9916,8 +9877,8 @@
                         x <span class="kw">as </span>f64 / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)
                     })
                 }
-                Utf8 =&gt; value_to_string::&lt;i32&gt;(array, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cast_options.format_options)),
-                LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cast_options.format_options)),
+                Utf8 =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
+                LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
                 Null =&gt; <span class="prelude-val">Ok</span>(new_null_array(to_type, array.len())),
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="macro">format!</span>(
                     <span class="string">&quot;Casting from {from_type:?} to {to_type:?} not supported&quot;
@@ -9985,8 +9946,8 @@
                         x.to_f64().unwrap() / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)
                     })
                 }
-                Utf8 =&gt; value_to_string::&lt;i32&gt;(array, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cast_options.format_options)),
-                LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cast_options.format_options)),
+                Utf8 =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
+                LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
                 Null =&gt; <span class="prelude-val">Ok</span>(new_null_array(to_type, array.len())),
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="macro">format!</span>(
                     <span class="string">&quot;Casting from {from_type:?} to {to_type:?} not supported&quot;
@@ -10207,24 +10168,8 @@
             Float16 =&gt; cast_bool_to_numeric::&lt;Float16Type&gt;(array, cast_options),
             Float32 =&gt; cast_bool_to_numeric::&lt;Float32Type&gt;(array, cast_options),
             Float64 =&gt; cast_bool_to_numeric::&lt;Float64Type&gt;(array, cast_options),
-            Utf8 =&gt; {
-                <span class="kw">let </span>array = array.as_any().downcast_ref::&lt;BooleanArray&gt;().unwrap();
-                <span class="prelude-val">Ok</span>(Arc::new(
-                    array
-                        .iter()
-                        .map(|value| value.map(|value| <span class="kw">if </span>value { <span class="string">&quot;true&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;false&quot; </span>}))
-                        .collect::&lt;StringArray&gt;(),
-                ))
-            }
-            LargeUtf8 =&gt; {
-                <span class="kw">let </span>array = array.as_any().downcast_ref::&lt;BooleanArray&gt;().unwrap();
-                <span class="prelude-val">Ok</span>(Arc::new(
-                    array
-                        .iter()
-                        .map(|value| value.map(|value| <span class="kw">if </span>value { <span class="string">&quot;true&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;false&quot; </span>}))
-                        .collect::&lt;LargeStringArray&gt;(),
-                ))
-            }
+            Utf8 =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
+            LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="macro">format!</span>(
                 <span class="string">&quot;Casting from {from_type:?} to {to_type:?} not supported&quot;</span>,
             ))),
@@ -10366,8 +10311,8 @@
                 <span class="string">&quot;Casting from {from_type:?} to {to_type:?} not supported&quot;</span>,
             ))),
         },
-        (from_type, LargeUtf8) <span class="kw">if </span>from_type.is_primitive() =&gt; value_to_string::&lt;i64&gt;(array, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cast_options.format_options)),
-        (from_type, Utf8) <span class="kw">if </span>from_type.is_primitive() =&gt; value_to_string::&lt;i32&gt;(array, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cast_options.format_options)),
+        (from_type, LargeUtf8) <span class="kw">if </span>from_type.is_primitive() =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
+        (from_type, Utf8) <span class="kw">if </span>from_type.is_primitive() =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
         <span class="comment">// start numeric casts
         </span>(UInt8, UInt16) =&gt; {
             cast_numeric_arrays::&lt;UInt8Type, UInt16Type&gt;(array, cast_options)
@@ -11453,14 +11398,10 @@
 
 <span class="kw">fn </span>value_to_string&lt;O: OffsetSizeTrait&gt;(
     array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    options: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>FormatOptions&gt;,
+    options: <span class="kw-2">&amp;</span>CastOptions,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;O&gt;::new();
-    <span class="kw">let </span><span class="kw-2">mut </span>fmt_options = <span class="kw-2">&amp;</span>FormatOptions::default();
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(fmt_opts) = options {
-        fmt_options = fmt_opts;
-    };
-    <span class="kw">let </span>formatter = ArrayFormatter::try_new(array, fmt_options)<span class="question-mark">?</span>;
+    <span class="kw">let </span>formatter = ArrayFormatter::try_new(array, <span class="kw-2">&amp;</span>options.format_options)<span class="question-mark">?</span>;
     <span class="kw">let </span>nulls = array.nulls();
     <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..array.len() {
         <span class="kw">match </span>nulls.map(|x| x.is_null(i)).unwrap_or_default() {
@@ -16361,14 +16302,10 @@
 
     <span class="doccomment">/// Print the `DictionaryArray` `array` as a vector of strings
     </span><span class="kw">fn </span>array_to_strings(array: <span class="kw-2">&amp;</span>ArrayRef) -&gt; Vec&lt;String&gt; {
+        <span class="kw">let </span>options = FormatOptions::new().with_null(<span class="string">&quot;null&quot;</span>);
+        <span class="kw">let </span>formatter = ArrayFormatter::try_new(array.as_ref(), <span class="kw-2">&amp;</span>options).unwrap();
         (<span class="number">0</span>..array.len())
-            .map(|i| {
-                <span class="kw">if </span>array.is_null(i) {
-                    <span class="string">&quot;null&quot;</span>.to_string()
-                } <span class="kw">else </span>{
-                    array_value_to_string(array, i).expect(<span class="string">&quot;Convert array to String&quot;</span>)
-                }
-            })
+            .map(|i| formatter.value(i).to_string())
             .collect()
     }
 
@@ -17980,6 +17917,21 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_const_options() {
         <span class="macro">assert!</span>(CAST_OPTIONS.safe)
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_list_format_options() {
+        <span class="kw">let </span>options = CastOptions {
+            safe: <span class="bool-val">false</span>,
+            format_options: FormatOptions::default().with_null(<span class="string">&quot;null&quot;</span>),
+        };
+        <span class="kw">let </span>array = ListArray::from_iter_primitive::&lt;Int32Type, <span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="macro">vec!</span>[
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>)]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>)]),
+        ]);
+        <span class="kw">let </span>a = cast_with_options(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Utf8, <span class="kw-2">&amp;</span>options).unwrap();
+        <span class="kw">let </span>r: Vec&lt;<span class="kw">_</span>&gt; = a.as_string::&lt;i32&gt;().iter().map(|x| x.unwrap()).collect();
+        <span class="macro">assert_eq!</span>(r, <span class="kw-2">&amp;</span>[<span class="string">&quot;[0, 1, 2]&quot;</span>, <span class="string">&quot;[0, null, 2]&quot;</span>]);
     }
 }
 </code></pre></div></section></main></body></html>
