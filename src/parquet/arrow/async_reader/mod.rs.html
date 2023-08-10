@@ -1482,6 +1482,27 @@
 <a href="#1482" id="1482">1482</a>
 <a href="#1483" id="1483">1483</a>
 <a href="#1484" id="1484">1484</a>
+<a href="#1485" id="1485">1485</a>
+<a href="#1486" id="1486">1486</a>
+<a href="#1487" id="1487">1487</a>
+<a href="#1488" id="1488">1488</a>
+<a href="#1489" id="1489">1489</a>
+<a href="#1490" id="1490">1490</a>
+<a href="#1491" id="1491">1491</a>
+<a href="#1492" id="1492">1492</a>
+<a href="#1493" id="1493">1493</a>
+<a href="#1494" id="1494">1494</a>
+<a href="#1495" id="1495">1495</a>
+<a href="#1496" id="1496">1496</a>
+<a href="#1497" id="1497">1497</a>
+<a href="#1498" id="1498">1498</a>
+<a href="#1499" id="1499">1499</a>
+<a href="#1500" id="1500">1500</a>
+<a href="#1501" id="1501">1501</a>
+<a href="#1502" id="1502">1502</a>
+<a href="#1503" id="1503">1503</a>
+<a href="#1504" id="1504">1504</a>
+<a href="#1505" id="1505">1505</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1580,8 +1601,9 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::arrow::array_reader::{build_array_reader, RowGroups};
 <span class="kw">use </span><span class="kw">crate</span>::arrow::arrow_reader::{
-    apply_range, evaluate_predicate, selects_any, ArrowReaderBuilder, ArrowReaderOptions,
-    ParquetRecordBatchReader, RowFilter, RowSelection,
+    apply_range, evaluate_predicate, selects_any, ArrowReaderBuilder,
+    ArrowReaderMetadata, ArrowReaderOptions, ParquetRecordBatchReader, RowFilter,
+    RowSelection,
 };
 <span class="kw">use </span><span class="kw">crate</span>::arrow::ProjectionMask;
 
@@ -1689,6 +1711,29 @@
     }
 }
 
+<span class="kw">impl </span>ArrowReaderMetadata {
+    <span class="doccomment">/// Returns a new [`ArrowReaderMetadata`] for this builder
+    ///
+    /// See [`ParquetRecordBatchStreamBuilder::new_with_metadata`] for how this can be used
+    </span><span class="kw">pub async fn </span>load_async&lt;T: AsyncFileReader&gt;(
+        input: <span class="kw-2">&amp;mut </span>T,
+        options: ArrowReaderOptions,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>metadata = input.get_metadata().<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">if </span>options.page_index
+            &amp;&amp; metadata.column_index().is_none()
+            &amp;&amp; metadata.offset_index().is_none()
+        {
+            <span class="kw">let </span>m = Arc::try_unwrap(metadata).unwrap_or_else(|e| e.as_ref().clone());
+            <span class="kw">let </span><span class="kw-2">mut </span>loader = MetadataLoader::new(input, m);
+            loader.load_page_index(<span class="bool-val">true</span>, <span class="bool-val">true</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            metadata = Arc::new(loader.finish())
+        }
+        <span class="self">Self</span>::try_new(metadata, options)
+    }
+}
+
 <span class="attr">#[doc(hidden)]
 </span><span class="doccomment">/// A newtype used within [`ReaderOptionsBuilder`] to distinguish sync readers from async
 ///
@@ -1701,33 +1746,30 @@
 /// In particular, this handles reading the parquet file metadata, allowing consumers
 /// to use this information to select what specific columns, row groups, etc...
 /// they wish to be read by the resulting stream
-///
 </span><span class="kw">pub type </span>ParquetRecordBatchStreamBuilder&lt;T&gt; = ArrowReaderBuilder&lt;AsyncReader&lt;T&gt;&gt;;
 
-<span class="kw">impl</span>&lt;T: AsyncFileReader + Send + <span class="lifetime">&#39;static</span>&gt; ArrowReaderBuilder&lt;AsyncReader&lt;T&gt;&gt; {
+<span class="kw">impl</span>&lt;T: AsyncFileReader + Send + <span class="lifetime">&#39;static</span>&gt; ParquetRecordBatchStreamBuilder&lt;T&gt; {
     <span class="doccomment">/// Create a new [`ParquetRecordBatchStreamBuilder`] with the provided parquet file
-    </span><span class="kw">pub async fn </span>new(<span class="kw-2">mut </span>input: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>metadata = input.get_metadata().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">Self</span>::new_builder(AsyncReader(input), metadata, Default::default())
-    }
+    </span><span class="kw">pub async fn </span>new(input: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::new_with_options(input, Default::default()).<span class="kw">await
+    </span>}
 
-    <span class="kw">pub async fn </span>new_with_options(
+    <span class="doccomment">/// Create a new [`ParquetRecordBatchStreamBuilder`] with the provided parquet file
+    /// and [`ArrowReaderOptions`]
+    </span><span class="kw">pub async fn </span>new_with_options(
         <span class="kw-2">mut </span>input: T,
         options: ArrowReaderOptions,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>metadata = input.get_metadata().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span>metadata = ArrowReaderMetadata::load_async(<span class="kw-2">&amp;mut </span>input, options).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="self">Self</span>::new_with_metadata(input, metadata))
+    }
 
-        <span class="kw">if </span>options.page_index
-            &amp;&amp; metadata.column_index().is_none()
-            &amp;&amp; metadata.offset_index().is_none()
-        {
-            <span class="kw">let </span>m = Arc::try_unwrap(metadata).unwrap_or_else(|e| e.as_ref().clone());
-            <span class="kw">let </span><span class="kw-2">mut </span>loader = MetadataLoader::new(<span class="kw-2">&amp;mut </span>input, m);
-            loader.load_page_index(<span class="bool-val">true</span>, <span class="bool-val">true</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-            metadata = Arc::new(loader.finish())
-        }
-
-        <span class="self">Self</span>::new_builder(AsyncReader(input), metadata, options)
+    <span class="doccomment">/// Create a [`ParquetRecordBatchStreamBuilder`] from the provided [`ArrowReaderMetadata`]
+    ///
+    /// This allows loading metadata once and using it to create multiple builders with
+    /// potentially different settings
+    </span><span class="kw">pub fn </span>new_with_metadata(input: T, metadata: ArrowReaderMetadata) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new_builder(AsyncReader(input), metadata)
     }
 
     <span class="doccomment">/// Build a new [`ParquetRecordBatchStream`]
@@ -1781,7 +1823,7 @@
 </span><span class="kw">struct </span>ReaderFactory&lt;T&gt; {
     metadata: Arc&lt;ParquetMetaData&gt;,
 
-    fields: <span class="prelude-ty">Option</span>&lt;ParquetField&gt;,
+    fields: <span class="prelude-ty">Option</span>&lt;Arc&lt;ParquetField&gt;&gt;,
 
     input: T,
 
@@ -1834,7 +1876,7 @@
                     .<span class="kw">await</span><span class="question-mark">?</span>;
 
                 <span class="kw">let </span>array_reader = build_array_reader(
-                    <span class="self">self</span>.fields.as_ref(),
+                    <span class="self">self</span>.fields.as_deref(),
                     predicate_projection,
                     <span class="kw-2">&amp;</span>row_group,
                 )<span class="question-mark">?</span>;
@@ -1887,7 +1929,7 @@
 
         <span class="kw">let </span>reader = ParquetRecordBatchReader::new(
             batch_size,
-            build_array_reader(<span class="self">self</span>.fields.as_ref(), <span class="kw-2">&amp;</span>projection, <span class="kw-2">&amp;</span>row_group)<span class="question-mark">?</span>,
+            build_array_reader(<span class="self">self</span>.fields.as_deref(), <span class="kw-2">&amp;</span>projection, <span class="kw-2">&amp;</span>row_group)<span class="question-mark">?</span>,
             selection,
         );
 
@@ -2893,7 +2935,7 @@
 
         <span class="kw">let </span>reader_factory = ReaderFactory {
             metadata,
-            fields,
+            fields: fields.map(Arc::new),
             input: async_reader,
             filter: <span class="prelude-val">None</span>,
             limit: <span class="prelude-val">None</span>,
