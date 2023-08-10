@@ -185,7 +185,7 @@
                 lhs_start + lhs_nulls.offset(),
                 len,
             );
-            <span class="kw">let </span>rhs_nulls = lhs.nulls().unwrap();
+            <span class="kw">let </span>rhs_nulls = rhs.nulls().unwrap();
             <span class="kw">let </span>rhs_slices_iter = BitSliceIterator::new(
                 rhs_nulls.validity(),
                 rhs_start + rhs_nulls.offset(),
