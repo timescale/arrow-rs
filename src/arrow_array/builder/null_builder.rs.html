@@ -177,6 +177,7 @@
 <a href="#177" id="177">177</a>
 <a href="#178" id="178">178</a>
 <a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -219,7 +220,7 @@
 /// let arr = b.finish();
 ///
 /// assert_eq!(8, arr.len());
-/// assert_eq!(8, arr.null_count());
+/// assert_eq!(0, arr.null_count());
 /// ```
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>NullBuilder {
@@ -339,7 +340,8 @@
         <span class="kw">let </span>arr = builder.finish();
         <span class="macro">assert_eq!</span>(<span class="number">20</span>, arr.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.offset());
-        <span class="macro">assert_eq!</span>(<span class="number">20</span>, arr.null_count());
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.null_count());
+        <span class="macro">assert!</span>(arr.is_nullable());
     }
 
     <span class="attr">#[test]
@@ -349,11 +351,11 @@
         builder.append_empty_value();
         builder.append_empty_values(<span class="number">3</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>array = builder.finish_cloned();
-        <span class="macro">assert_eq!</span>(<span class="number">21</span>, array.null_count());
+        <span class="macro">assert_eq!</span>(<span class="number">21</span>, array.len());
 
         builder.append_empty_values(<span class="number">5</span>);
         array = builder.finish();
-        <span class="macro">assert_eq!</span>(<span class="number">26</span>, array.null_count());
+        <span class="macro">assert_eq!</span>(<span class="number">26</span>, array.len());
     }
 }
 </code></pre></div></section></main></body></html>

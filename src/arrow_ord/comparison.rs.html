@@ -6353,6 +6353,20 @@
 <a href="#6353" id="6353">6353</a>
 <a href="#6354" id="6354">6354</a>
 <a href="#6355" id="6355">6355</a>
+<a href="#6356" id="6356">6356</a>
+<a href="#6357" id="6357">6357</a>
+<a href="#6358" id="6358">6358</a>
+<a href="#6359" id="6359">6359</a>
+<a href="#6360" id="6360">6360</a>
+<a href="#6361" id="6361">6361</a>
+<a href="#6362" id="6362">6362</a>
+<a href="#6363" id="6363">6363</a>
+<a href="#6364" id="6364">6364</a>
+<a href="#6365" id="6365">6365</a>
+<a href="#6366" id="6366">6366</a>
+<a href="#6367" id="6367">6367</a>
+<a href="#6368" id="6368">6368</a>
+<a href="#6369" id="6369">6369</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -12706,6 +12720,20 @@
         <span class="macro">assert!</span>(to_type
             .to_string()
             .contains(<span class="string">&quot;Could not convert ToType with to_i128&quot;</span>));
+    }
+
+    <span class="attr">#[test]
+    #[cfg(feature = <span class="string">&quot;dyn_cmp_dict&quot;</span>)]
+    </span><span class="kw">fn </span>test_dictionary_nested_nulls() {
+        <span class="kw">let </span>keys = Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]);
+        <span class="kw">let </span>v1 = Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>)]));
+        <span class="kw">let </span>a = DictionaryArray::new(keys.clone(), v1);
+        <span class="kw">let </span>v2 = Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>)]));
+        <span class="kw">let </span>b = DictionaryArray::new(keys, v2);
+
+        <span class="kw">let </span>r = eq_dyn(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b).unwrap();
+        <span class="macro">assert_eq!</span>(r.null_count(), <span class="number">2</span>);
+        <span class="macro">assert!</span>(r.is_valid(<span class="number">2</span>));
     }
 }
 </code></pre></div></section></main></body></html>

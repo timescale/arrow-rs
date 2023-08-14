@@ -1763,6 +1763,34 @@
 <a href="#1763" id="1763">1763</a>
 <a href="#1764" id="1764">1764</a>
 <a href="#1765" id="1765">1765</a>
+<a href="#1766" id="1766">1766</a>
+<a href="#1767" id="1767">1767</a>
+<a href="#1768" id="1768">1768</a>
+<a href="#1769" id="1769">1769</a>
+<a href="#1770" id="1770">1770</a>
+<a href="#1771" id="1771">1771</a>
+<a href="#1772" id="1772">1772</a>
+<a href="#1773" id="1773">1773</a>
+<a href="#1774" id="1774">1774</a>
+<a href="#1775" id="1775">1775</a>
+<a href="#1776" id="1776">1776</a>
+<a href="#1777" id="1777">1777</a>
+<a href="#1778" id="1778">1778</a>
+<a href="#1779" id="1779">1779</a>
+<a href="#1780" id="1780">1780</a>
+<a href="#1781" id="1781">1781</a>
+<a href="#1782" id="1782">1782</a>
+<a href="#1783" id="1783">1783</a>
+<a href="#1784" id="1784">1784</a>
+<a href="#1785" id="1785">1785</a>
+<a href="#1786" id="1786">1786</a>
+<a href="#1787" id="1787">1787</a>
+<a href="#1788" id="1788">1788</a>
+<a href="#1789" id="1789">1789</a>
+<a href="#1790" id="1790">1790</a>
+<a href="#1791" id="1791">1791</a>
+<a href="#1792" id="1792">1792</a>
+<a href="#1793" id="1793">1793</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2259,7 +2287,7 @@
                 def_levels.reserve(len);
                 info.non_null_indices.reserve(len);
 
-                <span class="kw">match </span>array.nulls() {
+                <span class="kw">match </span>array.logical_nulls() {
                     <span class="prelude-val">Some</span>(nulls) =&gt; {
                         <span class="comment">// TODO: Faster bitmask iteration (#1757)
                         </span><span class="kw">for </span>i <span class="kw">in </span>range {
@@ -3516,7 +3544,6 @@
         builder.write(<span class="kw-2">&amp;</span>a, <span class="number">0</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
 
-        <span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
         <span class="kw">let </span>expected_level = LevelInfo {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>]),
@@ -3525,7 +3552,36 @@
             max_rep_level: <span class="number">2</span>,
         };
 
-        <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
+        <span class="macro">assert_eq!</span>(levels[<span class="number">0</span>], expected_level);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_null_dictionary_values() {
+        <span class="kw">let </span>values = Int32Array::new(
+            <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into(),
+            <span class="prelude-val">Some</span>(NullBuffer::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>])),
+        );
+        <span class="kw">let </span>keys = Int32Array::new(
+            <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">54</span>, <span class="number">2</span>, <span class="number">0</span>].into(),
+            <span class="prelude-val">Some</span>(NullBuffer::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>])),
+        );
+        <span class="comment">// [NULL, NULL, 3, 0]
+        </span><span class="kw">let </span>dict = DictionaryArray::new(keys, Arc::new(values));
+
+        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, dict.data_type().clone(), <span class="bool-val">true</span>);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>builder =
+            LevelInfoBuilder::try_new(<span class="kw-2">&amp;</span>item_field, Default::default()).unwrap();
+        builder.write(<span class="kw-2">&amp;</span>dict, <span class="number">0</span>..<span class="number">4</span>);
+        <span class="kw">let </span>levels = builder.finish();
+        <span class="kw">let </span>expected_level = LevelInfo {
+            def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
+            rep_levels: <span class="prelude-val">None</span>,
+            non_null_indices: <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">3</span>],
+            max_def_level: <span class="number">1</span>,
+            max_rep_level: <span class="number">0</span>,
+        };
+        <span class="macro">assert_eq!</span>(levels[<span class="number">0</span>], expected_level);
     }
 }
 </code></pre></div></section></main></body></html>

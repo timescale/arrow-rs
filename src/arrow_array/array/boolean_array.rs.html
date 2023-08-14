@@ -605,6 +605,9 @@
 <a href="#605" id="605">605</a>
 <a href="#606" id="606">606</a>
 <a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -812,7 +815,7 @@
     </span><span class="kw">where
         </span>F: FnMut(T::Item) -&gt; bool,
     {
-        <span class="kw">let </span>nulls = left.nulls().cloned();
+        <span class="kw">let </span>nulls = left.logical_nulls();
         <span class="kw">let </span>values = BooleanBuffer::collect_bool(left.len(), |i| <span class="kw">unsafe </span>{
             <span class="comment">// SAFETY: i in range 0..len
             </span>op(left.value_unchecked(i))
@@ -846,7 +849,10 @@
     {
         <span class="macro">assert_eq!</span>(left.len(), right.len());
 
-        <span class="kw">let </span>nulls = NullBuffer::union(left.nulls(), right.nulls());
+        <span class="kw">let </span>nulls = NullBuffer::union(
+            left.logical_nulls().as_ref(),
+            right.logical_nulls().as_ref(),
+        );
         <span class="kw">let </span>values = BooleanBuffer::collect_bool(left.len(), |i| <span class="kw">unsafe </span>{
             <span class="comment">// SAFETY: i in range 0..len
             </span>op(left.value_unchecked(i), right.value_unchecked(i))

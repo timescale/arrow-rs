@@ -544,6 +544,11 @@
 <a href="#544" id="544">544</a>
 <a href="#545" id="545">545</a>
 <a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -744,7 +749,7 @@
         <span class="kw">return </span><span class="prelude-val">Ok</span>(PrimitiveArray::from(ArrayData::new_empty(<span class="kw-2">&amp;</span>O::DATA_TYPE)));
     }
 
-    <span class="kw">let </span>nulls = NullBuffer::union(a.nulls(), b.nulls());
+    <span class="kw">let </span>nulls = NullBuffer::union(a.logical_nulls().as_ref(), b.logical_nulls().as_ref());
 
     <span class="kw">let </span>values = a.values().iter().zip(b.values()).map(|(l, r)| op(<span class="kw-2">*</span>l, <span class="kw-2">*</span>r));
     <span class="comment">// JUSTIFICATION
@@ -794,7 +799,7 @@
         ))));
     }
 
-    <span class="kw">let </span>nulls = NullBuffer::union(a.nulls(), b.nulls());
+    <span class="kw">let </span>nulls = NullBuffer::union(a.logical_nulls().as_ref(), b.logical_nulls().as_ref());
 
     <span class="kw">let </span><span class="kw-2">mut </span>builder = a.into_builder()<span class="question-mark">?</span>;
 
@@ -842,7 +847,9 @@
     <span class="kw">if </span>a.null_count() == <span class="number">0 </span>&amp;&amp; b.null_count() == <span class="number">0 </span>{
         try_binary_no_nulls(len, a, b, op)
     } <span class="kw">else </span>{
-        <span class="kw">let </span>nulls = NullBuffer::union(a.nulls(), b.nulls()).unwrap();
+        <span class="kw">let </span>nulls =
+            NullBuffer::union(a.logical_nulls().as_ref(), b.logical_nulls().as_ref())
+                .unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = BufferBuilder::&lt;O::Native&gt;::new(len);
         buffer.append_n_zeroed(len);
@@ -901,7 +908,10 @@
     <span class="kw">if </span>a.null_count() == <span class="number">0 </span>&amp;&amp; b.null_count() == <span class="number">0 </span>{
         try_binary_no_nulls_mut(len, a, b, op)
     } <span class="kw">else </span>{
-        <span class="kw">let </span>nulls = NullBuffer::union(a.nulls(), b.nulls()).unwrap();
+        <span class="kw">let </span>nulls =
+            NullBuffer::union(a.logical_nulls().as_ref(), b.logical_nulls().as_ref())
+                .unwrap();
+
         <span class="kw">let </span><span class="kw-2">mut </span>builder = a.into_builder()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>slice = builder.values_slice_mut();

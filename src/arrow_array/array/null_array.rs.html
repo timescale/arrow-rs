@@ -192,9 +192,6 @@
 <a href="#192" id="192">192</a>
 <a href="#193" id="193">193</a>
 <a href="#194" id="194">194</a>
-<a href="#195" id="195">195</a>
-<a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -233,8 +230,10 @@
 ///
 /// let array = NullArray::new(10);
 ///
+/// assert!(array.is_nullable());
 /// assert_eq!(array.len(), 10);
-/// assert_eq!(array.null_count(), 10);
+/// assert_eq!(array.null_count(), 0);
+/// assert_eq!(array.logical_nulls().unwrap().null_count(), 10);
 /// ```
 </span><span class="attr">#[derive(Clone)]
 </span><span class="kw">pub struct </span>NullArray {
@@ -304,22 +303,12 @@
         <span class="prelude-val">None
     </span>}
 
-    <span class="doccomment">/// Returns whether the element at `index` is null.
-    /// All elements of a `NullArray` are always null.
-    </span><span class="kw">fn </span>is_null(<span class="kw-2">&amp;</span><span class="self">self</span>, _index: usize) -&gt; bool {
-        <span class="bool-val">true
-    </span>}
+    <span class="kw">fn </span>logical_nulls(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NullBuffer&gt; {
+        (<span class="self">self</span>.len != <span class="number">0</span>).then(|| NullBuffer::new_null(<span class="self">self</span>.len))
+    }
 
-    <span class="doccomment">/// Returns whether the element at `index` is valid.
-    /// All elements of a `NullArray` are always invalid.
-    </span><span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>, _index: usize) -&gt; bool {
-        <span class="bool-val">false
-    </span>}
-
-    <span class="doccomment">/// Returns the total number of null values in this array.
-    /// The null count of a `NullArray` always equals its length.
-    </span><span class="kw">fn </span>null_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
-        <span class="self">self</span>.len()
+    <span class="kw">fn </span>is_nullable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        !<span class="self">self</span>.is_empty()
     }
 
     <span class="kw">fn </span>get_buffer_memory_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
@@ -373,8 +362,10 @@
         <span class="kw">let </span>null_arr = NullArray::new(<span class="number">32</span>);
 
         <span class="macro">assert_eq!</span>(null_arr.len(), <span class="number">32</span>);
-        <span class="macro">assert_eq!</span>(null_arr.null_count(), <span class="number">32</span>);
-        <span class="macro">assert!</span>(!null_arr.is_valid(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(null_arr.null_count(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(null_arr.logical_nulls().unwrap().null_count(), <span class="number">32</span>);
+        <span class="macro">assert!</span>(null_arr.is_valid(<span class="number">0</span>));
+        <span class="macro">assert!</span>(null_arr.is_nullable());
     }
 
     <span class="attr">#[test]
@@ -383,7 +374,10 @@
 
         <span class="kw">let </span>array2 = array1.slice(<span class="number">8</span>, <span class="number">16</span>);
         <span class="macro">assert_eq!</span>(array2.len(), <span class="number">16</span>);
-        <span class="macro">assert_eq!</span>(array2.null_count(), <span class="number">16</span>);
+        <span class="macro">assert_eq!</span>(array2.null_count(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(array2.logical_nulls().unwrap().null_count(), <span class="number">16</span>);
+        <span class="macro">assert!</span>(array2.is_valid(<span class="number">0</span>));
+        <span class="macro">assert!</span>(array2.is_nullable());
     }
 
     <span class="attr">#[test]

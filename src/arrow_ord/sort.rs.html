@@ -4017,6 +4017,32 @@
 <a href="#4017" id="4017">4017</a>
 <a href="#4018" id="4018">4018</a>
 <a href="#4019" id="4019">4019</a>
+<a href="#4020" id="4020">4020</a>
+<a href="#4021" id="4021">4021</a>
+<a href="#4022" id="4022">4022</a>
+<a href="#4023" id="4023">4023</a>
+<a href="#4024" id="4024">4024</a>
+<a href="#4025" id="4025">4025</a>
+<a href="#4026" id="4026">4026</a>
+<a href="#4027" id="4027">4027</a>
+<a href="#4028" id="4028">4028</a>
+<a href="#4029" id="4029">4029</a>
+<a href="#4030" id="4030">4030</a>
+<a href="#4031" id="4031">4031</a>
+<a href="#4032" id="4032">4032</a>
+<a href="#4033" id="4033">4033</a>
+<a href="#4034" id="4034">4034</a>
+<a href="#4035" id="4035">4035</a>
+<a href="#4036" id="4036">4036</a>
+<a href="#4037" id="4037">4037</a>
+<a href="#4038" id="4038">4038</a>
+<a href="#4039" id="4039">4039</a>
+<a href="#4040" id="4040">4040</a>
+<a href="#4041" id="4041">4041</a>
+<a href="#4042" id="4042">4042</a>
+<a href="#4043" id="4043">4043</a>
+<a href="#4044" id="4044">4044</a>
+<a href="#4045" id="4045">4045</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -4738,19 +4764,19 @@
     }
 }
 
-<span class="kw">type </span>LexicographicalCompareItem&lt;<span class="lifetime">&#39;a</span>&gt; = (
-    <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>NullBuffer&gt;, <span class="comment">// nulls
-    </span>DynComparator,          <span class="comment">// comparator
-    </span>SortOptions,            <span class="comment">// sort_option
+<span class="kw">type </span>LexicographicalCompareItem = (
+    <span class="prelude-ty">Option</span>&lt;NullBuffer&gt;, <span class="comment">// nulls
+    </span>DynComparator,      <span class="comment">// comparator
+    </span>SortOptions,        <span class="comment">// sort_option
 </span>);
 
 <span class="doccomment">/// A lexicographical comparator that wraps given array data (columns) and can lexicographically compare data
 /// at given two indices. The lifetime is the same at the data wrapped.
-</span><span class="kw">pub struct </span>LexicographicalComparator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    compare_items: Vec&lt;LexicographicalCompareItem&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+</span><span class="kw">pub struct </span>LexicographicalComparator {
+    compare_items: Vec&lt;LexicographicalCompareItem&gt;,
 }
 
-<span class="kw">impl </span>LexicographicalComparator&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>LexicographicalComparator {
     <span class="doccomment">/// lexicographically compare values at the wrapped columns with given indices.
     </span><span class="kw">pub fn </span>compare(<span class="kw-2">&amp;</span><span class="self">self</span>, a_idx: usize, b_idx: usize) -&gt; Ordering {
         <span class="kw">for </span>(nulls, comparator, sort_option) <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.compare_items {
@@ -4799,14 +4825,14 @@
     /// results with two indices.
     </span><span class="kw">pub fn </span>try_new(
         columns: <span class="kw-2">&amp;</span>[SortColumn],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;LexicographicalComparator&lt;<span class="lifetime">&#39;_</span>&gt;, ArrowError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;LexicographicalComparator, ArrowError&gt; {
         <span class="kw">let </span>compare_items = columns
             .iter()
             .map(|column| {
                 <span class="comment">// flatten and convert build comparators
                 </span><span class="kw">let </span>values = column.values.as_ref();
                 <span class="prelude-val">Ok</span>((
-                    values.nulls(),
+                    values.logical_nulls(),
                     build_compare(values, values)<span class="question-mark">?</span>,
                     column.options.unwrap_or_default(),
                 ))
@@ -8034,6 +8060,32 @@
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">Some</span>(<span class="number">3.0</span>), <span class="prelude-val">Some</span>(<span class="number">1.2</span>)],
         );
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_lexicographic_comparator_null_dict_values() {
+        <span class="kw">let </span>values = Int32Array::new(
+            <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into(),
+            <span class="prelude-val">Some</span>(NullBuffer::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>])),
+        );
+        <span class="kw">let </span>keys = Int32Array::new(
+            <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">53</span>, <span class="number">3</span>].into(),
+            <span class="prelude-val">Some</span>(NullBuffer::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>])),
+        );
+        <span class="comment">// [1, NULL, NULL, 4]
+        </span><span class="kw">let </span>dict = DictionaryArray::new(keys, Arc::new(values));
+
+        <span class="kw">let </span>comparator = LexicographicalComparator::try_new(<span class="kw-2">&amp;</span>[SortColumn {
+            values: Arc::new(dict),
+            options: <span class="prelude-val">None</span>,
+        }])
+        .unwrap();
+        <span class="comment">// 1.cmp(NULL)
+        </span><span class="macro">assert_eq!</span>(comparator.compare(<span class="number">0</span>, <span class="number">1</span>), Ordering::Greater);
+        <span class="comment">// NULL.cmp(NULL)
+        </span><span class="macro">assert_eq!</span>(comparator.compare(<span class="number">2</span>, <span class="number">1</span>), Ordering::Equal);
+        <span class="comment">// NULL.cmp(4)
+        </span><span class="macro">assert_eq!</span>(comparator.compare(<span class="number">2</span>, <span class="number">3</span>), Ordering::Less);
     }
 }
 </code></pre></div></section></main></body></html>

@@ -1939,6 +1939,9 @@
 <a href="#1939" id="1939">1939</a>
 <a href="#1940" id="1940">1940</a>
 <a href="#1941" id="1941">1941</a>
+<a href="#1942" id="1942">1942</a>
+<a href="#1943" id="1943">1943</a>
+<a href="#1944" id="1944">1944</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2522,7 +2525,10 @@
         ));
     }
 
-    <span class="kw">let </span>nulls = NullBuffer::union(left.nulls(), right.nulls());
+    <span class="kw">let </span>nulls = NullBuffer::union(
+        left.logical_nulls().as_ref(),
+        right.logical_nulls().as_ref(),
+    );
 
     <span class="kw">let </span><span class="kw-2">mut </span>result = BooleanBufferBuilder::new(left.len());
     <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..left.len() {

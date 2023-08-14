@@ -1254,6 +1254,55 @@
 <a href="#1254" id="1254">1254</a>
 <a href="#1255" id="1255">1255</a>
 <a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
+<a href="#1275" id="1275">1275</a>
+<a href="#1276" id="1276">1276</a>
+<a href="#1277" id="1277">1277</a>
+<a href="#1278" id="1278">1278</a>
+<a href="#1279" id="1279">1279</a>
+<a href="#1280" id="1280">1280</a>
+<a href="#1281" id="1281">1281</a>
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
+<a href="#1287" id="1287">1287</a>
+<a href="#1288" id="1288">1288</a>
+<a href="#1289" id="1289">1289</a>
+<a href="#1290" id="1290">1290</a>
+<a href="#1291" id="1291">1291</a>
+<a href="#1292" id="1292">1292</a>
+<a href="#1293" id="1293">1293</a>
+<a href="#1294" id="1294">1294</a>
+<a href="#1295" id="1295">1295</a>
+<a href="#1296" id="1296">1296</a>
+<a href="#1297" id="1297">1297</a>
+<a href="#1298" id="1298">1298</a>
+<a href="#1299" id="1299">1299</a>
+<a href="#1300" id="1300">1300</a>
+<a href="#1301" id="1301">1301</a>
+<a href="#1302" id="1302">1302</a>
+<a href="#1303" id="1303">1303</a>
+<a href="#1304" id="1304">1304</a>
+<a href="#1305" id="1305">1305</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1985,6 +2034,31 @@
         <span class="self">self</span>.keys.nulls()
     }
 
+    <span class="kw">fn </span>logical_nulls(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NullBuffer&gt; {
+        <span class="kw">match </span><span class="self">self</span>.values.nulls() {
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.nulls().cloned(),
+            <span class="prelude-val">Some</span>(value_nulls) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>builder = BooleanBufferBuilder::new(<span class="self">self</span>.len());
+                <span class="kw">match </span><span class="self">self</span>.keys.nulls() {
+                    <span class="prelude-val">Some</span>(n) =&gt; builder.append_buffer(n.inner()),
+                    <span class="prelude-val">None </span>=&gt; builder.append_n(<span class="self">self</span>.len(), <span class="bool-val">true</span>),
+                }
+                <span class="kw">for </span>(idx, k) <span class="kw">in </span><span class="self">self</span>.keys.values().iter().enumerate() {
+                    <span class="kw">let </span>k = k.as_usize();
+                    <span class="comment">// Check range to allow for nulls
+                    </span><span class="kw">if </span>k &lt; value_nulls.len() &amp;&amp; value_nulls.is_null(k) {
+                        builder.set_bit(idx, <span class="bool-val">false</span>);
+                    }
+                }
+                <span class="prelude-val">Some</span>(builder.finish().into())
+            }
+        }
+    }
+
+    <span class="kw">fn </span>is_nullable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        !<span class="self">self</span>.is_empty() &amp;&amp; (<span class="self">self</span>.nulls().is_some() || <span class="self">self</span>.values.is_nullable())
+    }
+
     <span class="kw">fn </span>get_buffer_memory_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.keys.get_buffer_memory_size() + <span class="self">self</span>.values.get_buffer_memory_size()
     }
@@ -2097,6 +2171,14 @@
 
     <span class="kw">fn </span>nulls(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>NullBuffer&gt; {
         <span class="self">self</span>.dictionary.nulls()
+    }
+
+    <span class="kw">fn </span>logical_nulls(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NullBuffer&gt; {
+        <span class="self">self</span>.dictionary.logical_nulls()
+    }
+
+    <span class="kw">fn </span>is_nullable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.dictionary.is_nullable()
     }
 
     <span class="kw">fn </span>get_buffer_memory_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
@@ -2508,6 +2590,22 @@
             <span class="kw">let </span>expected = idx % <span class="number">4 </span>== <span class="number">0 </span>&amp;&amp; idx &lt; <span class="number">100</span>;
             <span class="macro">assert_eq!</span>(v, expected, <span class="string">&quot;{idx}&quot;</span>);
         }
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_iterator_nulls() {
+        <span class="kw">let </span>keys = Int32Array::new(
+            <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">700</span>, <span class="number">1</span>, <span class="number">2</span>].into(),
+            <span class="prelude-val">Some</span>(NullBuffer::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>])),
+        );
+        <span class="kw">let </span>values = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">50</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>)]);
+        <span class="kw">let </span>dict = DictionaryArray::new(keys, Arc::new(values));
+        <span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = dict
+            .downcast_dict::&lt;Int32Array&gt;()
+            .unwrap()
+            .into_iter()
+            .collect();
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="prelude-val">Some</span>(<span class="number">50</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>)])
     }
 }
 </code></pre></div></section></main></body></html>

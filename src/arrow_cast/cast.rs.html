@@ -8965,7 +8965,6 @@
 <a href="#8965" id="8965">8965</a>
 <a href="#8966" id="8966">8966</a>
 <a href="#8967" id="8967">8967</a>
-<a href="#8968" id="8968">8968</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -16201,9 +16200,8 @@
         <span class="macro">assert_eq!</span>(array.data_type(), <span class="kw-2">&amp;</span>data_type);
         <span class="kw">let </span>cast_array = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Null).expect(<span class="string">&quot;cast failed&quot;</span>);
         <span class="macro">assert_eq!</span>(cast_array.data_type(), <span class="kw-2">&amp;</span>DataType::Null);
-        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">4 </span>{
-            <span class="macro">assert!</span>(cast_array.is_null(i));
-        }
+        <span class="macro">assert_eq!</span>(cast_array.len(), <span class="number">4</span>);
+        <span class="macro">assert_eq!</span>(cast_array.logical_nulls().unwrap().null_count(), <span class="number">4</span>);
     }
 
     <span class="attr">#[test]

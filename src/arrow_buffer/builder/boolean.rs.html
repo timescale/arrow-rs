@@ -493,6 +493,12 @@
 <a href="#493" id="493">493</a>
 <a href="#494" id="494">494</a>
 <a href="#495" id="495">495</a>
+<a href="#496" id="496">496</a>
+<a href="#497" id="497">497</a>
+<a href="#498" id="498">498</a>
+<a href="#499" id="499">499</a>
+<a href="#500" id="500">500</a>
+<a href="#501" id="501">501</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -696,6 +702,12 @@
             range.start,
             len,
         );
+    }
+
+    <span class="doccomment">/// Append [`BooleanBuffer`] to this [`BooleanBufferBuilder`]
+    </span><span class="kw">pub fn </span>append_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buffer: <span class="kw-2">&amp;</span>BooleanBuffer) {
+        <span class="kw">let </span>range = buffer.offset()..buffer.offset() + buffer.len();
+        <span class="self">self</span>.append_packed_range(range, buffer.values())
     }
 
     <span class="doccomment">/// Returns the packed bits

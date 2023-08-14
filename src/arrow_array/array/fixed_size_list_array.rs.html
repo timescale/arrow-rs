@@ -847,7 +847,7 @@
     /// * `size &lt; 0`
     /// * `values.len() / size != nulls.len()`
     /// * `values.data_type() != field.data_type()`
-    /// * `!field.is_nullable() &amp;&amp; !nulls.expand(size).contains(values.nulls())`
+    /// * `!field.is_nullable() &amp;&amp; !nulls.expand(size).contains(values.logical_nulls())`
     </span><span class="kw">pub fn </span>try_new(
         field: FieldRef,
         size: i32,
@@ -881,11 +881,11 @@
             )));
         }
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(a) = values.nulls() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(a) = values.logical_nulls() {
             <span class="kw">let </span>nulls_valid = field.is_nullable()
                 || nulls
                     .as_ref()
-                    .map(|n| n.expand(size <span class="kw">as _</span>).contains(a))
+                    .map(|n| n.expand(size <span class="kw">as _</span>).contains(<span class="kw-2">&amp;</span>a))
                     .unwrap_or_default();
 
             <span class="kw">if </span>!nulls_valid {
