@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (180dffba1 2023-08-14)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (0bdb00d55 2023-08-15)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1685,26 +1685,6 @@
 <a href="#1685" id="1685">1685</a>
 <a href="#1686" id="1686">1686</a>
 <a href="#1687" id="1687">1687</a>
-<a href="#1688" id="1688">1688</a>
-<a href="#1689" id="1689">1689</a>
-<a href="#1690" id="1690">1690</a>
-<a href="#1691" id="1691">1691</a>
-<a href="#1692" id="1692">1692</a>
-<a href="#1693" id="1693">1693</a>
-<a href="#1694" id="1694">1694</a>
-<a href="#1695" id="1695">1695</a>
-<a href="#1696" id="1696">1696</a>
-<a href="#1697" id="1697">1697</a>
-<a href="#1698" id="1698">1698</a>
-<a href="#1699" id="1699">1699</a>
-<a href="#1700" id="1700">1700</a>
-<a href="#1701" id="1701">1701</a>
-<a href="#1702" id="1702">1702</a>
-<a href="#1703" id="1703">1703</a>
-<a href="#1704" id="1704">1704</a>
-<a href="#1705" id="1705">1705</a>
-<a href="#1706" id="1706">1706</a>
-<a href="#1707" id="1707">1707</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1727,8 +1707,7 @@
 //! The `FileReader` and `StreamReader` have similar interfaces,
 //! however the `FileReader` expects a reader that supports `Seek`ing
 
-</span><span class="kw">use </span>arrow_buffer::i256;
-<span class="kw">use </span>flatbuffers::VectorIter;
+</span><span class="kw">use </span>flatbuffers::VectorIter;
 <span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::io::{BufReader, Read, Seek, SeekFrom};
@@ -1836,7 +1815,7 @@
                 .offset(<span class="number">0</span>)
                 .add_child_data(run_ends.into_data())
                 .add_child_data(values.into_data())
-                .build()<span class="question-mark">?</span>;
+                .build_aligned()<span class="question-mark">?</span>;
 
             <span class="prelude-val">Ok</span>(make_array(data))
         }
@@ -1909,7 +1888,7 @@
             <span class="kw">let </span>data = ArrayData::builder(data_type.clone())
                 .len(length <span class="kw">as </span>usize)
                 .offset(<span class="number">0</span>)
-                .build()
+                .build_aligned()
                 .unwrap();
             <span class="comment">// no buffer increases
             </span><span class="prelude-val">Ok</span>(Arc::new(NullArray::from(data)))
@@ -1938,54 +1917,17 @@
                 .len(length)
                 .buffers(buffers[<span class="number">1</span>..<span class="number">3</span>].to_vec())
                 .null_bit_buffer(null_buffer)
-                .build()<span class="question-mark">?
+                .build_aligned()<span class="question-mark">?
         </span>}
-        Int8
-        | Int16
-        | Int32
-        | UInt8
-        | UInt16
-        | UInt32
-        | Time32(<span class="kw">_</span>)
-        | Date32
-        | Interval(IntervalUnit::YearMonth)
-        | Interval(IntervalUnit::DayTime)
-        | FixedSizeBinary(<span class="kw">_</span>)
-        | Boolean
-        | Int64
-        | UInt64
-        | Float32
-        | Float64
-        | Time64(<span class="kw">_</span>)
-        | Timestamp(<span class="kw">_</span>, <span class="kw">_</span>)
-        | Date64
-        | Duration(<span class="kw">_</span>) =&gt; {
+        <span class="kw">_ if </span>data_type.is_primitive()
+            || <span class="macro">matches!</span>(data_type, Boolean | FixedSizeBinary(<span class="kw">_</span>)) =&gt;
+        {
             <span class="comment">// read 2 buffers: null buffer (optional) and data buffer
             </span>ArrayData::builder(data_type.clone())
                 .len(length)
                 .add_buffer(buffers[<span class="number">1</span>].clone())
                 .null_bit_buffer(null_buffer)
-                .build()<span class="question-mark">?
-        </span>}
-        Interval(IntervalUnit::MonthDayNano) | Decimal128(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-            <span class="kw">let </span>buffer = get_aligned_buffer::&lt;i128&gt;(<span class="kw-2">&amp;</span>buffers[<span class="number">1</span>], length);
-
-            <span class="comment">// read 2 buffers: null buffer (optional) and data buffer
-            </span>ArrayData::builder(data_type.clone())
-                .len(length)
-                .add_buffer(buffer)
-                .null_bit_buffer(null_buffer)
-                .build()<span class="question-mark">?
-        </span>}
-        Decimal256(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-            <span class="kw">let </span>buffer = get_aligned_buffer::&lt;i256&gt;(<span class="kw-2">&amp;</span>buffers[<span class="number">1</span>], length);
-
-            <span class="comment">// read 2 buffers: null buffer (optional) and data buffer
-            </span>ArrayData::builder(data_type.clone())
-                .len(length)
-                .add_buffer(buffer)
-                .null_bit_buffer(null_buffer)
-                .build()<span class="question-mark">?
+                .build_aligned()<span class="question-mark">?
         </span>}
         t =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Data type {:?} either unsupported or not primitive&quot;</span>, t),
     };
@@ -1993,28 +1935,10 @@
     <span class="prelude-val">Ok</span>(make_array(array_data))
 }
 
-<span class="doccomment">/// Checks if given `Buffer` is properly aligned with `T`.
-/// If not, copying the data and padded it for alignment.
-</span><span class="kw">fn </span>get_aligned_buffer&lt;T&gt;(buffer: <span class="kw-2">&amp;</span>Buffer, length: usize) -&gt; Buffer {
-    <span class="kw">let </span>ptr = buffer.as_ptr();
-    <span class="kw">let </span>align_req = std::mem::align_of::&lt;T&gt;();
-    <span class="kw">let </span>align_offset = ptr.align_offset(align_req);
-    <span class="comment">// The buffer is not aligned properly. The writer might use a smaller alignment
-    // e.g. 8 bytes, but on some platform (e.g. ARM) i128 requires 16 bytes alignment.
-    // We need to copy the buffer as fallback.
-    </span><span class="kw">if </span>align_offset != <span class="number">0 </span>{
-        <span class="kw">let </span>len_in_bytes = (length * std::mem::size_of::&lt;T&gt;()).min(buffer.len());
-        <span class="kw">let </span>slice = <span class="kw-2">&amp;</span>buffer.as_slice()[<span class="number">0</span>..len_in_bytes];
-        Buffer::from_slice_ref(slice)
-    } <span class="kw">else </span>{
-        buffer.clone()
-    }
-}
-
 <span class="doccomment">/// Reads the correct number of buffers based on list type and null_count, and creates a
 /// list array ref
 </span><span class="kw">fn </span>create_list_array(
-    field_node: <span class="kw-2">&amp;</span><span class="kw">crate</span>::FieldNode,
+    field_node: <span class="kw-2">&amp;</span>FieldNode,
     data_type: <span class="kw-2">&amp;</span>DataType,
     buffers: <span class="kw-2">&amp;</span>[Buffer],
     child_array: ArrayRef,
@@ -2036,13 +1960,13 @@
 
         <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Cannot create list or map array from {:?}&quot;</span>, data_type),
     };
-    <span class="prelude-val">Ok</span>(make_array(builder.build()<span class="question-mark">?</span>))
+    <span class="prelude-val">Ok</span>(make_array(builder.build_aligned()<span class="question-mark">?</span>))
 }
 
 <span class="doccomment">/// Reads the correct number of buffers based on list type and null_count, and creates a
 /// list array ref
 </span><span class="kw">fn </span>create_dictionary_array(
-    field_node: <span class="kw-2">&amp;</span><span class="kw">crate</span>::FieldNode,
+    field_node: <span class="kw-2">&amp;</span>FieldNode,
     data_type: <span class="kw-2">&amp;</span>DataType,
     buffers: <span class="kw-2">&amp;</span>[Buffer],
     value_array: ArrayRef,
@@ -2055,7 +1979,7 @@
             .add_child_data(value_array.into_data())
             .null_bit_buffer(null_buffer);
 
-        <span class="prelude-val">Ok</span>(make_array(builder.build()<span class="question-mark">?</span>))
+        <span class="prelude-val">Ok</span>(make_array(builder.build_aligned()<span class="question-mark">?</span>))
     } <span class="kw">else </span>{
         <span class="macro">unreachable!</span>(<span class="string">&quot;Cannot create dictionary array from {:?}&quot;</span>, data_type)
     }
@@ -2804,10 +2728,11 @@
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-    <span class="kw">use </span><span class="kw">crate</span>::writer::unslice_run_array;
+    <span class="kw">use </span><span class="kw">crate</span>::writer::{unslice_run_array, DictionaryTracker, IpcDataGenerator};
 
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
+    <span class="kw">use </span><span class="kw">crate</span>::root_as_message;
     <span class="kw">use </span>arrow_array::builder::{PrimitiveRunBuilder, UnionBuilder};
     <span class="kw">use </span>arrow_array::types::<span class="kw-2">*</span>;
     <span class="kw">use </span>arrow_buffer::ArrowNativeType;
@@ -3064,8 +2989,7 @@
         writer.finish().unwrap();
         drop(writer);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader =
-            <span class="kw">crate</span>::reader::FileReader::try_new(std::io::Cursor::new(buf), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = FileReader::try_new(std::io::Cursor::new(buf), <span class="prelude-val">None</span>).unwrap();
         reader.next().unwrap().unwrap()
     }
 
@@ -3410,6 +3334,42 @@
             RecordBatch::try_new_with_options(schema, <span class="macro">vec!</span>[], <span class="kw-2">&amp;</span>options).unwrap();
         <span class="kw">let </span>output_batch = roundtrip_ipc_stream(<span class="kw-2">&amp;</span>input_batch);
         <span class="macro">assert_eq!</span>(input_batch, output_batch);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_unaligned() {
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(
+            <span class="string">&quot;i32&quot;</span>,
+            Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])) <span class="kw">as _</span>,
+        )])
+        .unwrap();
+
+        <span class="kw">let </span>gen = IpcDataGenerator {};
+        <span class="kw">let </span><span class="kw-2">mut </span>dict_tracker = DictionaryTracker::new(<span class="bool-val">false</span>);
+        <span class="kw">let </span>(<span class="kw">_</span>, encoded) = gen
+            .encoded_batch(<span class="kw-2">&amp;</span>batch, <span class="kw-2">&amp;mut </span>dict_tracker, <span class="kw-2">&amp;</span>Default::default())
+            .unwrap();
+
+        <span class="kw">let </span>message = root_as_message(<span class="kw-2">&amp;</span>encoded.ipc_message).unwrap();
+
+        <span class="comment">// Construct an unaligned buffer
+        </span><span class="kw">let </span><span class="kw-2">mut </span>buffer = MutableBuffer::with_capacity(encoded.arrow_data.len() + <span class="number">1</span>);
+        buffer.push(<span class="number">0_u8</span>);
+        buffer.extend_from_slice(<span class="kw-2">&amp;</span>encoded.arrow_data);
+        <span class="kw">let </span>b = Buffer::from(buffer).slice(<span class="number">1</span>);
+        <span class="macro">assert_ne!</span>(b.as_ptr().align_offset(<span class="number">8</span>), <span class="number">0</span>);
+
+        <span class="kw">let </span>ipc_batch = message.header_as_record_batch().unwrap();
+        <span class="kw">let </span>roundtrip = read_record_batch(
+            <span class="kw-2">&amp;</span>b,
+            ipc_batch,
+            batch.schema(),
+            <span class="kw-2">&amp;</span>Default::default(),
+            <span class="prelude-val">None</span>,
+            <span class="kw-2">&amp;</span>message.version(),
+        )
+        .unwrap();
+        <span class="macro">assert_eq!</span>(batch, roundtrip);
     }
 }
 </code></pre></div></section></main></body></html>
