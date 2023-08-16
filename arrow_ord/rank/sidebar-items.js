@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["bytes_rank","primitive_rank","rank","rank_impl"]};
