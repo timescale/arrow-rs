@@ -1136,7 +1136,7 @@
 
             <span class="kw">let </span>dictionaries_by_field = HashMap::new();
             <span class="kw">let </span>record_batch = read_record_batch(
-                <span class="kw-2">&amp;</span>Buffer::from(<span class="kw-2">&amp;</span>flight_data.data_body),
+                <span class="kw-2">&amp;</span>Buffer::from_bytes(flight_data.data_body.into()),
                 ipc_record_batch,
                 arrow_schema_ref.clone(),
                 <span class="kw-2">&amp;</span>dictionaries_by_field,

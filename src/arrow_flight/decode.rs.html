@@ -400,6 +400,7 @@
 <a href="#400" id="400">400</a>
 <a href="#401" id="401">401</a>
 <a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -419,6 +420,7 @@
 
 </span><span class="kw">use crate</span>::{utils::flight_data_to_arrow_batch, FlightData};
 <span class="kw">use </span>arrow_array::{ArrayRef, RecordBatch};
+<span class="kw">use </span>arrow_buffer::Buffer;
 <span class="kw">use </span>arrow_schema::{Schema, SchemaRef};
 <span class="kw">use </span>bytes::Bytes;
 <span class="kw">use </span>futures::{ready, stream::BoxStream, Stream, StreamExt};
@@ -660,7 +662,7 @@
                     ));
                 };
 
-                <span class="kw">let </span>buffer: arrow_buffer::Buffer = data.data_body.into();
+                <span class="kw">let </span>buffer = Buffer::from_bytes(data.data_body.into());
                 <span class="kw">let </span>dictionary_batch =
                     message.header_as_dictionary_batch().ok_or_else(|| {
                         FlightError::protocol(
