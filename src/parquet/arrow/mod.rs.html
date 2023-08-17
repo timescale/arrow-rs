@@ -216,6 +216,13 @@
 <a href="#216" id="216">216</a>
 <a href="#217" id="217">217</a>
 <a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -347,6 +354,13 @@
 
 <span class="doccomment">/// Schema metadata key used to store serialized Arrow IPC schema
 </span><span class="kw">pub const </span>ARROW_SCHEMA_META_KEY: <span class="kw-2">&amp;</span>str = <span class="string">&quot;ARROW:schema&quot;</span>;
+
+<span class="doccomment">/// The value of this metadata key, if present on [`Field::metadata`], will be used
+/// to populate [`BasicTypeInfo::id`]
+///
+/// [`Field::metadata`]: arrow_schema::Field::metadata
+/// [`BasicTypeInfo::id`]: crate::schema::types::BasicTypeInfo::id
+</span><span class="kw">pub const </span>PARQUET_FIELD_ID_META_KEY: <span class="kw-2">&amp;</span>str = <span class="string">&quot;PARQUET:field_id&quot;</span>;
 
 <span class="doccomment">/// A [`ProjectionMask`] identifies a set of columns within a potentially nested schema to project
 ///
