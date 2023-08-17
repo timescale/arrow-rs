@@ -1303,6 +1303,92 @@
 <a href="#1303" id="1303">1303</a>
 <a href="#1304" id="1304">1304</a>
 <a href="#1305" id="1305">1305</a>
+<a href="#1306" id="1306">1306</a>
+<a href="#1307" id="1307">1307</a>
+<a href="#1308" id="1308">1308</a>
+<a href="#1309" id="1309">1309</a>
+<a href="#1310" id="1310">1310</a>
+<a href="#1311" id="1311">1311</a>
+<a href="#1312" id="1312">1312</a>
+<a href="#1313" id="1313">1313</a>
+<a href="#1314" id="1314">1314</a>
+<a href="#1315" id="1315">1315</a>
+<a href="#1316" id="1316">1316</a>
+<a href="#1317" id="1317">1317</a>
+<a href="#1318" id="1318">1318</a>
+<a href="#1319" id="1319">1319</a>
+<a href="#1320" id="1320">1320</a>
+<a href="#1321" id="1321">1321</a>
+<a href="#1322" id="1322">1322</a>
+<a href="#1323" id="1323">1323</a>
+<a href="#1324" id="1324">1324</a>
+<a href="#1325" id="1325">1325</a>
+<a href="#1326" id="1326">1326</a>
+<a href="#1327" id="1327">1327</a>
+<a href="#1328" id="1328">1328</a>
+<a href="#1329" id="1329">1329</a>
+<a href="#1330" id="1330">1330</a>
+<a href="#1331" id="1331">1331</a>
+<a href="#1332" id="1332">1332</a>
+<a href="#1333" id="1333">1333</a>
+<a href="#1334" id="1334">1334</a>
+<a href="#1335" id="1335">1335</a>
+<a href="#1336" id="1336">1336</a>
+<a href="#1337" id="1337">1337</a>
+<a href="#1338" id="1338">1338</a>
+<a href="#1339" id="1339">1339</a>
+<a href="#1340" id="1340">1340</a>
+<a href="#1341" id="1341">1341</a>
+<a href="#1342" id="1342">1342</a>
+<a href="#1343" id="1343">1343</a>
+<a href="#1344" id="1344">1344</a>
+<a href="#1345" id="1345">1345</a>
+<a href="#1346" id="1346">1346</a>
+<a href="#1347" id="1347">1347</a>
+<a href="#1348" id="1348">1348</a>
+<a href="#1349" id="1349">1349</a>
+<a href="#1350" id="1350">1350</a>
+<a href="#1351" id="1351">1351</a>
+<a href="#1352" id="1352">1352</a>
+<a href="#1353" id="1353">1353</a>
+<a href="#1354" id="1354">1354</a>
+<a href="#1355" id="1355">1355</a>
+<a href="#1356" id="1356">1356</a>
+<a href="#1357" id="1357">1357</a>
+<a href="#1358" id="1358">1358</a>
+<a href="#1359" id="1359">1359</a>
+<a href="#1360" id="1360">1360</a>
+<a href="#1361" id="1361">1361</a>
+<a href="#1362" id="1362">1362</a>
+<a href="#1363" id="1363">1363</a>
+<a href="#1364" id="1364">1364</a>
+<a href="#1365" id="1365">1365</a>
+<a href="#1366" id="1366">1366</a>
+<a href="#1367" id="1367">1367</a>
+<a href="#1368" id="1368">1368</a>
+<a href="#1369" id="1369">1369</a>
+<a href="#1370" id="1370">1370</a>
+<a href="#1371" id="1371">1371</a>
+<a href="#1372" id="1372">1372</a>
+<a href="#1373" id="1373">1373</a>
+<a href="#1374" id="1374">1374</a>
+<a href="#1375" id="1375">1375</a>
+<a href="#1376" id="1376">1376</a>
+<a href="#1377" id="1377">1377</a>
+<a href="#1378" id="1378">1378</a>
+<a href="#1379" id="1379">1379</a>
+<a href="#1380" id="1380">1380</a>
+<a href="#1381" id="1381">1381</a>
+<a href="#1382" id="1382">1382</a>
+<a href="#1383" id="1383">1383</a>
+<a href="#1384" id="1384">1384</a>
+<a href="#1385" id="1385">1385</a>
+<a href="#1386" id="1386">1386</a>
+<a href="#1387" id="1387">1387</a>
+<a href="#1388" id="1388">1388</a>
+<a href="#1389" id="1389">1389</a>
+<a href="#1390" id="1390">1390</a>
+<a href="#1391" id="1391">1391</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1739,6 +1825,7 @@
     /// Panics if `values` has a length less than the current values
     ///
     /// ```
+    /// # use std::sync::Arc;
     /// # use arrow_array::builder::PrimitiveDictionaryBuilder;
     /// # use arrow_array::{Int8Array, Int64Array, ArrayAccessor};
     /// # use arrow_array::types::{Int32Type, Int8Type};
@@ -1756,7 +1843,7 @@
     /// let values: Int64Array = typed_dictionary.values().unary(|x| x as i64);
     ///
     /// // Create a Dict(Int32,
-    /// let new = dictionary.with_values(&amp;values);
+    /// let new = dictionary.with_values(Arc::new(values));
     ///
     /// // Verify values are as expected
     /// let new_typed = new.downcast_dict::&lt;Int64Array&gt;().unwrap();
@@ -1765,21 +1852,18 @@
     /// }
     /// ```
     ///
-    </span><span class="kw">pub fn </span>with_values(<span class="kw-2">&amp;</span><span class="self">self</span>, values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>with_values(<span class="kw-2">&amp;</span><span class="self">self</span>, values: ArrayRef) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(values.len() &gt;= <span class="self">self</span>.values.len());
-
-        <span class="kw">let </span>builder = <span class="self">self
-            </span>.to_data()
-            .into_builder()
-            .data_type(DataType::Dictionary(
-                Box::new(K::DATA_TYPE),
-                Box::new(values.data_type().clone()),
-            ))
-            .child_data(<span class="macro">vec!</span>[values.to_data()]);
-
-        <span class="comment">// SAFETY:
-        // Offsets were valid before and verified length is greater than or equal
-        </span><span class="self">Self</span>::from(<span class="kw">unsafe </span>{ builder.build_unchecked() })
+        <span class="kw">let </span>data_type = DataType::Dictionary(
+            Box::new(K::DATA_TYPE),
+            Box::new(values.data_type().clone()),
+        );
+        <span class="self">Self </span>{
+            data_type,
+            keys: <span class="self">self</span>.keys.clone(),
+            values,
+            is_ordered: <span class="bool-val">false</span>,
+        }
     }
 
     <span class="doccomment">/// Returns `PrimitiveDictionaryBuilder` of this dictionary array for mutating
@@ -2232,6 +2316,94 @@
             <span class="bool-val">true </span>=&gt; <span class="self">self</span>.values.value_unchecked(value_idx),
             <span class="bool-val">false </span>=&gt; Default::default(),
         }
+    }
+}
+
+<span class="doccomment">/// A [`DictionaryArray`] with the key type erased
+///
+/// This can be used to efficiently implement kernels for all possible dictionary
+/// keys without needing to create specialized implementations for each key type
+///
+/// For example
+///
+/// ```
+/// # use arrow_array::*;
+/// # use arrow_array::cast::AsArray;
+/// # use arrow_array::builder::PrimitiveDictionaryBuilder;
+/// # use arrow_array::types::*;
+/// # use arrow_schema::ArrowError;
+/// # use std::sync::Arc;
+///
+/// fn to_string(a: &amp;dyn Array) -&gt; Result&lt;ArrayRef, ArrowError&gt; {
+///     if let Some(d) = a.as_any_dictionary_opt() {
+///         // Recursively handle dictionary input
+///         let r = to_string(d.values().as_ref())?;
+///         return Ok(d.with_values(r));
+///     }
+///     downcast_primitive_array! {
+///         a =&gt; Ok(Arc::new(a.iter().map(|x| x.map(|x| x.to_string())).collect::&lt;StringArray&gt;())),
+///         d =&gt; Err(ArrowError::InvalidArgumentError(format!(&quot;{d:?} not supported&quot;)))
+///     }
+/// }
+///
+/// let result = to_string(&amp;Int32Array::from(vec![1, 2, 3])).unwrap();
+/// let actual = result.as_string::&lt;i32&gt;().iter().map(Option::unwrap).collect::&lt;Vec&lt;_&gt;&gt;();
+/// assert_eq!(actual, &amp;[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;]);
+///
+/// let mut dict = PrimitiveDictionaryBuilder::&lt;Int32Type, UInt16Type&gt;::new();
+/// dict.extend([Some(1), Some(1), Some(2), Some(3), Some(2)]);
+/// let dict = dict.finish();
+///
+/// let r = to_string(&amp;dict).unwrap();
+/// let r = r.as_dictionary::&lt;Int32Type&gt;().downcast_dict::&lt;StringArray&gt;().unwrap();
+/// assert_eq!(r.keys(), dict.keys()); // Keys are the same
+///
+/// let actual = r.into_iter().map(Option::unwrap).collect::&lt;Vec&lt;_&gt;&gt;();
+/// assert_eq!(actual, &amp;[&quot;1&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;2&quot;]);
+/// ```
+///
+/// See [`AsArray::as_any_dictionary_opt`] and [`AsArray::as_any_dictionary`]
+</span><span class="kw">pub trait </span>AnyDictionaryArray: Array {
+    <span class="doccomment">/// Returns the primitive keys of this dictionary as an [`Array`]
+    </span><span class="kw">fn </span>keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array;
+
+    <span class="doccomment">/// Returns the values of this dictionary
+    </span><span class="kw">fn </span>values(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ArrayRef;
+
+    <span class="doccomment">/// Returns the keys of this dictionary as usize
+    ///
+    /// The values for nulls will be arbitrary, but are guaranteed
+    /// to be in the range `0..self.values.len()`
+    ///
+    /// # Panic
+    ///
+    /// Panics if `values.len() == 0`
+    </span><span class="kw">fn </span>normalized_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;usize&gt;;
+
+    <span class="doccomment">/// Create a new [`DictionaryArray`] replacing `values` with the new values
+    ///
+    /// See [`DictionaryArray::with_values`]
+    </span><span class="kw">fn </span>with_values(<span class="kw-2">&amp;</span><span class="self">self</span>, values: ArrayRef) -&gt; ArrayRef;
+}
+
+<span class="kw">impl</span>&lt;K: ArrowDictionaryKeyType&gt; AnyDictionaryArray <span class="kw">for </span>DictionaryArray&lt;K&gt; {
+    <span class="kw">fn </span>keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.keys
+    }
+
+    <span class="kw">fn </span>values(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ArrayRef {
+        <span class="self">self</span>.values()
+    }
+
+    <span class="kw">fn </span>normalized_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;usize&gt; {
+        <span class="kw">let </span>v_len = <span class="self">self</span>.values().len();
+        <span class="macro">assert_ne!</span>(v_len, <span class="number">0</span>);
+        <span class="kw">let </span>iter = <span class="self">self</span>.keys().values().iter();
+        iter.map(|x| x.as_usize().min(v_len)).collect()
+    }
+
+    <span class="kw">fn </span>with_values(<span class="kw-2">&amp;</span><span class="self">self</span>, values: ArrayRef) -&gt; ArrayRef {
+        Arc::new(<span class="self">self</span>.with_values(values))
     }
 }
 

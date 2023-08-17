@@ -1604,7 +1604,7 @@
             <span class="macro">downcast_dictionary_array!</span>(
                 array =&gt; {
                     <span class="kw">let </span>values = time_fraction_dyn(array.values(), name, op)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(Arc::new(array.with_values(<span class="kw-2">&amp;</span>values)))
+                    <span class="prelude-val">Ok</span>(Arc::new(array.with_values(values)))
                 }
                 dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">&quot;{name} does not support&quot;</span>), dt),
             )
