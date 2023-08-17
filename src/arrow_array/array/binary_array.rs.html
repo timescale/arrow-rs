@@ -643,8 +643,6 @@
 <a href="#643" id="643">643</a>
 <a href="#644" id="644">644</a>
 <a href="#645" id="645">645</a>
-<a href="#646" id="646">646</a>
-<a href="#647" id="647">647</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1194,9 +1192,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;assertion failed: `(left == right)`\n  left: `UInt32`,\n \
-                    right: `UInt8`: BinaryArray can only be created from List&lt;u8&gt; arrays, \
-                    mismatched data types.&quot;
+        expected = <span class="string">&quot;BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types.&quot;
     </span>)]
     </span><span class="kw">fn </span>test_binary_array_from_incorrect_list_array() {
         <span class="kw">let </span>values: [u32; <span class="number">12</span>] = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>];
