@@ -1816,7 +1816,7 @@
 };
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::file::{metadata::KeyValue, properties::WriterProperties};
-<span class="kw">use </span><span class="kw">crate</span>::schema::types::{ColumnDescriptor, SchemaDescriptor, Type, TypePtr};
+<span class="kw">use </span><span class="kw">crate</span>::schema::types::{ColumnDescriptor, SchemaDescriptor, Type};
 
 <span class="kw">mod </span>complex;
 <span class="kw">mod </span>primitive;
@@ -2009,13 +2009,13 @@
 
 <span class="doccomment">/// Convert arrow schema to parquet schema
 </span><span class="kw">pub fn </span>arrow_to_parquet_schema(schema: <span class="kw-2">&amp;</span>Schema) -&gt; <span class="prelude-ty">Result</span>&lt;SchemaDescriptor&gt; {
-    <span class="kw">let </span>fields: <span class="prelude-ty">Result</span>&lt;Vec&lt;TypePtr&gt;&gt; = schema
+    <span class="kw">let </span>fields = schema
         .fields()
         .iter()
         .map(|field| arrow_to_parquet_type(field).map(Arc::new))
-        .collect();
+        .collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
     <span class="kw">let </span>group = Type::group_type_builder(<span class="string">&quot;arrow_schema&quot;</span>)
-        .with_fields(<span class="kw-2">&amp;mut </span>fields<span class="question-mark">?</span>)
+        .with_fields(fields)
         .build()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(SchemaDescriptor::new(Arc::new(group)))
 }
@@ -2255,9 +2255,9 @@
         }
         DataType::List(f) | DataType::FixedSizeList(f, <span class="kw">_</span>) | DataType::LargeList(f) =&gt; {
             Type::group_type_builder(name)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                .with_fields(<span class="macro">vec!</span>[Arc::new(
                     Type::group_type_builder(<span class="string">&quot;list&quot;</span>)
-                        .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(arrow_to_parquet_type(f)<span class="question-mark">?</span>)])
+                        .with_fields(<span class="macro">vec!</span>[Arc::new(arrow_to_parquet_type(f)<span class="question-mark">?</span>)])
                         .with_repetition(Repetition::REPEATED)
                         .build()<span class="question-mark">?</span>,
                 )])
@@ -2272,21 +2272,21 @@
                 );
             }
             <span class="comment">// recursively convert children to types/nodes
-            </span><span class="kw">let </span>fields: <span class="prelude-ty">Result</span>&lt;Vec&lt;TypePtr&gt;&gt; = fields
+            </span><span class="kw">let </span>fields = fields
                 .iter()
                 .map(|f| arrow_to_parquet_type(f).map(Arc::new))
-                .collect();
+                .collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
             Type::group_type_builder(name)
-                .with_fields(<span class="kw-2">&amp;mut </span>fields<span class="question-mark">?</span>)
+                .with_fields(fields)
                 .with_repetition(repetition)
                 .build()
         }
         DataType::Map(field, <span class="kw">_</span>) =&gt; {
             <span class="kw">if let </span>DataType::Struct(struct_fields) = field.data_type() {
                 Type::group_type_builder(name)
-                    .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                    .with_fields(<span class="macro">vec!</span>[Arc::new(
                         Type::group_type_builder(field.name())
-                            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[
+                            .with_fields(<span class="macro">vec!</span>[
                                 Arc::new(arrow_to_parquet_type(<span class="kw-2">&amp;</span>Field::new(
                                     struct_fields[<span class="number">0</span>].name(),
                                     struct_fields[<span class="number">0</span>].data_type().clone(),
@@ -2313,7 +2313,7 @@
         DataType::Union(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;See ARROW-8817.&quot;</span>),
         DataType::Dictionary(<span class="kw">_</span>, <span class="kw-2">ref </span>value) =&gt; {
             <span class="comment">// Dictionary encoding not handled at the schema level
-            </span><span class="kw">let </span>dict_field = Field::new(name, <span class="kw-2">*</span>value.clone(), field.is_nullable());
+            </span><span class="kw">let </span>dict_field = field.clone().with_data_type(value.as_ref().clone());
             arrow_to_parquet_type(<span class="kw-2">&amp;</span>dict_field)
         }
         DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(

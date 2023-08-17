@@ -417,7 +417,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_metadata_column_orders_parse() {
         <span class="comment">// Define simple schema, we do not need to provide logical types.
-        </span><span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[
+        </span><span class="kw">let </span>fields = <span class="macro">vec!</span>[
             Arc::new(
                 SchemaType::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                     .build()
@@ -430,7 +430,7 @@
             ),
         ];
         <span class="kw">let </span>schema = SchemaType::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-            .with_fields(<span class="kw-2">&amp;mut </span>fields)
+            .with_fields(fields)
             .build()
             .unwrap();
         <span class="kw">let </span>schema_descr = SchemaDescriptor::new(Arc::new(schema));

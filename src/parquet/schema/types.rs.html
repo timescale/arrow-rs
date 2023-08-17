@@ -2108,13 +2108,6 @@
 <a href="#2108" id="2108">2108</a>
 <a href="#2109" id="2109">2109</a>
 <a href="#2110" id="2110">2110</a>
-<a href="#2111" id="2111">2111</a>
-<a href="#2112" id="2112">2112</a>
-<a href="#2113" id="2113">2113</a>
-<a href="#2114" id="2114">2114</a>
-<a href="#2115" id="2115">2115</a>
-<a href="#2116" id="2116">2116</a>
-<a href="#2117" id="2117">2117</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2337,53 +2330,52 @@
     }
 
     <span class="doccomment">/// Sets [`Repetition`](crate::basic::Repetition) for this field and returns itself.
-    </span><span class="kw">pub fn </span>with_repetition(<span class="kw-2">mut </span><span class="self">self</span>, repetition: Repetition) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.repetition = repetition;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_repetition(<span class="self">self</span>, repetition: Repetition) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ repetition, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Sets [`ConvertedType`](crate::basic::ConvertedType) for this field and returns itself.
-    </span><span class="kw">pub fn </span>with_converted_type(<span class="kw-2">mut </span><span class="self">self</span>, converted_type: ConvertedType) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.converted_type = converted_type;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_converted_type(<span class="self">self</span>, converted_type: ConvertedType) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            converted_type,
+            ..<span class="self">self
+        </span>}
+    }
 
     <span class="doccomment">/// Sets [`LogicalType`](crate::basic::LogicalType) for this field and returns itself.
     /// If only the logical type is populated for a primitive type, the converted type
     /// will be automatically populated, and can thus be omitted.
-    </span><span class="kw">pub fn </span>with_logical_type(<span class="kw-2">mut </span><span class="self">self</span>, logical_type: <span class="prelude-ty">Option</span>&lt;LogicalType&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.logical_type = logical_type;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_logical_type(<span class="self">self</span>, logical_type: <span class="prelude-ty">Option</span>&lt;LogicalType&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            logical_type,
+            ..<span class="self">self
+        </span>}
+    }
 
     <span class="doccomment">/// Sets type length and returns itself.
     /// This is only applied to FIXED_LEN_BYTE_ARRAY and INT96 (INTERVAL) types, because
     /// they maintain fixed size underlying byte array.
     /// By default, value is `0`.
-    </span><span class="kw">pub fn </span>with_length(<span class="kw-2">mut </span><span class="self">self</span>, length: i32) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.length = length;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_length(<span class="self">self</span>, length: i32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ length, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Sets precision for Parquet DECIMAL physical type and returns itself.
     /// By default, it equals to `0` and used only for decimal context.
-    </span><span class="kw">pub fn </span>with_precision(<span class="kw-2">mut </span><span class="self">self</span>, precision: i32) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.precision = precision;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_precision(<span class="self">self</span>, precision: i32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ precision, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Sets scale for Parquet DECIMAL physical type and returns itself.
     /// By default, it equals to `0` and used only for decimal context.
-    </span><span class="kw">pub fn </span>with_scale(<span class="kw-2">mut </span><span class="self">self</span>, scale: i32) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.scale = scale;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_scale(<span class="self">self</span>, scale: i32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ scale, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Sets optional field id and returns itself.
-    </span><span class="kw">pub fn </span>with_id(<span class="kw-2">mut </span><span class="self">self</span>, id: i32) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.id = <span class="prelude-val">Some</span>(id);
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_id(<span class="self">self</span>, id: <span class="prelude-ty">Option</span>&lt;i32&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ id, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Creates a new `PrimitiveType` instance from the collected attributes.
     /// Returns `Err` in case of any building conditions are not met.
@@ -2677,29 +2669,31 @@
     </span>}
 
     <span class="doccomment">/// Sets [`ConvertedType`](crate::basic::ConvertedType) for this field and returns itself.
-    </span><span class="kw">pub fn </span>with_converted_type(<span class="kw-2">mut </span><span class="self">self</span>, converted_type: ConvertedType) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.converted_type = converted_type;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_converted_type(<span class="self">self</span>, converted_type: ConvertedType) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            converted_type,
+            ..<span class="self">self
+        </span>}
+    }
 
     <span class="doccomment">/// Sets [`LogicalType`](crate::basic::LogicalType) for this field and returns itself.
-    </span><span class="kw">pub fn </span>with_logical_type(<span class="kw-2">mut </span><span class="self">self</span>, logical_type: <span class="prelude-ty">Option</span>&lt;LogicalType&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.logical_type = logical_type;
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_logical_type(<span class="self">self</span>, logical_type: <span class="prelude-ty">Option</span>&lt;LogicalType&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            logical_type,
+            ..<span class="self">self
+        </span>}
+    }
 
     <span class="doccomment">/// Sets a list of fields that should be child nodes of this field.
     /// Returns updated self.
-    </span><span class="kw">pub fn </span>with_fields(<span class="kw-2">mut </span><span class="self">self</span>, fields: <span class="kw-2">&amp;mut </span>Vec&lt;TypePtr&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.fields.append(fields);
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_fields(<span class="self">self</span>, fields: Vec&lt;TypePtr&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ fields, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Sets optional field id and returns itself.
-    </span><span class="kw">pub fn </span>with_id(<span class="kw-2">mut </span><span class="self">self</span>, id: i32) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.id = <span class="prelude-val">Some</span>(id);
-        <span class="self">self
-    </span>}
+    </span><span class="kw">pub fn </span>with_id(<span class="self">self</span>, id: <span class="prelude-ty">Option</span>&lt;i32&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ id, ..<span class="self">self </span>}
+    }
 
     <span class="doccomment">/// Creates a new `GroupType` instance from the gathered attributes.
     </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Type&gt; {
@@ -3210,16 +3204,14 @@
             <span class="kw">let </span>scale = elements[index].scale.unwrap_or(-<span class="number">1</span>);
             <span class="kw">let </span>precision = elements[index].precision.unwrap_or(-<span class="number">1</span>);
             <span class="kw">let </span>name = <span class="kw-2">&amp;</span>elements[index].name;
-            <span class="kw">let </span><span class="kw-2">mut </span>builder = Type::primitive_type_builder(name, physical_type)
+            <span class="kw">let </span>builder = Type::primitive_type_builder(name, physical_type)
                 .with_repetition(repetition)
                 .with_converted_type(converted_type)
                 .with_logical_type(logical_type)
                 .with_length(length)
                 .with_precision(precision)
-                .with_scale(scale);
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = field_id {
-                builder = builder.with_id(id);
-            }
+                .with_scale(scale)
+                .with_id(field_id);
             <span class="prelude-val">Ok</span>((index + <span class="number">1</span>, Arc::new(builder.build()<span class="question-mark">?</span>)))
         }
         <span class="prelude-val">Some</span>(n) =&gt; {
@@ -3239,7 +3231,8 @@
             <span class="kw">let </span><span class="kw-2">mut </span>builder = Type::group_type_builder(<span class="kw-2">&amp;</span>elements[index].name)
                 .with_converted_type(converted_type)
                 .with_logical_type(logical_type)
-                .with_fields(<span class="kw-2">&amp;mut </span>fields);
+                .with_fields(fields)
+                .with_id(field_id);
             <span class="kw">if let </span><span class="prelude-val">Some</span>(rep) = repetition {
                 <span class="comment">// Sometimes parquet-cpp and parquet-mr set repetition level REQUIRED or
                 // REPEATED for root node.
@@ -3251,9 +3244,6 @@
                 </span><span class="kw">if </span>!is_root_node {
                     builder = builder.with_repetition(rep);
                 }
-            }
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = field_id {
-                builder = builder.with_id(id);
             }
             <span class="prelude-val">Ok</span>((next_index, Arc::new(builder.build().unwrap())))
         }
@@ -3360,7 +3350,7 @@
                 bit_width: <span class="number">32</span>,
                 is_signed: <span class="bool-val">true</span>,
             }))
-            .with_id(<span class="number">0</span>)
+            .with_id(<span class="prelude-val">Some</span>(<span class="number">0</span>))
             .build();
         <span class="macro">assert!</span>(result.is_ok());
 
@@ -3642,22 +3632,22 @@
     </span><span class="kw">fn </span>test_group_type() {
         <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
             .with_converted_type(ConvertedType::INT_32)
-            .with_id(<span class="number">0</span>)
+            .with_id(<span class="prelude-val">Some</span>(<span class="number">0</span>))
             .build();
         <span class="macro">assert!</span>(f1.is_ok());
         <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::BYTE_ARRAY)
             .with_converted_type(ConvertedType::UTF8)
-            .with_id(<span class="number">1</span>)
+            .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
             .build();
         <span class="macro">assert!</span>(f2.is_ok());
 
-        <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[Arc::new(f1.unwrap()), Arc::new(f2.unwrap())];
+        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Arc::new(f1.unwrap()), Arc::new(f2.unwrap())];
 
         <span class="kw">let </span>result = Type::group_type_builder(<span class="string">&quot;foo&quot;</span>)
             .with_repetition(Repetition::REPEATED)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
-            .with_fields(<span class="kw-2">&amp;mut </span>fields)
-            .with_id(<span class="number">1</span>)
+            .with_fields(fields)
+            .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
             .build();
         <span class="macro">assert!</span>(result.is_ok());
 
@@ -3747,17 +3737,17 @@
         <span class="kw">let </span>list = Type::group_type_builder(<span class="string">&quot;records&quot;</span>)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::LIST)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(item1), Arc::new(item2), Arc::new(item3)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(item1), Arc::new(item2), Arc::new(item3)])
             .build()<span class="question-mark">?</span>;
         <span class="kw">let </span>bag = Type::group_type_builder(<span class="string">&quot;bag&quot;</span>)
             .with_repetition(Repetition::OPTIONAL)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(list)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(list)])
             .build()<span class="question-mark">?</span>;
         fields.push(Arc::new(bag));
 
         <span class="kw">let </span>schema = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
             .with_repetition(Repetition::REPEATED)
-            .with_fields(<span class="kw-2">&amp;mut </span>fields)
+            .with_fields(fields)
             .build()<span class="question-mark">?</span>;
         <span class="kw">let </span>descr = SchemaDescriptor::new(Arc::new(schema));
 
@@ -3906,13 +3896,9 @@
 
     <span class="comment">// function to create a new group type for testing
     </span><span class="kw">fn </span>test_new_group_type(name: <span class="kw-2">&amp;</span>str, repetition: Repetition, types: Vec&lt;Type&gt;) -&gt; Type {
-        <span class="kw">let </span><span class="kw-2">mut </span>fields = Vec::new();
-        <span class="kw">for </span>tpe <span class="kw">in </span>types {
-            fields.push(Arc::new(tpe))
-        }
         Type::group_type_builder(name)
             .with_repetition(repetition)
-            .with_fields(<span class="kw-2">&amp;mut </span>fields)
+            .with_fields(types.into_iter().map(Arc::new).collect())
             .build()
             .unwrap()
     }

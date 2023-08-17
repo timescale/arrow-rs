@@ -25,7 +25,7 @@
     .unwrap();
 
 <span class="kw">let </span>schema = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-    .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(field_a), Arc::new(field_b)])
+    .with_fields(<span class="macro">vec!</span>[Arc::new(field_a), Arc::new(field_b)])
     .build()
     .unwrap();
 

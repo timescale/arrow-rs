@@ -1917,7 +1917,7 @@
                     <span class="kw">let </span>required_field = Type::group_type_builder(field.name())
                         .with_repetition(Repetition::REQUIRED)
                         .with_converted_type(field.get_basic_info().converted_type())
-                        .with_fields(<span class="kw-2">&amp;mut </span>Vec::from(field.get_fields()))
+                        .with_fields(field.get_fields().to_vec())
                         .build()<span class="question-mark">?</span>;
 
                     path.pop();

@@ -2504,7 +2504,7 @@
         <span class="kw">let </span>file = tempfile::tempfile().unwrap();
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                .with_fields(<span class="macro">vec!</span>[Arc::new(
                     types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                         .build()
                         .unwrap(),
@@ -2530,7 +2530,7 @@
         <span class="kw">let </span>file = tempfile::tempfile().unwrap();
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[
+                .with_fields(<span class="macro">vec!</span>[
                     Arc::new(
                         types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                             .with_repetition(Repetition::REQUIRED)
@@ -2577,7 +2577,7 @@
 
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                .with_fields(<span class="macro">vec!</span>[Arc::new(
                     types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                         .build()
                         .unwrap(),
@@ -2600,7 +2600,7 @@
 
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                .with_fields(<span class="macro">vec!</span>[Arc::new(
                     types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                         .build()
                         .unwrap(),
@@ -2649,7 +2649,7 @@
         );
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[field.clone()])
+                .with_fields(<span class="macro">vec!</span>[field.clone()])
                 .build()
                 .unwrap(),
         );
@@ -2692,7 +2692,7 @@
 
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[
+                .with_fields(<span class="macro">vec!</span>[
                     Arc::new(
                         types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                             .build()
@@ -3039,7 +3039,7 @@
     {
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                .with_fields(<span class="macro">vec!</span>[Arc::new(
                     types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, D::get_physical_type())
                         .with_repetition(Repetition::REQUIRED)
                         .build()
@@ -3197,7 +3197,7 @@
     ) {
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(
+                .with_fields(<span class="macro">vec!</span>[Arc::new(
                     types::Type::primitive_type_builder(<span class="string">&quot;col1&quot;</span>, Type::INT32)
                         .with_repetition(Repetition::REQUIRED)
                         .build()

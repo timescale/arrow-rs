@@ -269,7 +269,7 @@
           #field_types
         );<span class="kw-2">*</span>;
         <span class="kw">let </span>group = ParquetType::group_type_builder(<span class="string">&quot;rust_schema&quot;</span>)
-          .with_fields(<span class="kw-2">&amp;mut </span>fields)
+          .with_fields(fields)
           .build()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(group.into())
       }

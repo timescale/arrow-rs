@@ -4628,7 +4628,7 @@
             <span class="kw">_ </span>=&gt; -<span class="number">1</span>,
         };
 
-        <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[Arc::new(
+        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Arc::new(
             Type::primitive_type_builder(<span class="string">&quot;leaf&quot;</span>, T::get_physical_type())
                 .with_repetition(repetition)
                 .with_converted_type(converted_type)
@@ -4639,7 +4639,7 @@
 
         <span class="kw">let </span>schema = Arc::new(
             Type::group_type_builder(<span class="string">&quot;test_schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span>fields)
+                .with_fields(fields)
                 .build()
                 .unwrap(),
         );
@@ -4985,7 +4985,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dictionary_preservation() {
-        <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[Arc::new(
+        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Arc::new(
             Type::primitive_type_builder(<span class="string">&quot;leaf&quot;</span>, PhysicalType::BYTE_ARRAY)
                 .with_repetition(Repetition::OPTIONAL)
                 .with_converted_type(ConvertedType::UTF8)
@@ -4995,7 +4995,7 @@
 
         <span class="kw">let </span>schema = Arc::new(
             Type::group_type_builder(<span class="string">&quot;test_schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span>fields)
+                .with_fields(fields)
                 .build()
                 .unwrap(),
         );

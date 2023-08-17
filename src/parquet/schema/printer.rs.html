@@ -1565,40 +1565,40 @@
             <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
                 .with_repetition(Repetition::REQUIRED)
                 .with_converted_type(ConvertedType::INT_32)
-                .with_id(<span class="number">0</span>)
+                .with_id(<span class="prelude-val">Some</span>(<span class="number">0</span>))
                 .build();
             <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::BYTE_ARRAY)
                 .with_converted_type(ConvertedType::UTF8)
-                .with_id(<span class="number">1</span>)
+                .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
                 .build();
             <span class="kw">let </span>f3 = Type::primitive_type_builder(<span class="string">&quot;f3&quot;</span>, PhysicalType::BYTE_ARRAY)
                 .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::String))
-                .with_id(<span class="number">1</span>)
+                .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
                 .build();
             <span class="kw">let </span>f4 =
                 Type::primitive_type_builder(<span class="string">&quot;f4&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                     .with_repetition(Repetition::REPEATED)
                     .with_converted_type(ConvertedType::INTERVAL)
                     .with_length(<span class="number">12</span>)
-                    .with_id(<span class="number">2</span>)
+                    .with_id(<span class="prelude-val">Some</span>(<span class="number">2</span>))
                     .build();
 
-            <span class="kw">let </span><span class="kw-2">mut </span>struct_fields = <span class="macro">vec!</span>[
+            <span class="kw">let </span>struct_fields = <span class="macro">vec!</span>[
                 Arc::new(f1.unwrap()),
                 Arc::new(f2.unwrap()),
                 Arc::new(f3.unwrap()),
             ];
             <span class="kw">let </span>field = Type::group_type_builder(<span class="string">&quot;field&quot;</span>)
                 .with_repetition(Repetition::OPTIONAL)
-                .with_fields(<span class="kw-2">&amp;mut </span>struct_fields)
-                .with_id(<span class="number">1</span>)
+                .with_fields(struct_fields)
+                .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
                 .build()
                 .unwrap();
 
-            <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[Arc::new(field), Arc::new(f4.unwrap())];
+            <span class="kw">let </span>fields = <span class="macro">vec!</span>[Arc::new(field), Arc::new(f4.unwrap())];
             <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-                .with_fields(<span class="kw-2">&amp;mut </span>fields)
-                .with_id(<span class="number">2</span>)
+                .with_fields(fields)
+                .with_id(<span class="prelude-val">Some</span>(<span class="number">2</span>))
                 .build()
                 .unwrap();
             p.print(<span class="kw-2">&amp;</span>message);
@@ -1626,7 +1626,7 @@
             .with_repetition(Repetition::OPTIONAL)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
             .with_converted_type(ConvertedType::LIST)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(a2)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(a2)])
             .build()
             .unwrap();
 
@@ -1643,7 +1643,7 @@
         <span class="kw">let </span>b2 = Type::group_type_builder(<span class="string">&quot;b2&quot;</span>)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::NONE)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(b3), Arc::new(b4)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(b3), Arc::new(b4)])
             .build()
             .unwrap();
 
@@ -1651,18 +1651,18 @@
             .with_repetition(Repetition::OPTIONAL)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
             .with_converted_type(ConvertedType::LIST)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(b2)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(b2)])
             .build()
             .unwrap();
 
         <span class="kw">let </span>a0 = Type::group_type_builder(<span class="string">&quot;a0&quot;</span>)
             .with_repetition(Repetition::REQUIRED)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(a1), Arc::new(b1)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(a1), Arc::new(b1)])
             .build()
             .unwrap();
 
         <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;root&quot;</span>)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(a0)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(a0)])
             .build()
             .unwrap();
 
@@ -1685,7 +1685,7 @@
 
         <span class="kw">let </span>field = Type::group_type_builder(<span class="string">&quot;field&quot;</span>)
             .with_repetition(Repetition::OPTIONAL)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(f1), Arc::new(f2)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(f1), Arc::new(f2)])
             .build()
             .unwrap();
 
@@ -1697,7 +1697,7 @@
             .unwrap();
 
         <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(field), Arc::new(f3)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(field), Arc::new(f3)])
             .build()
             .unwrap();
 
@@ -1731,7 +1731,7 @@
             .unwrap();
 
         <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
-            .with_fields(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[Arc::new(f1), Arc::new(f2)])
+            .with_fields(<span class="macro">vec!</span>[Arc::new(f1), Arc::new(f2)])
             .build()
             .unwrap();
 
