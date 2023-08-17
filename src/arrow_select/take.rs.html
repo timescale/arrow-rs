@@ -1939,6 +1939,81 @@
 <a href="#1939" id="1939">1939</a>
 <a href="#1940" id="1940">1940</a>
 <a href="#1941" id="1941">1941</a>
+<a href="#1942" id="1942">1942</a>
+<a href="#1943" id="1943">1943</a>
+<a href="#1944" id="1944">1944</a>
+<a href="#1945" id="1945">1945</a>
+<a href="#1946" id="1946">1946</a>
+<a href="#1947" id="1947">1947</a>
+<a href="#1948" id="1948">1948</a>
+<a href="#1949" id="1949">1949</a>
+<a href="#1950" id="1950">1950</a>
+<a href="#1951" id="1951">1951</a>
+<a href="#1952" id="1952">1952</a>
+<a href="#1953" id="1953">1953</a>
+<a href="#1954" id="1954">1954</a>
+<a href="#1955" id="1955">1955</a>
+<a href="#1956" id="1956">1956</a>
+<a href="#1957" id="1957">1957</a>
+<a href="#1958" id="1958">1958</a>
+<a href="#1959" id="1959">1959</a>
+<a href="#1960" id="1960">1960</a>
+<a href="#1961" id="1961">1961</a>
+<a href="#1962" id="1962">1962</a>
+<a href="#1963" id="1963">1963</a>
+<a href="#1964" id="1964">1964</a>
+<a href="#1965" id="1965">1965</a>
+<a href="#1966" id="1966">1966</a>
+<a href="#1967" id="1967">1967</a>
+<a href="#1968" id="1968">1968</a>
+<a href="#1969" id="1969">1969</a>
+<a href="#1970" id="1970">1970</a>
+<a href="#1971" id="1971">1971</a>
+<a href="#1972" id="1972">1972</a>
+<a href="#1973" id="1973">1973</a>
+<a href="#1974" id="1974">1974</a>
+<a href="#1975" id="1975">1975</a>
+<a href="#1976" id="1976">1976</a>
+<a href="#1977" id="1977">1977</a>
+<a href="#1978" id="1978">1978</a>
+<a href="#1979" id="1979">1979</a>
+<a href="#1980" id="1980">1980</a>
+<a href="#1981" id="1981">1981</a>
+<a href="#1982" id="1982">1982</a>
+<a href="#1983" id="1983">1983</a>
+<a href="#1984" id="1984">1984</a>
+<a href="#1985" id="1985">1985</a>
+<a href="#1986" id="1986">1986</a>
+<a href="#1987" id="1987">1987</a>
+<a href="#1988" id="1988">1988</a>
+<a href="#1989" id="1989">1989</a>
+<a href="#1990" id="1990">1990</a>
+<a href="#1991" id="1991">1991</a>
+<a href="#1992" id="1992">1992</a>
+<a href="#1993" id="1993">1993</a>
+<a href="#1994" id="1994">1994</a>
+<a href="#1995" id="1995">1995</a>
+<a href="#1996" id="1996">1996</a>
+<a href="#1997" id="1997">1997</a>
+<a href="#1998" id="1998">1998</a>
+<a href="#1999" id="1999">1999</a>
+<a href="#2000" id="2000">2000</a>
+<a href="#2001" id="2001">2001</a>
+<a href="#2002" id="2002">2002</a>
+<a href="#2003" id="2003">2003</a>
+<a href="#2004" id="2004">2004</a>
+<a href="#2005" id="2005">2005</a>
+<a href="#2006" id="2006">2006</a>
+<a href="#2007" id="2007">2007</a>
+<a href="#2008" id="2008">2008</a>
+<a href="#2009" id="2009">2009</a>
+<a href="#2010" id="2010">2010</a>
+<a href="#2011" id="2011">2011</a>
+<a href="#2012" id="2012">2012</a>
+<a href="#2013" id="2013">2013</a>
+<a href="#2014" id="2014">2014</a>
+<a href="#2015" id="2015">2015</a>
+<a href="#2016" id="2016">2016</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2014,49 +2089,65 @@
 ///
 /// assert_eq!(*taken, StringArray::from(vec![&quot;two&quot;, &quot;one&quot;]));
 /// ```
-</span><span class="kw">pub fn </span>take&lt;IndexType: ArrowPrimitiveType&gt;(
+</span><span class="kw">pub fn </span>take(
     values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    indices: <span class="kw-2">&amp;</span>PrimitiveArray&lt;IndexType&gt;,
-    options: <span class="prelude-ty">Option</span>&lt;TakeOptions&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    take_impl(values, indices, options)
-}
-
-<span class="kw">fn </span>take_impl&lt;IndexType: ArrowPrimitiveType&gt;(
-    values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    indices: <span class="kw-2">&amp;</span>PrimitiveArray&lt;IndexType&gt;,
+    indices: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
     options: <span class="prelude-ty">Option</span>&lt;TakeOptions&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">let </span>options = options.unwrap_or_default();
-    <span class="kw">if </span>options.check_bounds {
-        <span class="kw">let </span>len = values.len();
-        <span class="kw">if </span>indices.null_count() &gt; <span class="number">0 </span>{
-            indices.iter().flatten().try_for_each(|index| {
-                <span class="kw">let </span>ix = index.to_usize().ok_or_else(|| {
-                    ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-                })<span class="question-mark">?</span>;
-                <span class="kw">if </span>ix &gt;= len {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                        <span class="macro">format!</span>(<span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;</span>))
-                    );
-                }
-                <span class="prelude-val">Ok</span>(())
-            })<span class="question-mark">?</span>;
-        } <span class="kw">else </span>{
-            indices.values().iter().try_for_each(|index| {
-                <span class="kw">let </span>ix = index.to_usize().ok_or_else(|| {
-                    ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-                })<span class="question-mark">?</span>;
-                <span class="kw">if </span>ix &gt;= len {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                        <span class="macro">format!</span>(<span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;</span>))
-                    );
-                }
-                <span class="prelude-val">Ok</span>(())
-            })<span class="question-mark">?
-        </span>}
+    <span class="macro">macro_rules! </span>helper {
+        (<span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$values</span>:expr, <span class="macro-nonterminal">$indices</span>:expr, <span class="macro-nonterminal">$options</span>:expr) =&gt; {{
+            <span class="kw">let </span>indices = indices.as_primitive::&lt;<span class="macro-nonterminal">$t</span>&gt;();
+            <span class="kw">if </span><span class="macro-nonterminal">$options</span>.check_bounds {
+                check_bounds(<span class="macro-nonterminal">$values</span>.len(), indices)<span class="question-mark">?</span>;
+            }
+            <span class="kw">let </span>indices = indices.to_indices();
+            take_impl(<span class="macro-nonterminal">$values</span>, <span class="kw-2">&amp;</span>indices)
+        }};
     }
+    <span class="macro">downcast_integer! </span>{
+        indices.data_type() =&gt; (helper, values, indices, options),
+        d =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(<span class="string">&quot;Take only supported for integers, got {d:?}&quot;</span>)))
+    }
+}
 
+<span class="doccomment">/// Verifies that the non-null values of `indices` are all `&lt; len`
+</span><span class="kw">fn </span>check_bounds&lt;T: ArrowPrimitiveType&gt;(
+    len: usize,
+    indices: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+    <span class="kw">if </span>indices.null_count() &gt; <span class="number">0 </span>{
+        indices.iter().flatten().try_for_each(|index| {
+            <span class="kw">let </span>ix = index.to_usize().ok_or_else(|| {
+                ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
+            })<span class="question-mark">?</span>;
+            <span class="kw">if </span>ix &gt;= len {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
+                    <span class="macro">format!</span>(<span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;</span>))
+                );
+            }
+            <span class="prelude-val">Ok</span>(())
+        })
+    } <span class="kw">else </span>{
+        indices.values().iter().try_for_each(|index| {
+            <span class="kw">let </span>ix = index.to_usize().ok_or_else(|| {
+                ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
+            })<span class="question-mark">?</span>;
+            <span class="kw">if </span>ix &gt;= len {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
+                    <span class="macro">format!</span>(<span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;</span>))
+                );
+            }
+            <span class="prelude-val">Ok</span>(())
+        })
+    }
+}
+
+<span class="attr">#[inline(never)]
+</span><span class="kw">fn </span>take_impl&lt;IndexType: ArrowPrimitiveType&gt;(
+    values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
+    indices: <span class="kw-2">&amp;</span>PrimitiveArray&lt;IndexType&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="macro">downcast_primitive_array! </span>{
         values =&gt; <span class="prelude-val">Ok</span>(Arc::new(take_primitive(values, indices)<span class="question-mark">?</span>)),
         DataType::Boolean =&gt; {
@@ -2097,7 +2188,7 @@
             <span class="kw">let </span>arrays  = array
                 .columns()
                 .iter()
-                .map(|a| take_impl(a.as_ref(), indices, <span class="prelude-val">Some</span>(options.clone())))
+                .map(|a| take_impl(a.as_ref(), indices))
                 .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;ArrayRef&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
             <span class="kw">let </span>fields: Vec&lt;(FieldRef, ArrayRef)&gt; =
                 fields.iter().cloned().zip(arrays).collect();
@@ -2364,7 +2455,7 @@
     </span><span class="kw">let </span>(list_indices, offsets, null_buf) =
         take_value_indices_from_list::&lt;IndexType, OffsetType&gt;(values, indices)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>taken = take_impl::&lt;OffsetType&gt;(values.values().as_ref(), <span class="kw-2">&amp;</span>list_indices, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>taken = take_impl::&lt;OffsetType&gt;(values.values().as_ref(), <span class="kw-2">&amp;</span>list_indices)<span class="question-mark">?</span>;
     <span class="kw">let </span>value_offsets = Buffer::from_vec(offsets);
     <span class="comment">// create a new list with taken data and computed null information
     </span><span class="kw">let </span>list_data = ArrayDataBuilder::new(values.data_type().clone())
@@ -2390,7 +2481,7 @@
     length: &lt;UInt32Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;FixedSizeListArray, ArrowError&gt; {
     <span class="kw">let </span>list_indices = take_value_indices_from_fixed_size_list(values, indices, length)<span class="question-mark">?</span>;
-    <span class="kw">let </span>taken = take_impl::&lt;UInt32Type&gt;(values.values().as_ref(), <span class="kw-2">&amp;</span>list_indices, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>taken = take_impl::&lt;UInt32Type&gt;(values.values().as_ref(), <span class="kw-2">&amp;</span>list_indices)<span class="question-mark">?</span>;
 
     <span class="comment">// determine null count and null buffer, which are a function of `values` and `indices`
     </span><span class="kw">let </span>num_bytes = bit_util::ceil(indices.len(), <span class="number">8</span>);
@@ -2617,6 +2708,65 @@
     <span class="prelude-val">Ok</span>(PrimitiveArray::&lt;UInt32Type&gt;::from(values))
 }
 
+<span class="doccomment">/// To avoid generating take implementations for every index type, instead we
+/// only generate for UInt32 and UInt64 and coerce inputs to these types
+</span><span class="kw">trait </span>ToIndices {
+    <span class="kw">type </span>T: ArrowPrimitiveType;
+
+    <span class="kw">fn </span>to_indices(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrimitiveArray&lt;<span class="self">Self</span>::T&gt;;
+}
+
+<span class="macro">macro_rules! </span>to_indices_reinterpret {
+    (<span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$o</span>:ty) =&gt; {
+        <span class="kw">impl </span>ToIndices <span class="kw">for </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+            <span class="kw">type </span>T = <span class="macro-nonterminal">$o</span>;
+
+            <span class="kw">fn </span>to_indices(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrimitiveArray&lt;<span class="macro-nonterminal">$o</span>&gt; {
+                <span class="kw">let </span>cast =
+                    ScalarBuffer::new(<span class="self">self</span>.values().inner().clone(), <span class="number">0</span>, <span class="self">self</span>.len());
+                PrimitiveArray::new(cast, <span class="self">self</span>.nulls().cloned())
+            }
+        }
+    };
+}
+
+<span class="macro">macro_rules! </span>to_indices_identity {
+    (<span class="macro-nonterminal">$t</span>:ty) =&gt; {
+        <span class="kw">impl </span>ToIndices <span class="kw">for </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+            <span class="kw">type </span>T = <span class="macro-nonterminal">$t</span>;
+
+            <span class="kw">fn </span>to_indices(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+                <span class="self">self</span>.clone()
+            }
+        }
+    };
+}
+
+<span class="macro">macro_rules! </span>to_indices_widening {
+    (<span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$o</span>:ty) =&gt; {
+        <span class="kw">impl </span>ToIndices <span class="kw">for </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+            <span class="kw">type </span>T = UInt32Type;
+
+            <span class="kw">fn </span>to_indices(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrimitiveArray&lt;<span class="macro-nonterminal">$o</span>&gt; {
+                <span class="kw">let </span>cast = <span class="self">self</span>.values().iter().copied().map(|x| x <span class="kw">as _</span>).collect();
+                PrimitiveArray::new(cast, <span class="self">self</span>.nulls().cloned())
+            }
+        }
+    };
+}
+
+<span class="macro">to_indices_widening!</span>(UInt8Type, UInt32Type);
+<span class="macro">to_indices_widening!</span>(Int8Type, UInt32Type);
+
+<span class="macro">to_indices_widening!</span>(UInt16Type, UInt32Type);
+<span class="macro">to_indices_widening!</span>(Int16Type, UInt32Type);
+
+<span class="macro">to_indices_identity!</span>(UInt32Type);
+<span class="macro">to_indices_reinterpret!</span>(Int32Type, UInt32Type);
+
+<span class="macro">to_indices_identity!</span>(UInt64Type);
+<span class="macro">to_indices_reinterpret!</span>(Int64Type, UInt64Type);
+
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -2708,7 +2858,7 @@
     {
         <span class="kw">let </span>output = PrimitiveArray::&lt;T&gt;::from(data);
         <span class="kw">let </span>expected = PrimitiveArray::&lt;T&gt;::from(expected_data);
-        <span class="kw">let </span>output = take_impl(<span class="kw-2">&amp;</span>output, index, options).unwrap();
+        <span class="kw">let </span>output = take(<span class="kw-2">&amp;</span>output, index, options).unwrap();
         <span class="kw">let </span>output = output.as_any().downcast_ref::&lt;PrimitiveArray&lt;T&gt;&gt;().unwrap();
         <span class="macro">assert_eq!</span>(output, <span class="kw-2">&amp;</span>expected)
     }
@@ -3019,7 +3169,7 @@
             <span class="number">1_639_715_368_000_000_000</span>,
         ])
         .with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
-        <span class="kw">let </span>result = take_impl(<span class="kw-2">&amp;</span>input, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>result = take(<span class="kw-2">&amp;</span>input, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">match </span>result.data_type() {
             DataType::Timestamp(TimeUnit::Nanosecond, tz) =&gt; {
                 <span class="macro">assert_eq!</span>(tz.clone(), <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into()))

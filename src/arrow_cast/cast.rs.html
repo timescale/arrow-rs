@@ -8953,18 +8953,6 @@
 <a href="#8953" id="8953">8953</a>
 <a href="#8954" id="8954">8954</a>
 <a href="#8955" id="8955">8955</a>
-<a href="#8956" id="8956">8956</a>
-<a href="#8957" id="8957">8957</a>
-<a href="#8958" id="8958">8958</a>
-<a href="#8959" id="8959">8959</a>
-<a href="#8960" id="8960">8960</a>
-<a href="#8961" id="8961">8961</a>
-<a href="#8962" id="8962">8962</a>
-<a href="#8963" id="8963">8963</a>
-<a href="#8964" id="8964">8964</a>
-<a href="#8965" id="8965">8965</a>
-<a href="#8966" id="8966">8966</a>
-<a href="#8967" id="8967">8967</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -9016,7 +9004,7 @@
 <span class="kw">use </span>arrow_array::{
     builder::<span class="kw-2">*</span>, cast::<span class="kw-2">*</span>, temporal_conversions::<span class="kw-2">*</span>, timezone::Tz, types::<span class="kw-2">*</span>, <span class="kw-2">*</span>,
 };
-<span class="kw">use </span>arrow_buffer::{i256, ArrowNativeType, Buffer, OffsetBuffer, ScalarBuffer};
+<span class="kw">use </span>arrow_buffer::{i256, ArrowNativeType, Buffer, OffsetBuffer};
 <span class="kw">use </span>arrow_data::ArrayData;
 <span class="kw">use </span>arrow_schema::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_select::take::take;
@@ -11994,19 +11982,7 @@
 {
     <span class="kw">let </span>dict_array = array.as_dictionary::&lt;K&gt;();
     <span class="kw">let </span>cast_dict_values = cast_with_options(dict_array.values(), to_type, cast_options)<span class="question-mark">?</span>;
-    <span class="kw">let </span>keys = dict_array.keys();
-    <span class="kw">match </span>K::DATA_TYPE {
-        DataType::Int32 =&gt; {
-            <span class="comment">// Dictionary guarantees all non-null keys &gt;= 0
-            </span><span class="kw">let </span>buffer = ScalarBuffer::new(keys.values().inner().clone(), <span class="number">0</span>, keys.len());
-            <span class="kw">let </span>indices = PrimitiveArray::new(buffer, keys.nulls().cloned());
-            take::&lt;UInt32Type&gt;(cast_dict_values.as_ref(), <span class="kw-2">&amp;</span>indices, <span class="prelude-val">None</span>)
-        }
-        <span class="kw">_ </span>=&gt; {
-            <span class="kw">let </span>indices = cast_with_options(keys, <span class="kw-2">&amp;</span>DataType::UInt32, cast_options)<span class="question-mark">?</span>;
-            take::&lt;UInt32Type&gt;(cast_dict_values.as_ref(), indices.as_primitive(), <span class="prelude-val">None</span>)
-        }
-    }
+    take(cast_dict_values.as_ref(), dict_array.keys(), <span class="prelude-val">None</span>)
 }
 
 <span class="doccomment">/// Attempts to encode an array into an `ArrayDictionary` with index
