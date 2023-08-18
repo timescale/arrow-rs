@@ -2957,6 +2957,8 @@
 <a href="#2957" id="2957">2957</a>
 <a href="#2958" id="2958">2958</a>
 <a href="#2959" id="2959">2959</a>
+<a href="#2960" id="2960">2960</a>
+<a href="#2961" id="2961">2961</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -3263,6 +3265,8 @@
 <span class="doccomment">/// A synchronous builder used to construct [`ParquetRecordBatchReader`] for a file
 ///
 /// For an async API see [`crate::arrow::async_reader::ParquetRecordBatchStreamBuilder`]
+///
+/// See [`ArrowReaderBuilder`] for additional member functions
 </span><span class="kw">pub type </span>ParquetRecordBatchReaderBuilder&lt;T&gt; = ArrowReaderBuilder&lt;SyncReader&lt;T&gt;&gt;;
 
 <span class="kw">impl</span>&lt;T: ChunkReader + <span class="lifetime">&#39;static</span>&gt; ParquetRecordBatchReaderBuilder&lt;T&gt; {
