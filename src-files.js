@@ -13,7 +13,7 @@ var srcIndex = JSON.parse('{\
 "arrow_ipc":["",[["gen",[],["File.rs","Message.rs","Schema.rs","SparseTensor.rs","Tensor.rs","mod.rs"]]],["compression.rs","convert.rs","lib.rs","reader.rs","writer.rs"]],\
 "arrow_json":["",[["reader",[],["boolean_array.rs","decimal_array.rs","list_array.rs","map_array.rs","mod.rs","null_array.rs","primitive_array.rs","schema.rs","serializer.rs","string_array.rs","struct_array.rs","tape.rs","timestamp_array.rs"]]],["lib.rs","writer.rs"]],\
 "arrow_json_integration_test":["",[],["arrow-json-integration-test.rs"]],\
-"arrow_ord":["",[],["comparison.rs","lib.rs","ord.rs","partition.rs","sort.rs"]],\
+"arrow_ord":["",[],["cmp.rs","comparison.rs","lib.rs","ord.rs","partition.rs","sort.rs"]],\
 "arrow_row":["",[],["dictionary.rs","fixed.rs","interner.rs","lib.rs","list.rs","variable.rs"]],\
 "arrow_schema":["",[],["datatype.rs","error.rs","ffi.rs","field.rs","fields.rs","lib.rs","schema.rs"]],\
 "arrow_select":["",[],["concat.rs","filter.rs","interleave.rs","lib.rs","nullif.rs","take.rs","window.rs","zip.rs"]],\
