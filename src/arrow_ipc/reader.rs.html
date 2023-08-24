@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (5c6a7e71c 2023-08-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (249595b75 2023-08-23)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-b2d31d2efc7e9b67.css" data-theme-dark-css="dark-3388a2fb2ef8066b.css" data-theme-ayu-css="ayu-8c3c66a6cf12cb2f.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-b2d31d2efc7e9b67.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-3388a2fb2ef8066b.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1685,6 +1685,8 @@
 <a href="#1685" id="1685">1685</a>
 <a href="#1686" id="1686">1686</a>
 <a href="#1687" id="1687">1687</a>
+<a href="#1688" id="1688">1688</a>
+<a href="#1689" id="1689">1689</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1825,12 +1827,12 @@
             <span class="kw">let </span>index_buffers = [reader.next_buffer()<span class="question-mark">?</span>, reader.next_buffer()<span class="question-mark">?</span>];
 
             <span class="kw">let </span>dict_id = field.dict_id().ok_or_else(|| {
-                ArrowError::IoError(<span class="macro">format!</span>(<span class="string">&quot;Field {field} does not have dict id&quot;</span>))
+                ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Field {field} does not have dict id&quot;</span>))
             })<span class="question-mark">?</span>;
 
             <span class="kw">let </span>value_array =
                 reader.dictionaries_by_id.get(<span class="kw-2">&amp;</span>dict_id).ok_or_else(|| {
-                    ArrowError::IoError(<span class="macro">format!</span>(
+                    ArrowError::ParseError(<span class="macro">format!</span>(
                         <span class="string">&quot;Cannot find a dictionary batch with dict id: {dict_id}&quot;
                     </span>))
                 })<span class="question-mark">?</span>;
@@ -1880,7 +1882,7 @@
             <span class="kw">let </span>null_count = node.null_count();
 
             <span class="kw">if </span>length != null_count {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IoError(<span class="macro">format!</span>(
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(<span class="macro">format!</span>(
                     <span class="string">&quot;Field {field} of NullArray has unequal null_count {null_count} and len {length}&quot;
                 </span>)));
             }
@@ -2012,7 +2014,7 @@
 
     <span class="kw">fn </span>next_node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, field: <span class="kw-2">&amp;</span>Field) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FieldNode, ArrowError&gt; {
         <span class="self">self</span>.nodes.next().ok_or_else(|| {
-            ArrowError::IoError(<span class="macro">format!</span>(
+            ArrowError::SchemaError(<span class="macro">format!</span>(
                 <span class="string">&quot;Invalid data for schema. {} refers to node not found in schema&quot;</span>,
                 field
             ))
@@ -2089,10 +2091,10 @@
     metadata: <span class="kw-2">&amp;</span>MetadataVersion,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;RecordBatch, ArrowError&gt; {
     <span class="kw">let </span>buffers = batch.buffers().ok_or_else(|| {
-        ArrowError::IoError(<span class="string">&quot;Unable to get buffers from IPC RecordBatch&quot;</span>.to_string())
+        ArrowError::IpcError(<span class="string">&quot;Unable to get buffers from IPC RecordBatch&quot;</span>.to_string())
     })<span class="question-mark">?</span>;
     <span class="kw">let </span>field_nodes = batch.nodes().ok_or_else(|| {
-        ArrowError::IoError(<span class="string">&quot;Unable to get field nodes from IPC RecordBatch&quot;</span>.to_string())
+        ArrowError::IpcError(<span class="string">&quot;Unable to get field nodes from IPC RecordBatch&quot;</span>.to_string())
     })<span class="question-mark">?</span>;
     <span class="kw">let </span>batch_compression = batch.compression();
     <span class="kw">let </span>compression = batch_compression
@@ -2149,7 +2151,7 @@
     metadata: <span class="kw-2">&amp;</span><span class="kw">crate</span>::MetadataVersion,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
     <span class="kw">if </span>batch.isDelta() {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IoError(
+        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
             <span class="string">&quot;delta dictionary batches not supported&quot;</span>.to_string(),
         ));
     }
@@ -2256,14 +2258,14 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>magic_buffer: [u8; <span class="number">6</span>] = [<span class="number">0</span>; <span class="number">6</span>];
         reader.read_exact(<span class="kw-2">&amp;mut </span>magic_buffer)<span class="question-mark">?</span>;
         <span class="kw">if </span>magic_buffer != <span class="kw">super</span>::ARROW_MAGIC {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IoError(
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
                 <span class="string">&quot;Arrow file does not contain correct header&quot;</span>.to_string(),
             ));
         }
         reader.seek(SeekFrom::End(-<span class="number">6</span>))<span class="question-mark">?</span>;
         reader.read_exact(<span class="kw-2">&amp;mut </span>magic_buffer)<span class="question-mark">?</span>;
         <span class="kw">if </span>magic_buffer != <span class="kw">super</span>::ARROW_MAGIC {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IoError(
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
                 <span class="string">&quot;Arrow file does not contain correct footer&quot;</span>.to_string(),
             ));
         }
@@ -2279,11 +2281,11 @@
         reader.read_exact(<span class="kw-2">&amp;mut </span>footer_data)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>footer = <span class="kw">crate</span>::root_as_footer(<span class="kw-2">&amp;</span>footer_data[..]).map_err(|err| {
-            ArrowError::IoError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as footer: {err:?}&quot;</span>))
+            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as footer: {err:?}&quot;</span>))
         })<span class="question-mark">?</span>;
 
         <span class="kw">let </span>blocks = footer.recordBatches().ok_or_else(|| {
-            ArrowError::IoError(
+            ArrowError::ParseError(
                 <span class="string">&quot;Unable to get record batches from IPC Footer&quot;</span>.to_string(),
             )
         })<span class="question-mark">?</span>;
@@ -2320,7 +2322,9 @@
                 reader.read_exact(<span class="kw-2">&amp;mut </span>block_data)<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>message = <span class="kw">crate</span>::root_as_message(<span class="kw-2">&amp;</span>block_data[..]).map_err(|err| {
-                    ArrowError::IoError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as message: {err:?}&quot;</span>))
+                    ArrowError::ParseError(<span class="macro">format!</span>(
+                        <span class="string">&quot;Unable to get root as message: {err:?}&quot;
+                    </span>))
                 })<span class="question-mark">?</span>;
 
                 <span class="kw">match </span>message.header_type() {
@@ -2344,7 +2348,7 @@
                         )<span class="question-mark">?</span>;
                     }
                     t =&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IoError(<span class="macro">format!</span>(
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
                             <span class="string">&quot;Expecting DictionaryBatch in dictionary blocks, found {t:?}.&quot;
                         </span>)));
                     }
@@ -2392,7 +2396,7 @@
     /// Sets the current block to the index, allowing random reads
     </span><span class="kw">pub fn </span>set_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="kw">if </span>index &gt;= <span class="self">self</span>.total_blocks {
-            <span class="prelude-val">Err</span>(ArrowError::IoError(<span class="macro">format!</span>(
+            <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
                 <span class="string">&quot;Cannot set batch to index {} from {} total batches&quot;</span>,
                 index, <span class="self">self</span>.total_blocks
             )))
@@ -2419,25 +2423,25 @@
         <span class="kw">let </span><span class="kw-2">mut </span>block_data = <span class="macro">vec!</span>[<span class="number">0</span>; meta_len <span class="kw">as </span>usize];
         <span class="self">self</span>.reader.read_exact(<span class="kw-2">&amp;mut </span>block_data)<span class="question-mark">?</span>;
         <span class="kw">let </span>message = <span class="kw">crate</span>::root_as_message(<span class="kw-2">&amp;</span>block_data[..]).map_err(|err| {
-            ArrowError::IoError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as footer: {err:?}&quot;</span>))
+            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as footer: {err:?}&quot;</span>))
         })<span class="question-mark">?</span>;
 
         <span class="comment">// some old test data&#39;s footer metadata is not set, so we account for that
         </span><span class="kw">if </span><span class="self">self</span>.metadata_version != <span class="kw">crate</span>::MetadataVersion::V1
             &amp;&amp; message.version() != <span class="self">self</span>.metadata_version
         {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IoError(
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IpcError(
                 <span class="string">&quot;Could not read IPC message as metadata versions mismatch&quot;</span>.to_string(),
             ));
         }
 
         <span class="kw">match </span>message.header_type() {
-            <span class="kw">crate</span>::MessageHeader::Schema =&gt; <span class="prelude-val">Err</span>(ArrowError::IoError(
+            <span class="kw">crate</span>::MessageHeader::Schema =&gt; <span class="prelude-val">Err</span>(ArrowError::IpcError(
                 <span class="string">&quot;Not expecting a schema when messages are read&quot;</span>.to_string(),
             )),
             <span class="kw">crate</span>::MessageHeader::RecordBatch =&gt; {
                 <span class="kw">let </span>batch = message.header_as_record_batch().ok_or_else(|| {
-                    ArrowError::IoError(
+                    ArrowError::IpcError(
                         <span class="string">&quot;Unable to read IPC message as record batch&quot;</span>.to_string(),
                     )
                 })<span class="question-mark">?</span>;
@@ -2461,7 +2465,7 @@
             <span class="kw">crate</span>::MessageHeader::NONE =&gt; {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
             }
-            t =&gt; <span class="prelude-val">Err</span>(ArrowError::IoError(<span class="macro">format!</span>(
+            t =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
                 <span class="string">&quot;Reading types other than record batches not yet supported, unable to read {t:?}&quot;
             </span>))),
         }
@@ -2573,11 +2577,11 @@
         reader.read_exact(<span class="kw-2">&amp;mut </span>meta_buffer)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>message = <span class="kw">crate</span>::root_as_message(meta_buffer.as_slice()).map_err(|err| {
-            ArrowError::IoError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as message: {err:?}&quot;</span>))
+            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as message: {err:?}&quot;</span>))
         })<span class="question-mark">?</span>;
         <span class="comment">// message header is a Schema, so read it
         </span><span class="kw">let </span>ipc_schema: <span class="kw">crate</span>::Schema = message.header_as_schema().ok_or_else(|| {
-            ArrowError::IoError(<span class="string">&quot;Unable to read IPC message as schema&quot;</span>.to_string())
+            ArrowError::ParseError(<span class="string">&quot;Unable to read IPC message as schema&quot;</span>.to_string())
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>schema = <span class="kw">crate</span>::convert::fb_to_schema(ipc_schema);
 
@@ -2652,16 +2656,16 @@
 
         <span class="kw">let </span>vecs = <span class="kw-2">&amp;</span>meta_buffer.to_vec();
         <span class="kw">let </span>message = <span class="kw">crate</span>::root_as_message(vecs).map_err(|err| {
-            ArrowError::IoError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as message: {err:?}&quot;</span>))
+            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as message: {err:?}&quot;</span>))
         })<span class="question-mark">?</span>;
 
         <span class="kw">match </span>message.header_type() {
-            <span class="kw">crate</span>::MessageHeader::Schema =&gt; <span class="prelude-val">Err</span>(ArrowError::IoError(
+            <span class="kw">crate</span>::MessageHeader::Schema =&gt; <span class="prelude-val">Err</span>(ArrowError::IpcError(
                 <span class="string">&quot;Not expecting a schema when messages are read&quot;</span>.to_string(),
             )),
             <span class="kw">crate</span>::MessageHeader::RecordBatch =&gt; {
                 <span class="kw">let </span>batch = message.header_as_record_batch().ok_or_else(|| {
-                    ArrowError::IoError(
+                    ArrowError::IpcError(
                         <span class="string">&quot;Unable to read IPC message as record batch&quot;</span>.to_string(),
                     )
                 })<span class="question-mark">?</span>;
@@ -2673,7 +2677,7 @@
             }
             <span class="kw">crate</span>::MessageHeader::DictionaryBatch =&gt; {
                 <span class="kw">let </span>batch = message.header_as_dictionary_batch().ok_or_else(|| {
-                    ArrowError::IoError(
+                    ArrowError::IpcError(
                         <span class="string">&quot;Unable to read IPC message as dictionary batch&quot;</span>.to_string(),
                     )
                 })<span class="question-mark">?</span>;
@@ -2691,7 +2695,7 @@
             <span class="kw">crate</span>::MessageHeader::NONE =&gt; {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
             }
-            t =&gt; <span class="prelude-val">Err</span>(ArrowError::IoError(
+            t =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
                 <span class="macro">format!</span>(<span class="string">&quot;Reading types other than record batches not yet supported, unable to read {t:?} &quot;</span>)
             )),
         }
