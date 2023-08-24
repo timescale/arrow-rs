@@ -738,6 +738,7 @@
 <a href="#738" id="738">738</a>
 <a href="#739" id="739">739</a>
 <a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -756,6 +757,7 @@
 // under the License.
 
 </span><span class="doccomment">//! Defines kernel for length of string arrays and binary arrays
+</span><span class="attr">#![allow(clippy::redundant_closure_call)]
 
 </span><span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::{cast::AsArray, types::<span class="kw-2">*</span>};

@@ -4302,7 +4302,7 @@
             <span class="kw">let </span>u32 = UInt32Builder::new();
             <span class="kw">let </span><span class="kw-2">mut </span>ls = ListBuilder::new(u32);
 
-            <span class="kw">for </span>list <span class="kw">in </span><span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">1u32</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]] {
+            <span class="kw">for </span>list <span class="kw">in </span>[<span class="macro">vec!</span>[<span class="number">1u32</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]] {
                 <span class="kw">for </span>value <span class="kw">in </span>list {
                     ls.values().append_value(value);
                 }

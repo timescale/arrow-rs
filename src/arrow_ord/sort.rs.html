@@ -3992,57 +3992,6 @@
 <a href="#3992" id="3992">3992</a>
 <a href="#3993" id="3993">3993</a>
 <a href="#3994" id="3994">3994</a>
-<a href="#3995" id="3995">3995</a>
-<a href="#3996" id="3996">3996</a>
-<a href="#3997" id="3997">3997</a>
-<a href="#3998" id="3998">3998</a>
-<a href="#3999" id="3999">3999</a>
-<a href="#4000" id="4000">4000</a>
-<a href="#4001" id="4001">4001</a>
-<a href="#4002" id="4002">4002</a>
-<a href="#4003" id="4003">4003</a>
-<a href="#4004" id="4004">4004</a>
-<a href="#4005" id="4005">4005</a>
-<a href="#4006" id="4006">4006</a>
-<a href="#4007" id="4007">4007</a>
-<a href="#4008" id="4008">4008</a>
-<a href="#4009" id="4009">4009</a>
-<a href="#4010" id="4010">4010</a>
-<a href="#4011" id="4011">4011</a>
-<a href="#4012" id="4012">4012</a>
-<a href="#4013" id="4013">4013</a>
-<a href="#4014" id="4014">4014</a>
-<a href="#4015" id="4015">4015</a>
-<a href="#4016" id="4016">4016</a>
-<a href="#4017" id="4017">4017</a>
-<a href="#4018" id="4018">4018</a>
-<a href="#4019" id="4019">4019</a>
-<a href="#4020" id="4020">4020</a>
-<a href="#4021" id="4021">4021</a>
-<a href="#4022" id="4022">4022</a>
-<a href="#4023" id="4023">4023</a>
-<a href="#4024" id="4024">4024</a>
-<a href="#4025" id="4025">4025</a>
-<a href="#4026" id="4026">4026</a>
-<a href="#4027" id="4027">4027</a>
-<a href="#4028" id="4028">4028</a>
-<a href="#4029" id="4029">4029</a>
-<a href="#4030" id="4030">4030</a>
-<a href="#4031" id="4031">4031</a>
-<a href="#4032" id="4032">4032</a>
-<a href="#4033" id="4033">4033</a>
-<a href="#4034" id="4034">4034</a>
-<a href="#4035" id="4035">4035</a>
-<a href="#4036" id="4036">4036</a>
-<a href="#4037" id="4037">4037</a>
-<a href="#4038" id="4038">4038</a>
-<a href="#4039" id="4039">4039</a>
-<a href="#4040" id="4040">4040</a>
-<a href="#4041" id="4041">4041</a>
-<a href="#4042" id="4042">4042</a>
-<a href="#4043" id="4043">4043</a>
-<a href="#4044" id="4044">4044</a>
-<a href="#4045" id="4045">4045</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -5706,22 +5655,26 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sort_indices_decimal256() {
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[
+            <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">5</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">2</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">3</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">4</span>)),
+            <span class="prelude-val">None</span>,
+        ];
+
         <span class="comment">// decimal default
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>],
         );
         <span class="comment">// decimal descending
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">false</span>,
@@ -5731,10 +5684,7 @@
         );
         <span class="comment">// decimal null_first and descending
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5744,10 +5694,7 @@
         );
         <span class="comment">// decimal null_first
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5756,21 +5703,10 @@
             <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>],
         );
         <span class="comment">// limit
-        </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
-            <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">4</span>],
-        );
+        </span>test_sort_to_indices_decimal256_array(data.clone(), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">4</span>]);
         <span class="comment">// limit descending
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">false</span>,
@@ -5780,10 +5716,7 @@
         );
         <span class="comment">// limit descending null_first
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5793,10 +5726,7 @@
         );
         <span class="comment">// limit null_first
         </span>test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data,
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5808,14 +5738,15 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sort_indices_decimal256_max_min() {
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[
+            <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(i256::MIN),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
+            <span class="prelude-val">Some</span>(i256::MAX),
+            <span class="prelude-val">Some</span>(i256::from_i128(-<span class="number">1</span>)),
+        ];
         test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(i256::MIN),
-                <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
-                <span class="prelude-val">Some</span>(i256::MAX),
-                <span class="prelude-val">Some</span>(i256::from_i128(-<span class="number">1</span>)),
-            ],
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5825,13 +5756,7 @@
         );
 
         test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(i256::MIN),
-                <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
-                <span class="prelude-val">Some</span>(i256::MAX),
-                <span class="prelude-val">Some</span>(i256::from_i128(-<span class="number">1</span>)),
-            ],
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5841,13 +5766,7 @@
         );
 
         test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(i256::MIN),
-                <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
-                <span class="prelude-val">Some</span>(i256::MAX),
-                <span class="prelude-val">Some</span>(i256::from_i128(-<span class="number">1</span>)),
-            ],
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5857,13 +5776,7 @@
         );
 
         test_sort_to_indices_decimal256_array(
-            <span class="macro">vec!</span>[
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(i256::MIN),
-                <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
-                <span class="prelude-val">Some</span>(i256::MAX),
-                <span class="prelude-val">Some</span>(i256::from_i128(-<span class="number">1</span>)),
-            ],
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -5953,124 +5866,109 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sort_decimal256() {
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[
+            <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">5</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">2</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">3</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">1</span>)),
+            <span class="prelude-val">Some</span>(i256::from_i128(<span class="number">4</span>)),
+            <span class="prelude-val">None</span>,
+        ];
         <span class="comment">// decimal default
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>)]
+            [<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// decimal descending
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">false</span>,
             }),
             <span class="prelude-val">None</span>,
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]
+            [<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// decimal null_first and descending
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">None</span>,
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>)]
+            [<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// decimal null_first
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">None</span>,
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>)]
+            [<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// limit
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">None</span>,
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>)]
+            [<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// limit descending
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">false</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>)]
+            [<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// limit descending null_first
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data.clone(),
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>)]
+            [<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),
         );
         <span class="comment">// limit null_first
         </span>test_sort_decimal256_array(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]
-                .iter()
-                .map(|v| v.map(i256::from_i128))
-                .collect(),
+            data,
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>)]
+            [<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>)]
                 .iter()
                 .map(|v| v.map(i256::from_i128))
                 .collect(),

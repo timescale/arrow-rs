@@ -645,10 +645,10 @@
             buffer.try_push(v.as_bytes(), <span class="bool-val">false</span>).unwrap()
         }
 
-        <span class="kw">let </span>valid = <span class="macro">vec!</span>[
+        <span class="kw">let </span>valid = [
             <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>,
         ];
-        <span class="kw">let </span>valid_mask = Buffer::from_iter(valid.iter().cloned());
+        <span class="kw">let </span>valid_mask = Buffer::from_iter(valid.iter().copied());
 
         <span class="comment">// Both trailing and leading nulls
         </span>buffer.pad_nulls(<span class="number">1</span>, values.len() - <span class="number">1</span>, valid.len() - <span class="number">1</span>, valid_mask.as_slice());

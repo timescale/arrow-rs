@@ -832,7 +832,7 @@
         <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
         <span class="macro">vec!</span>[<span class="string">&quot;^ar&quot;</span>, <span class="string">&quot;^AR&quot;</span>, <span class="string">&quot;ow$&quot;</span>, <span class="string">&quot;OW$&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;&quot;</span>],
         regexp_is_match_utf8,
-        <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
+        [<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
     <span class="macro">test_flag_utf8!</span>(
         test_utf8_array_regexp_is_match_insensitive,
@@ -840,7 +840,7 @@
         <span class="macro">vec!</span>[<span class="string">&quot;^ar&quot;</span>, <span class="string">&quot;^AR&quot;</span>, <span class="string">&quot;ow$&quot;</span>, <span class="string">&quot;OW$&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;&quot;</span>],
         <span class="macro">vec!</span>[<span class="string">&quot;i&quot;</span>; <span class="number">6</span>],
         regexp_is_match_utf8,
-        <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
+        [<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
 
     <span class="macro">test_flag_utf8_scalar!</span>(
@@ -848,14 +848,14 @@
         <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;PARQUET&quot;</span>],
         <span class="string">&quot;^ar&quot;</span>,
         regexp_is_match_utf8_scalar,
-        <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
+        [<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
     );
     <span class="macro">test_flag_utf8_scalar!</span>(
         test_utf8_array_regexp_is_match_empty_scalar,
         <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;PARQUET&quot;</span>],
         <span class="string">&quot;&quot;</span>,
         regexp_is_match_utf8_scalar,
-        <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
+        [<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
     );
     <span class="macro">test_flag_utf8_scalar!</span>(
         test_utf8_array_regexp_is_match_insensitive_scalar,
@@ -863,7 +863,7 @@
         <span class="string">&quot;^ar&quot;</span>,
         <span class="string">&quot;i&quot;</span>,
         regexp_is_match_utf8_scalar,
-        <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
+        [<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
     );
 }
 </code></pre></div></section></main></body></html>

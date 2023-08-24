@@ -1633,13 +1633,6 @@
 <a href="#1633" id="1633">1633</a>
 <a href="#1634" id="1634">1634</a>
 <a href="#1635" id="1635">1635</a>
-<a href="#1636" id="1636">1636</a>
-<a href="#1637" id="1637">1637</a>
-<a href="#1638" id="1638">1638</a>
-<a href="#1639" id="1639">1639</a>
-<a href="#1640" id="1640">1640</a>
-<a href="#1641" id="1641">1641</a>
-<a href="#1642" id="1642">1642</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2470,7 +2463,7 @@
 
     <span class="kw">use </span><span class="kw">crate</span>::errors::Result;
     <span class="kw">use </span><span class="kw">crate</span>::file::reader::{FileReader, SerializedFileReader};
-    <span class="kw">use </span><span class="kw">crate</span>::record::api::{Field, Row, RowAccessor, RowFormatter};
+    <span class="kw">use </span><span class="kw">crate</span>::record::api::{Field, Row, RowAccessor};
     <span class="kw">use </span><span class="kw">crate</span>::schema::parser::parse_message_type;
     <span class="kw">use </span><span class="kw">crate</span>::util::test_common::file_util::{get_test_file, get_test_path};
     <span class="kw">use </span>std::convert::TryFrom;
@@ -3142,33 +3135,26 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_file_reader_iter() {
         <span class="kw">let </span>path = get_test_path(<span class="string">&quot;alltypes_plain.parquet&quot;</span>);
-        <span class="kw">let </span>vec = <span class="macro">vec!</span>[path]
-            .iter()
-            .map(|p| SerializedFileReader::try_from(p.as_path()).unwrap())
-            .flat_map(|r| RowIter::from_file_into(Box::new(r)))
-            .flat_map(|r| r.unwrap().get_int(<span class="number">0</span>))
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>reader = SerializedFileReader::try_from(path.as_path()).unwrap();
+        <span class="kw">let </span>iter = RowIter::from_file_into(Box::new(reader));
 
-        <span class="macro">assert_eq!</span>(vec, <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]);
+        <span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = iter.flat_map(|r| r.unwrap().get_int(<span class="number">0</span>)).collect();
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_file_reader_iter_projection() {
         <span class="kw">let </span>path = get_test_path(<span class="string">&quot;alltypes_plain.parquet&quot;</span>);
-        <span class="kw">let </span>values = <span class="macro">vec!</span>[path]
-            .iter()
-            .map(|p| SerializedFileReader::try_from(p.as_path()).unwrap())
-            .flat_map(|r| {
-                <span class="kw">let </span>schema = <span class="string">&quot;message schema { OPTIONAL INT32 id; }&quot;</span>;
-                <span class="kw">let </span>proj = parse_message_type(schema).ok();
+        <span class="kw">let </span>reader = SerializedFileReader::try_from(path.as_path()).unwrap();
+        <span class="kw">let </span>schema = <span class="string">&quot;message schema { OPTIONAL INT32 id; }&quot;</span>;
+        <span class="kw">let </span>proj = parse_message_type(schema).ok();
 
-                RowIter::from_file_into(Box::new(r)).project(proj).unwrap()
-            })
-            .map(|r| <span class="macro">format!</span>(<span class="string">&quot;id:{}&quot;</span>, r.unwrap().fmt(<span class="number">0</span>)))
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
-            .join(<span class="string">&quot;, &quot;</span>);
+        <span class="kw">let </span>iter = RowIter::from_file_into(Box::new(reader))
+            .project(proj)
+            .unwrap();
+        <span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = iter.flat_map(|r| r.unwrap().get_int(<span class="number">0</span>)).collect();
 
-        <span class="macro">assert_eq!</span>(values, <span class="string">&quot;id:4, id:5, id:6, id:7, id:2, id:3, id:0, id:1&quot;</span>);
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]);
     }
 
     <span class="attr">#[test]

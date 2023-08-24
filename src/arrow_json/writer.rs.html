@@ -1575,8 +1575,6 @@
 <a href="#1575" id="1575">1575</a>
 <a href="#1576" id="1576">1576</a>
 <a href="#1577" id="1577">1577</a>
-<a href="#1578" id="1578">1578</a>
-<a href="#1579" id="1579">1579</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1899,11 +1897,9 @@
         }
         DataType::Struct(<span class="kw">_</span>) =&gt; {
             <span class="kw">let </span>inner_objs = struct_array_to_jsonmap_array(array.as_struct())<span class="question-mark">?</span>;
-            rows.iter_mut()
-                .zip(inner_objs.into_iter())
-                .for_each(|(row, obj)| {
-                    row.insert(col_name.to_string(), Value::Object(obj));
-                });
+            rows.iter_mut().zip(inner_objs).for_each(|(row, obj)| {
+                row.insert(col_name.to_string(), Value::Object(obj));
+            });
         }
         DataType::List(<span class="kw">_</span>) =&gt; {
             <span class="kw">let </span>listarr = as_list_array(array);
@@ -1953,7 +1949,7 @@
             <span class="kw">let </span>keys = keys.as_string::&lt;i32&gt;();
             <span class="kw">let </span>values = array_to_json_array(values)<span class="question-mark">?</span>;
 
-            <span class="kw">let </span><span class="kw-2">mut </span>kv = keys.iter().zip(values.into_iter());
+            <span class="kw">let </span><span class="kw-2">mut </span>kv = keys.iter().zip(values);
 
             <span class="kw">for </span>(i, row) <span class="kw">in </span>rows.iter_mut().enumerate() {
                 <span class="kw">if </span>maparr.is_null(i) {

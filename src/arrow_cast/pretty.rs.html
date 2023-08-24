@@ -1871,7 +1871,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>buf = String::new();
         <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>buf, <span class="string">&quot;{}&quot;</span>, pretty_format_batches(<span class="kw-2">&amp;</span>[batch]).unwrap()).unwrap();
 
-        <span class="kw">let </span>s = <span class="macro">vec!</span>[
+        <span class="kw">let </span>s = [
             <span class="string">&quot;+---+-----+&quot;</span>,
             <span class="string">&quot;| a | b   |&quot;</span>,
             <span class="string">&quot;+---+-----+&quot;</span>,

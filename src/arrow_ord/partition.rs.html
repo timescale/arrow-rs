@@ -314,6 +314,8 @@
 <a href="#314" id="314">314</a>
 <a href="#315" id="315">315</a>
 <a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -536,8 +538,10 @@
             Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>])) <span class="kw">as _</span>,
             Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>])) <span class="kw">as _</span>,
         ])
-        .unwrap();
-        <span class="macro">assert_eq!</span>(results.ranges(), <span class="kw-2">&amp;</span>[<span class="number">0</span>..<span class="number">1</span>]);
+        .unwrap()
+        .ranges();
+        <span class="macro">assert_eq!</span>(results.len(), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(results[<span class="number">0</span>], <span class="number">0</span>..<span class="number">1</span>);
     }
 
     <span class="attr">#[test]

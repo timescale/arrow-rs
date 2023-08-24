@@ -1367,7 +1367,7 @@
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">4</span>..<span class="number">8</span>).unwrap(), <span class="number">0</span>);
 
-            <span class="kw">let </span>valid = <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>];
+            <span class="kw">let </span>valid = [<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>];
             <span class="kw">let </span>valid_buffer = Buffer::from_iter(valid.iter().cloned());
 
             output.pad_nulls(<span class="number">0</span>, <span class="number">4</span>, valid.len(), valid_buffer.as_slice());
@@ -1421,7 +1421,7 @@
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">4</span>..<span class="number">8</span>).unwrap(), <span class="number">0</span>);
 
-            <span class="kw">let </span>valid = <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>];
+            <span class="kw">let </span>valid = [<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>];
             <span class="kw">let </span>valid_buffer = Buffer::from_iter(valid.iter().cloned());
 
             output.pad_nulls(<span class="number">0</span>, <span class="number">2</span>, valid.len(), valid_buffer.as_slice());

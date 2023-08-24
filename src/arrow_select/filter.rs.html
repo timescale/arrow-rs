@@ -2421,7 +2421,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_filter_dictionary_array() {
-        <span class="kw">let </span>values = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;!&quot;</span>)];
+        <span class="kw">let </span>values = [<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;!&quot;</span>)];
         <span class="kw">let </span>a: Int8DictionaryArray = values.iter().copied().collect();
         <span class="kw">let </span>b = BooleanArray::from(<span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>]);
         <span class="kw">let </span>c = filter(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b).unwrap();

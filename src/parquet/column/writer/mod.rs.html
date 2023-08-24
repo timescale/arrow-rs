@@ -2838,9 +2838,6 @@
 <a href="#2838" id="2838">2838</a>
 <a href="#2839" id="2839">2839</a>
 <a href="#2840" id="2840">2840</a>
-<a href="#2841" id="2841">2841</a>
-<a href="#2842" id="2842">2842</a>
-<a href="#2843" id="2843">2843</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -4951,10 +4948,10 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_byte_array_statistics() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">&quot;aawaa&quot;</span>, <span class="string">&quot;zz&quot;</span>, <span class="string">&quot;aaw&quot;</span>, <span class="string">&quot;m&quot;</span>, <span class="string">&quot;qrs&quot;</span>]
+        <span class="kw">let </span>input = [<span class="string">&quot;aawaa&quot;</span>, <span class="string">&quot;zz&quot;</span>, <span class="string">&quot;aaw&quot;</span>, <span class="string">&quot;m&quot;</span>, <span class="string">&quot;qrs&quot;</span>]
             .iter()
             .map(|<span class="kw-2">&amp;</span>s| s.into())
-            .collect::&lt;Vec&lt;ByteArray&gt;&gt;();
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">let </span>stats = statistics_roundtrip::&lt;ByteArrayType&gt;(<span class="kw-2">&amp;</span>input);
         <span class="macro">assert!</span>(!stats.is_min_max_backwards_compatible());
@@ -4969,13 +4966,10 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_fixed_len_byte_array_statistics() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">&quot;aawaa&quot;</span>, <span class="string">&quot;zz   &quot;</span>, <span class="string">&quot;aaw  &quot;</span>, <span class="string">&quot;m    &quot;</span>, <span class="string">&quot;qrs  &quot;</span>]
+        <span class="kw">let </span>input = [<span class="string">&quot;aawaa&quot;</span>, <span class="string">&quot;zz   &quot;</span>, <span class="string">&quot;aaw  &quot;</span>, <span class="string">&quot;m    &quot;</span>, <span class="string">&quot;qrs  &quot;</span>]
             .iter()
-            .map(|<span class="kw-2">&amp;</span>s| {
-                <span class="kw">let </span>b: ByteArray = s.into();
-                b.into()
-            })
-            .collect::&lt;Vec&lt;FixedLenByteArray&gt;&gt;();
+            .map(|<span class="kw-2">&amp;</span>s| ByteArray::from(s).into())
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">let </span>stats = statistics_roundtrip::&lt;FixedLenByteArrayType&gt;(<span class="kw-2">&amp;</span>input);
         <span class="macro">assert!</span>(stats.has_min_max_set());

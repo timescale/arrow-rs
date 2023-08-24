@@ -8928,31 +8928,6 @@
 <a href="#8928" id="8928">8928</a>
 <a href="#8929" id="8929">8929</a>
 <a href="#8930" id="8930">8930</a>
-<a href="#8931" id="8931">8931</a>
-<a href="#8932" id="8932">8932</a>
-<a href="#8933" id="8933">8933</a>
-<a href="#8934" id="8934">8934</a>
-<a href="#8935" id="8935">8935</a>
-<a href="#8936" id="8936">8936</a>
-<a href="#8937" id="8937">8937</a>
-<a href="#8938" id="8938">8938</a>
-<a href="#8939" id="8939">8939</a>
-<a href="#8940" id="8940">8940</a>
-<a href="#8941" id="8941">8941</a>
-<a href="#8942" id="8942">8942</a>
-<a href="#8943" id="8943">8943</a>
-<a href="#8944" id="8944">8944</a>
-<a href="#8945" id="8945">8945</a>
-<a href="#8946" id="8946">8946</a>
-<a href="#8947" id="8947">8947</a>
-<a href="#8948" id="8948">8948</a>
-<a href="#8949" id="8949">8949</a>
-<a href="#8950" id="8950">8950</a>
-<a href="#8951" id="8951">8951</a>
-<a href="#8952" id="8952">8952</a>
-<a href="#8953" id="8953">8953</a>
-<a href="#8954" id="8954">8954</a>
-<a href="#8955" id="8955">8955</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -12383,50 +12358,24 @@
 
     <span class="macro">macro_rules! </span>generate_cast_test_case {
         (<span class="macro-nonterminal">$INPUT_ARRAY</span>: expr, <span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY</span>: ident, <span class="macro-nonterminal">$OUTPUT_TYPE</span>: expr, <span class="macro-nonterminal">$OUTPUT_VALUES</span>: expr) =&gt; {
+            <span class="kw">let </span>output = <span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY::from</span>(<span class="macro-nonterminal">$OUTPUT_VALUES</span>)
+                .with_data_type(<span class="macro-nonterminal">$OUTPUT_TYPE</span>.clone());
+
             <span class="comment">// assert cast type
             </span><span class="kw">let </span>input_array_type = <span class="macro-nonterminal">$INPUT_ARRAY</span>.data_type();
             <span class="macro">assert!</span>(can_cast_types(input_array_type, <span class="macro-nonterminal">$OUTPUT_TYPE</span>));
-            <span class="kw">let </span>casted_array = cast(<span class="macro-nonterminal">$INPUT_ARRAY</span>, <span class="macro-nonterminal">$OUTPUT_TYPE</span>).unwrap();
-            <span class="kw">let </span>result_array = casted_array
-                .as_any()
-                .downcast_ref::&lt;<span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY</span>&gt;()
-                .unwrap();
-            <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$OUTPUT_TYPE</span>, result_array.data_type());
-            <span class="macro">assert_eq!</span>(result_array.len(), <span class="macro-nonterminal">$OUTPUT_VALUES</span>.len());
-            <span class="kw">for </span>(i, x) <span class="kw">in </span><span class="macro-nonterminal">$OUTPUT_VALUES</span>.iter().enumerate() {
-                <span class="kw">match </span>x {
-                    <span class="prelude-val">Some</span>(x) =&gt; {
-                        <span class="macro">assert!</span>(!result_array.is_null(i));
-                        <span class="macro">assert_eq!</span>(result_array.value(i), <span class="kw-2">*</span>x);
-                    }
-                    <span class="prelude-val">None </span>=&gt; {
-                        <span class="macro">assert!</span>(result_array.is_null(i));
-                    }
-                }
-            }
+            <span class="kw">let </span>result = cast(<span class="macro-nonterminal">$INPUT_ARRAY</span>, <span class="macro-nonterminal">$OUTPUT_TYPE</span>).unwrap();
+            <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$OUTPUT_TYPE</span>, result.data_type());
+            <span class="macro">assert_eq!</span>(result.as_ref(), <span class="kw-2">&amp;</span>output);
 
             <span class="kw">let </span>cast_option = CastOptions {
                 safe: <span class="bool-val">false</span>,
                 format_options: FormatOptions::default(),
             };
-            <span class="kw">let </span>casted_array_with_option =
+            <span class="kw">let </span>result =
                 cast_with_options(<span class="macro-nonterminal">$INPUT_ARRAY</span>, <span class="macro-nonterminal">$OUTPUT_TYPE</span>, <span class="kw-2">&amp;</span>cast_option).unwrap();
-            <span class="kw">let </span>result_array = casted_array_with_option
-                .as_any()
-                .downcast_ref::&lt;<span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY</span>&gt;()
-                .unwrap();
-            <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$OUTPUT_TYPE</span>, result_array.data_type());
-            <span class="macro">assert_eq!</span>(result_array.len(), <span class="macro-nonterminal">$OUTPUT_VALUES</span>.len());
-            <span class="kw">for </span>(i, x) <span class="kw">in </span><span class="macro-nonterminal">$OUTPUT_VALUES</span>.iter().enumerate() {
-                <span class="kw">match </span>x {
-                    <span class="prelude-val">Some</span>(x) =&gt; {
-                        <span class="macro">assert_eq!</span>(result_array.value(i), <span class="kw-2">*</span>x);
-                    }
-                    <span class="prelude-val">None </span>=&gt; {
-                        <span class="macro">assert!</span>(result_array.is_null(i));
-                    }
-                }
-            }
+            <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$OUTPUT_TYPE</span>, result.data_type());
+            <span class="macro">assert_eq!</span>(result.as_ref(), <span class="kw-2">&amp;</span>output);
         };
     }
 
@@ -14952,7 +14901,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_str_to_str_casts() {
-        <span class="kw">for </span>data <span class="kw">in </span><span class="macro">vec!</span>[
+        <span class="kw">for </span>data <span class="kw">in </span>[
             <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;ham&quot;</span>)],
             <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)],
         ] {
@@ -17889,6 +17838,7 @@
     };
 
     <span class="attr">#[test]
+    #[allow(clippy::assertions_on_constants)]
     </span><span class="kw">fn </span>test_const_options() {
         <span class="macro">assert!</span>(CAST_OPTIONS.safe)
     }

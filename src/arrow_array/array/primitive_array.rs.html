@@ -2533,7 +2533,6 @@
 <a href="#2533" id="2533">2533</a>
 <a href="#2534" id="2534">2534</a>
 <a href="#2535" id="2535">2535</a>
-<a href="#2536" id="2536">2536</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -4116,7 +4115,7 @@
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, arr.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.offset());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.null_count());
-        <span class="kw">let </span>formatted = <span class="macro">vec!</span>[<span class="string">&quot;00:00:00.001&quot;</span>, <span class="string">&quot;10:30:00.005&quot;</span>, <span class="string">&quot;23:59:59.210&quot;</span>];
+        <span class="kw">let </span>formatted = [<span class="string">&quot;00:00:00.001&quot;</span>, <span class="string">&quot;10:30:00.005&quot;</span>, <span class="string">&quot;23:59:59.210&quot;</span>];
         <span class="kw">for </span>(i, formatted) <span class="kw">in </span>formatted.iter().enumerate().take(<span class="number">3</span>) {
             <span class="comment">// check that we can&#39;t create dates or datetimes from time instances
             </span><span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, arr.value_as_datetime(i));
@@ -4140,7 +4139,7 @@
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, arr.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.offset());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.null_count());
-        <span class="kw">let </span>formatted = <span class="macro">vec!</span>[<span class="string">&quot;00:00:00.001&quot;</span>, <span class="string">&quot;10:30:00.005&quot;</span>, <span class="string">&quot;23:59:59.210&quot;</span>];
+        <span class="kw">let </span>formatted = [<span class="string">&quot;00:00:00.001&quot;</span>, <span class="string">&quot;10:30:00.005&quot;</span>, <span class="string">&quot;23:59:59.210&quot;</span>];
         <span class="kw">for </span>(i, item) <span class="kw">in </span>formatted.iter().enumerate().take(<span class="number">3</span>) {
             <span class="comment">// check that we can&#39;t create dates or datetimes from time instances
             </span><span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, arr.value_as_datetime(i));
@@ -4755,7 +4754,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decimal_from_iter_values() {
-        <span class="kw">let </span>array = Decimal128Array::from_iter_values(<span class="macro">vec!</span>[-<span class="number">100</span>, <span class="number">0</span>, <span class="number">101</span>].into_iter());
+        <span class="kw">let </span>array = Decimal128Array::from_iter_values(<span class="macro">vec!</span>[-<span class="number">100</span>, <span class="number">0</span>, <span class="number">101</span>]);
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">3</span>);
         <span class="macro">assert_eq!</span>(array.data_type(), <span class="kw-2">&amp;</span>DataType::Decimal128(<span class="number">38</span>, <span class="number">10</span>));
         <span class="macro">assert_eq!</span>(-<span class="number">100_i128</span>, array.value(<span class="number">0</span>));
@@ -4955,8 +4954,7 @@
         expected = <span class="string">&quot;Trying to access an element at index 4 from a PrimitiveArray of length 3&quot;
     </span>)]
     </span><span class="kw">fn </span>test_fixed_size_binary_array_get_value_index_out_of_bound() {
-        <span class="kw">let </span>array = Decimal128Array::from_iter_values(<span class="macro">vec!</span>[-<span class="number">100</span>, <span class="number">0</span>, <span class="number">101</span>].into_iter());
-
+        <span class="kw">let </span>array = Decimal128Array::from(<span class="macro">vec!</span>[-<span class="number">100</span>, <span class="number">0</span>, <span class="number">101</span>]);
         array.value(<span class="number">4</span>);
     }
 

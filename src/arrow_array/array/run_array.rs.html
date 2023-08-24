@@ -1106,9 +1106,6 @@
 <a href="#1106" id="1106">1106</a>
 <a href="#1107" id="1107">1107</a>
 <a href="#1108" id="1108">1108</a>
-<a href="#1109" id="1109">1109</a>
-<a href="#1110" id="1110">1110</a>
-<a href="#1111" id="1111">1111</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1648,11 +1645,8 @@
 <span class="comment">// Manually implement `Clone` to avoid `V: Clone` type constraint
 </span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; Clone <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            run_array: <span class="self">self</span>.run_array,
-            values: <span class="self">self</span>.values,
-        }
-    }
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; Copy <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {}
@@ -2204,7 +2198,7 @@
         <span class="kw">let </span>values = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>array = RunArray::try_new(<span class="kw-2">&amp;</span>run, <span class="kw-2">&amp;</span>values).unwrap();
 
-        <span class="kw">let </span>expected = <span class="macro">vec!</span>[
+        <span class="kw">let </span>expected = [
             <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>,
         ];
 

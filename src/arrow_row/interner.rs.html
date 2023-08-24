@@ -940,7 +940,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_intern_duplicates() {
         <span class="comment">// Unsorted with duplicates
-        </span><span class="kw">let </span>values = <span class="macro">vec!</span>[<span class="number">0_u8</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">0</span>];
+        </span><span class="kw">let </span>values = [<span class="number">0_u8</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">0</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>interner = OrderPreservingInterner::default();
 
         <span class="kw">let </span>interned = interner.intern(values.iter().map(std::slice::from_ref).map(<span class="prelude-val">Some</span>));

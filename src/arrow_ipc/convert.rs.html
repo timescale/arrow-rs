@@ -1811,7 +1811,7 @@
         RunEndEncoded(run_ends, values) =&gt; {
             <span class="kw">let </span>run_ends_field = build_field(fbb, run_ends);
             <span class="kw">let </span>values_field = build_field(fbb, values);
-            <span class="kw">let </span>children = <span class="macro">vec!</span>[run_ends_field, values_field];
+            <span class="kw">let </span>children = [run_ends_field, values_field];
             FBFieldType {
                 type_type: <span class="kw">crate</span>::Type::RunEndEncoded,
                 type_: <span class="kw">crate</span>::RunEndEncodedBuilder::new(fbb)

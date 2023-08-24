@@ -3519,7 +3519,7 @@
         </span><span class="kw">let </span>expected_batch =
             RecordBatch::try_new(schema.clone(), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)]).unwrap();
 
-        <span class="kw">for </span>buffer <span class="kw">in </span><span class="macro">vec!</span>[
+        <span class="kw">for </span>buffer <span class="kw">in </span>[
             get_bytes_after_close(schema.clone(), <span class="kw-2">&amp;</span>expected_batch),
             get_bytes_by_into_inner(schema, <span class="kw-2">&amp;</span>expected_batch),
         ] {
@@ -4818,7 +4818,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>u32_min_max() {
         <span class="comment">// check values roundtrip through parquet
-        </span><span class="kw">let </span>src = <span class="macro">vec!</span>[
+        </span><span class="kw">let </span>src = [
             u32::MIN,
             u32::MIN + <span class="number">1</span>,
             (i32::MAX <span class="kw">as </span>u32) - <span class="number">1</span>,
@@ -4859,7 +4859,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>u64_min_max() {
         <span class="comment">// check values roundtrip through parquet
-        </span><span class="kw">let </span>src = <span class="macro">vec!</span>[
+        </span><span class="kw">let </span>src = [
             u64::MIN,
             u64::MIN + <span class="number">1</span>,
             (i64::MAX <span class="kw">as </span>u64) - <span class="number">1</span>,

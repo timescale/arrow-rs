@@ -481,7 +481,7 @@
 <span class="kw">impl</span>&lt;T: ArrowNativeType&gt; ToByteSlice <span class="kw">for </span>[T] {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>to_byte_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
-        <span class="kw">let </span>raw_ptr = <span class="self">self</span>.as_ptr() <span class="kw">as </span><span class="kw-2">*const </span>T <span class="kw">as </span><span class="kw-2">*const </span>u8;
+        <span class="kw">let </span>raw_ptr = <span class="self">self</span>.as_ptr() <span class="kw">as </span><span class="kw-2">*const </span>u8;
         <span class="kw">unsafe </span>{ std::slice::from_raw_parts(raw_ptr, std::mem::size_of_val(<span class="self">self</span>)) }
     }
 }

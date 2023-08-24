@@ -140,7 +140,7 @@
         .prefix()
         .into_iter()
         .chain(unaligned.chunks().iter().cloned())
-        .chain(unaligned.suffix().into_iter());
+        .chain(unaligned.suffix());
 
     iter.rev().flat_map(<span class="kw">move </span>|<span class="kw-2">mut </span>chunk| {
         <span class="kw">let </span>chunk_idx = chunk_end_idx - <span class="number">64</span>;

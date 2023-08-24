@@ -1899,7 +1899,7 @@
         ))))
         .add_child_data(a2_child.into_data())
         .len(<span class="number">2</span>)
-        .add_buffer(Buffer::from(<span class="macro">vec!</span>[<span class="number">0i32</span>, <span class="number">3</span>, <span class="number">4</span>].to_byte_slice()))
+        .add_buffer(Buffer::from([<span class="number">0i32</span>, <span class="number">3</span>, <span class="number">4</span>].to_byte_slice()))
         .build()
         .unwrap();
         <span class="kw">let </span>a2: ArrayRef = Arc::new(ListArray::from(a2));

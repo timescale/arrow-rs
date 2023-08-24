@@ -1743,21 +1743,6 @@
 <a href="#1743" id="1743">1743</a>
 <a href="#1744" id="1744">1744</a>
 <a href="#1745" id="1745">1745</a>
-<a href="#1746" id="1746">1746</a>
-<a href="#1747" id="1747">1747</a>
-<a href="#1748" id="1748">1748</a>
-<a href="#1749" id="1749">1749</a>
-<a href="#1750" id="1750">1750</a>
-<a href="#1751" id="1751">1751</a>
-<a href="#1752" id="1752">1752</a>
-<a href="#1753" id="1753">1753</a>
-<a href="#1754" id="1754">1754</a>
-<a href="#1755" id="1755">1755</a>
-<a href="#1756" id="1756">1756</a>
-<a href="#1757" id="1757">1757</a>
-<a href="#1758" id="1758">1758</a>
-<a href="#1759" id="1759">1759</a>
-<a href="#1760" id="1760">1760</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2611,38 +2596,23 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_file_reader_into_iter() {
         <span class="kw">let </span>path = get_test_path(<span class="string">&quot;alltypes_plain.parquet&quot;</span>);
-        <span class="kw">let </span>vec = <span class="macro">vec!</span>[path.clone(), path]
-            .iter()
-            .map(|p| SerializedFileReader::try_from(p.as_path()).unwrap())
-            .flat_map(|r| r.into_iter())
-            .flat_map(|r| r.unwrap().get_int(<span class="number">0</span>))
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>reader = SerializedFileReader::try_from(path.as_path()).unwrap();
+        <span class="kw">let </span>iter = reader.into_iter();
+        <span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = iter.flat_map(|x| x.unwrap().get_int(<span class="number">0</span>)).collect();
 
-        <span class="comment">// rows in the parquet file are not sorted by &quot;id&quot;
-        // each file contains [id:4, id:5, id:6, id:7, id:2, id:3, id:0, id:1]
-        </span><span class="macro">assert_eq!</span>(vec, <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]);
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_file_reader_into_iter_project() {
         <span class="kw">let </span>path = get_test_path(<span class="string">&quot;alltypes_plain.parquet&quot;</span>);
-        <span class="kw">let </span>result = <span class="macro">vec!</span>[path]
-            .iter()
-            .map(|p| SerializedFileReader::try_from(p.as_path()).unwrap())
-            .flat_map(|r| {
-                <span class="kw">let </span>schema = <span class="string">&quot;message schema { OPTIONAL INT32 id; }&quot;</span>;
-                <span class="kw">let </span>proj = parse_message_type(schema).ok();
+        <span class="kw">let </span>reader = SerializedFileReader::try_from(path.as_path()).unwrap();
+        <span class="kw">let </span>schema = <span class="string">&quot;message schema { OPTIONAL INT32 id; }&quot;</span>;
+        <span class="kw">let </span>proj = parse_message_type(schema).ok();
+        <span class="kw">let </span>iter = reader.into_iter().project(proj).unwrap();
+        <span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = iter.flat_map(|x| x.unwrap().get_int(<span class="number">0</span>)).collect();
 
-                r.into_iter().project(proj).unwrap()
-            })
-            .map(|r| <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, r.unwrap()))
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
-            .join(<span class="string">&quot;,&quot;</span>);
-
-        <span class="macro">assert_eq!</span>(
-            result,
-            <span class="string">&quot;{id: 4},{id: 5},{id: 6},{id: 7},{id: 2},{id: 3},{id: 0},{id: 1}&quot;
-        </span>);
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]);
     }
 
     <span class="attr">#[test]

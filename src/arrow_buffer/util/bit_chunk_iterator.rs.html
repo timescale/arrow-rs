@@ -824,7 +824,7 @@
         <span class="self">self</span>.prefix
             .into_iter()
             .chain(<span class="self">self</span>.chunks.iter().cloned())
-            .chain(<span class="self">self</span>.suffix.into_iter())
+            .chain(<span class="self">self</span>.suffix)
     }
 
     <span class="doccomment">/// Counts the number of ones

@@ -1912,36 +1912,6 @@
 <a href="#1912" id="1912">1912</a>
 <a href="#1913" id="1913">1913</a>
 <a href="#1914" id="1914">1914</a>
-<a href="#1915" id="1915">1915</a>
-<a href="#1916" id="1916">1916</a>
-<a href="#1917" id="1917">1917</a>
-<a href="#1918" id="1918">1918</a>
-<a href="#1919" id="1919">1919</a>
-<a href="#1920" id="1920">1920</a>
-<a href="#1921" id="1921">1921</a>
-<a href="#1922" id="1922">1922</a>
-<a href="#1923" id="1923">1923</a>
-<a href="#1924" id="1924">1924</a>
-<a href="#1925" id="1925">1925</a>
-<a href="#1926" id="1926">1926</a>
-<a href="#1927" id="1927">1927</a>
-<a href="#1928" id="1928">1928</a>
-<a href="#1929" id="1929">1929</a>
-<a href="#1930" id="1930">1930</a>
-<a href="#1931" id="1931">1931</a>
-<a href="#1932" id="1932">1932</a>
-<a href="#1933" id="1933">1933</a>
-<a href="#1934" id="1934">1934</a>
-<a href="#1935" id="1935">1935</a>
-<a href="#1936" id="1936">1936</a>
-<a href="#1937" id="1937">1937</a>
-<a href="#1938" id="1938">1938</a>
-<a href="#1939" id="1939">1939</a>
-<a href="#1940" id="1940">1940</a>
-<a href="#1941" id="1941">1941</a>
-<a href="#1942" id="1942">1942</a>
-<a href="#1943" id="1943">1943</a>
-<a href="#1944" id="1944">1944</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2680,15 +2650,11 @@
         (<span class="macro-nonterminal">$test_name</span>:ident, <span class="macro-nonterminal">$left</span>:expr, <span class="macro-nonterminal">$right</span>:expr, <span class="macro-nonterminal">$op</span>:expr, <span class="macro-nonterminal">$expected</span>:expr) =&gt; {
             <span class="attr">#[test]
             </span><span class="kw">fn </span><span class="macro-nonterminal">$test_name</span>() {
+                <span class="kw">let </span>expected = BooleanArray::from(<span class="macro-nonterminal">$expected</span>);
                 <span class="kw">let </span>left = StringArray::from(<span class="macro-nonterminal">$left</span>);
                 <span class="kw">let </span>right = StringArray::from(<span class="macro-nonterminal">$right</span>);
                 <span class="kw">let </span>res = <span class="macro-nonterminal">$op</span>(<span class="kw-2">&amp;</span>left, <span class="kw-2">&amp;</span>right).unwrap();
-                <span class="kw">let </span>expected = <span class="macro-nonterminal">$expected</span>;
-                <span class="macro">assert_eq!</span>(expected.len(), res.len());
-                <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..res.len() {
-                    <span class="kw">let </span>v = res.value(i);
-                    <span class="macro">assert_eq!</span>(v, expected[i]);
-                }
+                <span class="macro">assert_eq!</span>(res, expected);
             }
         };
     }
@@ -2698,15 +2664,11 @@
             <span class="attr">#[test]
             #[cfg(feature = <span class="string">&quot;dyn_cmp_dict&quot;</span>)]
             </span><span class="kw">fn </span><span class="macro-nonterminal">$test_name</span>() {
+                <span class="kw">let </span>expected = BooleanArray::from(<span class="macro-nonterminal">$expected</span>);
                 <span class="kw">let </span>left: DictionaryArray&lt;Int8Type&gt; = <span class="macro-nonterminal">$left</span>.into_iter().collect();
                 <span class="kw">let </span>right: DictionaryArray&lt;Int8Type&gt; = <span class="macro-nonterminal">$right</span>.into_iter().collect();
                 <span class="kw">let </span>res = <span class="macro-nonterminal">$op</span>(<span class="kw-2">&amp;</span>left, <span class="kw-2">&amp;</span>right).unwrap();
-                <span class="kw">let </span>expected = <span class="macro-nonterminal">$expected</span>;
-                <span class="macro">assert_eq!</span>(expected.len(), res.len());
-                <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..res.len() {
-                    <span class="kw">let </span>v = res.value(i);
-                    <span class="macro">assert_eq!</span>(v, expected[i]);
-                }
+                <span class="macro">assert_eq!</span>(res, expected);
             }
         };
     }
@@ -2715,37 +2677,15 @@
         (<span class="macro-nonterminal">$test_name</span>:ident, <span class="macro-nonterminal">$left</span>:expr, <span class="macro-nonterminal">$right</span>:expr, <span class="macro-nonterminal">$op</span>:expr, <span class="macro-nonterminal">$expected</span>:expr) =&gt; {
             <span class="attr">#[test]
             </span><span class="kw">fn </span><span class="macro-nonterminal">$test_name</span>() {
+                <span class="kw">let </span>expected = BooleanArray::from(<span class="macro-nonterminal">$expected</span>);
+
                 <span class="kw">let </span>left = StringArray::from(<span class="macro-nonterminal">$left</span>);
                 <span class="kw">let </span>res = <span class="macro-nonterminal">$op</span>(<span class="kw-2">&amp;</span>left, <span class="macro-nonterminal">$right</span>).unwrap();
-                <span class="kw">let </span>expected = <span class="macro-nonterminal">$expected</span>;
-                <span class="macro">assert_eq!</span>(expected.len(), res.len());
-                <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..res.len() {
-                    <span class="kw">let </span>v = res.value(i);
-                    <span class="macro">assert_eq!</span>(
-                        v,
-                        expected[i],
-                        <span class="string">&quot;unexpected result when comparing {} at position {} to {} &quot;</span>,
-                        left.value(i),
-                        i,
-                        <span class="macro-nonterminal">$right
-                    </span>);
-                }
+                <span class="macro">assert_eq!</span>(res, expected);
 
                 <span class="kw">let </span>left = LargeStringArray::from(<span class="macro-nonterminal">$left</span>);
                 <span class="kw">let </span>res = <span class="macro-nonterminal">$op</span>(<span class="kw-2">&amp;</span>left, <span class="macro-nonterminal">$right</span>).unwrap();
-                <span class="kw">let </span>expected = <span class="macro-nonterminal">$expected</span>;
-                <span class="macro">assert_eq!</span>(expected.len(), res.len());
-                <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..res.len() {
-                    <span class="kw">let </span>v = res.value(i);
-                    <span class="macro">assert_eq!</span>(
-                        v,
-                        expected[i],
-                        <span class="string">&quot;unexpected result when comparing {} at position {} to {} &quot;</span>,
-                        left.value(i),
-                        i,
-                        <span class="macro-nonterminal">$right
-                    </span>);
-                }
+                <span class="macro">assert_eq!</span>(res, expected);
             }
         };
         (<span class="macro-nonterminal">$test_name</span>:ident, <span class="macro-nonterminal">$test_name_dyn</span>:ident, <span class="macro-nonterminal">$left</span>:expr, <span class="macro-nonterminal">$right</span>:expr, <span class="macro-nonterminal">$op</span>:expr, <span class="macro-nonterminal">$op_dyn</span>:expr, <span class="macro-nonterminal">$expected</span>:expr) =&gt; {
@@ -2897,7 +2837,7 @@
     <span class="macro">test_utf8!</span>(
         test_utf8_scalar_ilike_regex,
         <span class="macro">vec!</span>[<span class="string">&quot;%%%&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">r#&quot;\%_\%&quot;#</span>],
+        <span class="macro">vec!</span>[<span class="string">r&quot;\%_\%&quot;</span>],
         ilike_utf8,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>]
     );
@@ -2905,7 +2845,7 @@
     <span class="macro">test_dict_utf8!</span>(
         test_utf8_scalar_ilike_regex_dict,
         <span class="macro">vec!</span>[<span class="string">&quot;%%%&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">r#&quot;\%_\%&quot;#</span>],
+        <span class="macro">vec!</span>[<span class="string">r&quot;\%_\%&quot;</span>],
         ilike_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>]
     );

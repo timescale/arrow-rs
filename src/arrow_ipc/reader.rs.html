@@ -2845,7 +2845,7 @@
 
         <span class="kw">let </span>array10_input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i32</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>array10_builder = PrimitiveRunBuilder::&lt;Int16Type, Int32Type&gt;::new();
-        array10_builder.extend(array10_input.into_iter());
+        array10_builder.extend(array10_input);
         <span class="kw">let </span>array10 = array10_builder.finish();
 
         <span class="kw">let </span>array11 = BooleanArray::from(<span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]);
@@ -3100,7 +3100,7 @@
 
         <span class="kw">let </span>run_array_2_inupt = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i32</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>)];
         <span class="kw">let </span><span class="kw-2">mut </span>run_array_2_builder = PrimitiveRunBuilder::&lt;Int16Type, Int32Type&gt;::new();
-        run_array_2_builder.extend(run_array_2_inupt.into_iter());
+        run_array_2_builder.extend(run_array_2_inupt);
         <span class="kw">let </span>run_array_2 = run_array_2_builder.finish();
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[

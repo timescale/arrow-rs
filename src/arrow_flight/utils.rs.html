@@ -339,8 +339,8 @@
         flight_data.push(encoded_batch.into());
     }
     <span class="kw">let </span><span class="kw-2">mut </span>stream = <span class="macro">vec!</span>[schema_flight_data];
-    stream.extend(dictionaries.into_iter());
-    stream.extend(flight_data.into_iter());
+    stream.extend(dictionaries);
+    stream.extend(flight_data);
     <span class="kw">let </span>flight_data: Vec&lt;<span class="kw">_</span>&gt; = stream.into_iter().collect();
     <span class="prelude-val">Ok</span>(flight_data)
 }

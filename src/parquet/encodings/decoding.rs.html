@@ -3180,9 +3180,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_decode_int32() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
+        <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>data_bytes = Int32Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">3</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0</span>; <span class="number">3</span>];
         test_plain_decode::&lt;Int32Type&gt;(
             ByteBufferPtr::new(data_bytes),
             <span class="number">3</span>,
@@ -3194,7 +3194,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_int32() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
+        <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>data_bytes = Int32Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;Int32Type&gt;(
             ByteBufferPtr::new(data_bytes),
@@ -3207,7 +3207,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_all_int32() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
+        <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>data_bytes = Int32Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;Int32Type&gt;(ByteBufferPtr::new(data_bytes), <span class="number">3</span>, <span class="number">5</span>, -<span class="number">1</span>, <span class="kw-2">&amp;</span>[]);
     }
@@ -3217,7 +3217,7 @@
         <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>expected_data = [<span class="number">0</span>, <span class="number">42</span>, <span class="number">0</span>, <span class="number">18</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">52</span>, <span class="number">0</span>];
         <span class="kw">let </span>data_bytes = Int32Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">8</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0</span>; <span class="number">8</span>];
         <span class="kw">let </span>num_nulls = <span class="number">5</span>;
         <span class="kw">let </span>valid_bits = [<span class="number">0b01001010</span>];
         test_plain_decode_spaced::&lt;Int32Type&gt;(
@@ -3233,9 +3233,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_decode_int64() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
+        <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>data_bytes = Int64Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">3</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0</span>; <span class="number">3</span>];
         test_plain_decode::&lt;Int64Type&gt;(
             ByteBufferPtr::new(data_bytes),
             <span class="number">3</span>,
@@ -3247,7 +3247,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_int64() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
+        <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>data_bytes = Int64Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;Int64Type&gt;(
             ByteBufferPtr::new(data_bytes),
@@ -3260,16 +3260,16 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_all_int64() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
+        <span class="kw">let </span>data = [<span class="number">42</span>, <span class="number">18</span>, <span class="number">52</span>];
         <span class="kw">let </span>data_bytes = Int64Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;Int64Type&gt;(ByteBufferPtr::new(data_bytes), <span class="number">3</span>, <span class="number">3</span>, -<span class="number">1</span>, <span class="kw-2">&amp;</span>[]);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_decode_float() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[PI_f32, <span class="number">2.414</span>, <span class="number">12.51</span>];
+        <span class="kw">let </span>data = [PI_f32, <span class="number">2.414</span>, <span class="number">12.51</span>];
         <span class="kw">let </span>data_bytes = FloatType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0.0</span>; <span class="number">3</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0.0</span>; <span class="number">3</span>];
         test_plain_decode::&lt;FloatType&gt;(
             ByteBufferPtr::new(data_bytes),
             <span class="number">3</span>,
@@ -3281,7 +3281,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_float() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[PI_f32, <span class="number">2.414</span>, <span class="number">12.51</span>];
+        <span class="kw">let </span>data = [PI_f32, <span class="number">2.414</span>, <span class="number">12.51</span>];
         <span class="kw">let </span>data_bytes = FloatType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;FloatType&gt;(
             ByteBufferPtr::new(data_bytes),
@@ -3294,14 +3294,14 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_all_float() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[PI_f32, <span class="number">2.414</span>, <span class="number">12.51</span>];
+        <span class="kw">let </span>data = [PI_f32, <span class="number">2.414</span>, <span class="number">12.51</span>];
         <span class="kw">let </span>data_bytes = FloatType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;FloatType&gt;(ByteBufferPtr::new(data_bytes), <span class="number">3</span>, <span class="number">4</span>, -<span class="number">1</span>, <span class="kw-2">&amp;</span>[]);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_double() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[PI_f64, <span class="number">2.414f64</span>, <span class="number">12.51f64</span>];
+        <span class="kw">let </span>data = [PI_f64, <span class="number">2.414f64</span>, <span class="number">12.51f64</span>];
         <span class="kw">let </span>data_bytes = DoubleType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;DoubleType&gt;(
             ByteBufferPtr::new(data_bytes),
@@ -3314,16 +3314,16 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_all_double() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[PI_f64, <span class="number">2.414f64</span>, <span class="number">12.51f64</span>];
+        <span class="kw">let </span>data = [PI_f64, <span class="number">2.414f64</span>, <span class="number">12.51f64</span>];
         <span class="kw">let </span>data_bytes = DoubleType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
         test_plain_skip::&lt;DoubleType&gt;(ByteBufferPtr::new(data_bytes), <span class="number">3</span>, <span class="number">5</span>, -<span class="number">1</span>, <span class="kw-2">&amp;</span>[]);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_decode_double() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[PI_f64, <span class="number">2.414f64</span>, <span class="number">12.51f64</span>];
+        <span class="kw">let </span>data = [PI_f64, <span class="number">2.414f64</span>, <span class="number">12.51f64</span>];
         <span class="kw">let </span>data_bytes = DoubleType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0.0f64</span>; <span class="number">3</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0.0f64</span>; <span class="number">3</span>];
         test_plain_decode::&lt;DoubleType&gt;(
             ByteBufferPtr::new(data_bytes),
             <span class="number">3</span>,
@@ -3335,13 +3335,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_decode_int96() {
-        <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[Int96::new(); <span class="number">4</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>data = [Int96::new(); <span class="number">4</span>];
         data[<span class="number">0</span>].set_data(<span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>);
         data[<span class="number">1</span>].set_data(<span class="number">44</span>, <span class="number">55</span>, <span class="number">66</span>);
         data[<span class="number">2</span>].set_data(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>);
         data[<span class="number">3</span>].set_data(<span class="number">40</span>, <span class="number">50</span>, <span class="number">60</span>);
         <span class="kw">let </span>data_bytes = Int96Type::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[Int96::new(); <span class="number">4</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [Int96::new(); <span class="number">4</span>];
         test_plain_decode::&lt;Int96Type&gt;(
             ByteBufferPtr::new(data_bytes),
             <span class="number">4</span>,
@@ -3353,7 +3353,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_int96() {
-        <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[Int96::new(); <span class="number">4</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>data = [Int96::new(); <span class="number">4</span>];
         data[<span class="number">0</span>].set_data(<span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>);
         data[<span class="number">1</span>].set_data(<span class="number">44</span>, <span class="number">55</span>, <span class="number">66</span>);
         data[<span class="number">2</span>].set_data(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>);
@@ -3370,7 +3370,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_all_int96() {
-        <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[Int96::new(); <span class="number">4</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>data = [Int96::new(); <span class="number">4</span>];
         data[<span class="number">0</span>].set_data(<span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>);
         data[<span class="number">1</span>].set_data(<span class="number">44</span>, <span class="number">55</span>, <span class="number">66</span>);
         data[<span class="number">2</span>].set_data(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>);
@@ -3381,11 +3381,11 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_decode_bool() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[
+        <span class="kw">let </span>data = [
             <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>,
         ];
         <span class="kw">let </span>data_bytes = BoolType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="bool-val">false</span>; <span class="number">10</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="bool-val">false</span>; <span class="number">10</span>];
         test_plain_decode::&lt;BoolType&gt;(
             ByteBufferPtr::new(data_bytes),
             <span class="number">10</span>,
@@ -3397,7 +3397,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_bool() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[
+        <span class="kw">let </span>data = [
             <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>,
         ];
         <span class="kw">let </span>data_bytes = BoolType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
@@ -3412,7 +3412,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_plain_skip_all_bool() {
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[
+        <span class="kw">let </span>data = [
             <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>,
         ];
         <span class="kw">let </span>data_bytes = BoolType::to_byte_array(<span class="kw-2">&amp;</span>data[..]);
