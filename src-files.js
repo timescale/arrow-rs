@@ -18,7 +18,7 @@ var srcIndex = JSON.parse('{\
 "arrow_schema":["",[],["datatype.rs","error.rs","ffi.rs","field.rs","fields.rs","lib.rs","schema.rs"]],\
 "arrow_select":["",[],["concat.rs","filter.rs","interleave.rs","lib.rs","nullif.rs","take.rs","window.rs","zip.rs"]],\
 "arrow_stream_to_file":["",[],["arrow-stream-to-file.rs"]],\
-"arrow_string":["",[],["concat_elements.rs","length.rs","lib.rs","like.rs","regexp.rs","substring.rs"]],\
+"arrow_string":["",[],["concat_elements.rs","length.rs","lib.rs","like.rs","predicate.rs","regexp.rs","substring.rs"]],\
 "flight_sql_client":["",[],["flight_sql_client.rs"]],\
 "flight_test_integration_client":["",[],["flight-test-integration-client.rs"]],\
 "flight_test_integration_server":["",[],["flight-test-integration-server.rs"]],\

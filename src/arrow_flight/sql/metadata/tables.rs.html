@@ -474,10 +474,6 @@
 <a href="#474" id="474">474</a>
 <a href="#475" id="475">475</a>
 <a href="#476" id="476">476</a>
-<a href="#477" id="477">477</a>
-<a href="#478" id="478">478</a>
-<a href="#479" id="479">479</a>
-<a href="#480" id="480">480</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -503,11 +499,11 @@
 
 <span class="kw">use </span>arrow_arith::boolean::{and, or};
 <span class="kw">use </span>arrow_array::builder::{BinaryBuilder, StringBuilder};
-<span class="kw">use </span>arrow_array::{ArrayRef, RecordBatch, Scalar, StringArray};
+<span class="kw">use </span>arrow_array::{ArrayRef, RecordBatch, StringArray};
 <span class="kw">use </span>arrow_ord::cmp::eq;
 <span class="kw">use </span>arrow_schema::{DataType, Field, Schema, SchemaRef};
 <span class="kw">use </span>arrow_select::{filter::filter_record_batch, take::take};
-<span class="kw">use </span>arrow_string::like::like_utf8_scalar;
+<span class="kw">use </span>arrow_string::like::like;
 <span class="kw">use </span>once_cell::sync::Lazy;
 
 <span class="kw">use </span><span class="kw">super</span>::lexsort_to_indices;
@@ -664,16 +660,13 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>filters = <span class="macro">vec!</span>[];
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(catalog_filter_name) = catalog_filter {
-            <span class="kw">let </span>scalar = StringArray::from_iter_values([catalog_filter_name]);
-            filters.push(eq(<span class="kw-2">&amp;</span>catalog_name, <span class="kw-2">&amp;</span>Scalar::new(<span class="kw-2">&amp;</span>scalar))<span class="question-mark">?</span>);
+            <span class="kw">let </span>scalar = StringArray::new_scalar(catalog_filter_name);
+            filters.push(eq(<span class="kw-2">&amp;</span>catalog_name, <span class="kw-2">&amp;</span>scalar)<span class="question-mark">?</span>);
         }
 
         <span class="kw">let </span>tt_filter = table_types_filter
             .into_iter()
-            .map(|tt| {
-                <span class="kw">let </span>scalar = StringArray::from_iter_values([tt]);
-                eq(<span class="kw-2">&amp;</span>table_type, <span class="kw-2">&amp;</span>Scalar::new(<span class="kw-2">&amp;</span>scalar))
-            })
+            .map(|tt| eq(<span class="kw-2">&amp;</span>table_type, <span class="kw-2">&amp;</span>StringArray::new_scalar(tt)))
             .collect::&lt;std::result::Result&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?
             </span>.into_iter()
             <span class="comment">// We know the arrays are of same length as they are produced fromn the same root array
@@ -684,15 +677,14 @@
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(db_schema_filter_pattern) = db_schema_filter_pattern {
             <span class="comment">// use like kernel to get wildcard matching
-            </span>filters.push(like_utf8_scalar(
-                <span class="kw-2">&amp;</span>db_schema_name,
-                <span class="kw-2">&amp;</span>db_schema_filter_pattern,
-            )<span class="question-mark">?</span>)
+            </span><span class="kw">let </span>scalar = StringArray::new_scalar(db_schema_filter_pattern);
+            filters.push(like(<span class="kw-2">&amp;</span>db_schema_name, <span class="kw-2">&amp;</span>scalar)<span class="question-mark">?</span>)
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(table_name_filter_pattern) = table_name_filter_pattern {
             <span class="comment">// use like kernel to get wildcard matching
-            </span>filters.push(like_utf8_scalar(<span class="kw-2">&amp;</span>table_name, <span class="kw-2">&amp;</span>table_name_filter_pattern)<span class="question-mark">?</span>)
+            </span><span class="kw">let </span>scalar = StringArray::new_scalar(table_name_filter_pattern);
+            filters.push(like(<span class="kw-2">&amp;</span>table_name, <span class="kw-2">&amp;</span>scalar)<span class="question-mark">?</span>)
         }
 
         <span class="kw">let </span>batch = <span class="kw">if let </span><span class="prelude-val">Some</span>(table_schema) = table_schema {
