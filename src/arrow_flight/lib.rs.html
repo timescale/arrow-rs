@@ -721,6 +721,9 @@
 <a href="#721" id="721">721</a>
 <a href="#722" id="722">722</a>
 <a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -833,6 +836,9 @@
 <span class="kw">pub use </span>gen::Result;
 <span class="kw">pub use </span>gen::SchemaResult;
 <span class="kw">pub use </span>gen::Ticket;
+
+<span class="doccomment">/// Helper to extract HTTP/gRPC trailers from a tonic stream.
+</span><span class="kw">mod </span>trailers;
 
 <span class="kw">pub mod </span>utils;
 

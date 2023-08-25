@@ -7,7 +7,7 @@ var srcIndex = JSON.parse('{\
 "arrow_csv":["",[["reader",[],["mod.rs","records.rs"]]],["lib.rs","writer.rs"]],\
 "arrow_data":["",[["equal",[],["boolean.rs","dictionary.rs","fixed_binary.rs","fixed_list.rs","list.rs","mod.rs","null.rs","primitive.rs","run.rs","structure.rs","union.rs","utils.rs","variable_size.rs"]],["transform",[],["boolean.rs","fixed_binary.rs","fixed_size_list.rs","list.rs","mod.rs","null.rs","primitive.rs","structure.rs","union.rs","utils.rs","variable_size.rs"]]],["data.rs","decimal.rs","ffi.rs","lib.rs"]],\
 "arrow_file_to_stream":["",[],["arrow-file-to-stream.rs"]],\
-"arrow_flight":["",[["sql",[["metadata",[],["catalogs.rs","db_schemas.rs","mod.rs","sql_info.rs","tables.rs","xdbc_info.rs"]]],["arrow.flight.protocol.sql.rs","client.rs","mod.rs","server.rs"]]],["arrow.flight.protocol.rs","client.rs","decode.rs","encode.rs","error.rs","lib.rs","utils.rs"]],\
+"arrow_flight":["",[["sql",[["metadata",[],["catalogs.rs","db_schemas.rs","mod.rs","sql_info.rs","tables.rs","xdbc_info.rs"]]],["arrow.flight.protocol.sql.rs","client.rs","mod.rs","server.rs"]]],["arrow.flight.protocol.rs","client.rs","decode.rs","encode.rs","error.rs","lib.rs","trailers.rs","utils.rs"]],\
 "arrow_integration_test":["",[],["datatype.rs","field.rs","lib.rs","schema.rs"]],\
 "arrow_integration_testing":["",[["flight_client_scenarios",[],["auth_basic_proto.rs","integration_test.rs","middleware.rs"]],["flight_server_scenarios",[],["auth_basic_proto.rs","integration_test.rs","middleware.rs"]]],["flight_client_scenarios.rs","flight_server_scenarios.rs","lib.rs"]],\
 "arrow_ipc":["",[["gen",[],["File.rs","Message.rs","Schema.rs","SparseTensor.rs","Tensor.rs","mod.rs"]]],["compression.rs","convert.rs","lib.rs","reader.rs","writer.rs"]],\

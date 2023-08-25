@@ -401,6 +401,46 @@
 <a href="#401" id="401">401</a>
 <a href="#402" id="402">402</a>
 <a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -418,7 +458,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-</span><span class="kw">use crate</span>::{utils::flight_data_to_arrow_batch, FlightData};
+</span><span class="kw">use crate</span>::{trailers::LazyTrailers, utils::flight_data_to_arrow_batch, FlightData};
 <span class="kw">use </span>arrow_array::{ArrayRef, RecordBatch};
 <span class="kw">use </span>arrow_buffer::Buffer;
 <span class="kw">use </span>arrow_schema::{Schema, SchemaRef};
@@ -427,6 +467,7 @@
 <span class="kw">use </span>std::{
     collections::HashMap, convert::TryFrom, fmt::Debug, pin::Pin, sync::Arc, task::Poll,
 };
+<span class="kw">use </span>tonic::metadata::MetadataMap;
 
 <span class="kw">use </span><span class="kw">crate</span>::error::{FlightError, <span class="prelude-ty">Result</span>};
 
@@ -485,13 +526,23 @@
 /// ```
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>FlightRecordBatchStream {
+    <span class="doccomment">/// Optional grpc header metadata.
+    </span>headers: MetadataMap,
+
+    <span class="doccomment">/// Optional grpc trailer metadata.
+    </span>trailers: <span class="prelude-ty">Option</span>&lt;LazyTrailers&gt;,
+
     inner: FlightDataDecoder,
 }
 
 <span class="kw">impl </span>FlightRecordBatchStream {
     <span class="doccomment">/// Create a new [`FlightRecordBatchStream`] from a decoded stream
     </span><span class="kw">pub fn </span>new(inner: FlightDataDecoder) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ inner }
+        <span class="self">Self </span>{
+            inner,
+            headers: MetadataMap::default(),
+            trailers: <span class="prelude-val">None</span>,
+        }
     }
 
     <span class="doccomment">/// Create a new [`FlightRecordBatchStream`] from a stream of [`FlightData`]
@@ -501,7 +552,35 @@
     {
         <span class="self">Self </span>{
             inner: FlightDataDecoder::new(inner),
+            headers: MetadataMap::default(),
+            trailers: <span class="prelude-val">None</span>,
         }
+    }
+
+    <span class="doccomment">/// Record response headers.
+    </span><span class="kw">pub fn </span>with_headers(<span class="self">self</span>, headers: MetadataMap) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ headers, ..<span class="self">self </span>}
+    }
+
+    <span class="doccomment">/// Record response trailers.
+    </span><span class="kw">pub fn </span>with_trailers(<span class="self">self</span>, trailers: LazyTrailers) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            trailers: <span class="prelude-val">Some</span>(trailers),
+            ..<span class="self">self
+        </span>}
+    }
+
+    <span class="doccomment">/// Headers attached to this stream.
+    </span><span class="kw">pub fn </span>headers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetadataMap {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.headers
+    }
+
+    <span class="doccomment">/// Trailers attached to this stream.
+    ///
+    /// Note that this will return `None` until the entire stream is consumed.
+    /// Only after calling `next()` returns `None`, might any available trailers be returned.
+    </span><span class="kw">pub fn </span>trailers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;MetadataMap&gt; {
+        <span class="self">self</span>.trailers.as_ref().and_then(|trailers| trailers.get())
     }
 
     <span class="doccomment">/// Has a message defining the schema been received yet?
@@ -520,6 +599,7 @@
         <span class="self">self</span>.inner
     }
 }
+
 <span class="kw">impl </span>futures::Stream <span class="kw">for </span>FlightRecordBatchStream {
     <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;;
 
