@@ -262,14 +262,6 @@
 <a href="#262" id="262">262</a>
 <a href="#263" id="263">263</a>
 <a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -357,14 +349,6 @@
     <span class="doccomment">/// Returns the inner [`Buffer`], consuming self
     </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; Buffer {
         <span class="self">self</span>.buffer
-    }
-
-    <span class="doccomment">/// Returns true if this [`ScalarBuffer`] is equal to `other`, using pointer comparisons
-    /// to determine buffer equality. This is cheaper than `PartialEq::eq` but may
-    /// return false when the arrays are logically equal
-    </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>ptr_eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="self">self</span>.buffer.ptr_eq(<span class="kw-2">&amp;</span>other.buffer)
     }
 }
 

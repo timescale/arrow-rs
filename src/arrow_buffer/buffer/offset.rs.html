@@ -228,14 +228,6 @@
 <a href="#228" id="228">228</a>
 <a href="#229" id="229">229</a>
 <a href="#230" id="230">230</a>
-<a href="#231" id="231">231</a>
-<a href="#232" id="232">232</a>
-<a href="#233" id="233">233</a>
-<a href="#234" id="234">234</a>
-<a href="#235" id="235">235</a>
-<a href="#236" id="236">236</a>
-<a href="#237" id="237">237</a>
-<a href="#238" id="238">238</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -385,14 +377,6 @@
     <span class="doccomment">/// Returns a zero-copy slice of this buffer with length `len` and starting at `offset`
     </span><span class="kw">pub fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: usize, len: usize) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.slice(offset, len.saturating_add(<span class="number">1</span>)))
-    }
-
-    <span class="doccomment">/// Returns true if this [`OffsetBuffer`] is equal to `other`, using pointer comparisons
-    /// to determine buffer equality. This is cheaper than `PartialEq::eq` but may
-    /// return false when the arrays are logically equal
-    </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>ptr_eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="self">self</span>.<span class="number">0</span>.ptr_eq(<span class="kw-2">&amp;</span>other.<span class="number">0</span>)
     }
 }
 

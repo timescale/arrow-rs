@@ -810,14 +810,6 @@
 <a href="#810" id="810">810</a>
 <a href="#811" id="811">811</a>
 <a href="#812" id="812">812</a>
-<a href="#813" id="813">813</a>
-<a href="#814" id="814">814</a>
-<a href="#815" id="815">815</a>
-<a href="#816" id="816">816</a>
-<a href="#817" id="817">817</a>
-<a href="#818" id="818">818</a>
-<a href="#819" id="819">819</a>
-<a href="#820" id="820">820</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1142,14 +1134,6 @@
                 ptr,
                 length,
             })
-    }
-
-    <span class="doccomment">/// Returns true if this [`Buffer`] is equal to `other`, using pointer comparisons
-    /// to determine buffer equality. This is cheaper than `PartialEq::eq` but may
-    /// return false when the arrays are logically equal
-    </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>ptr_eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="self">self</span>.ptr == other.ptr &amp;&amp; <span class="self">self</span>.length == other.length
     }
 }
 

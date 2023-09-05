@@ -296,25 +296,6 @@
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
 <a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-<a href="#300" id="300">300</a>
-<a href="#301" id="301">301</a>
-<a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -346,7 +327,6 @@
     distributions::{Alphanumeric, Distribution, Standard},
     prelude::StdRng,
 };
-<span class="kw">use </span>std::ops::Range;
 
 <span class="doccomment">/// Creates an random (but fixed-seeded) array of a given size and null density
 </span><span class="kw">pub fn </span>create_primitive_array&lt;T&gt;(size: usize, null_density: f32) -&gt; PrimitiveArray&lt;T&gt;
@@ -591,33 +571,15 @@
     Standard: Distribution&lt;K::Native&gt;,
     K::Native: SampleUniform,
 {
-    <span class="kw">let </span>min_key = K::Native::from_usize(<span class="number">0</span>).unwrap();
-    <span class="kw">let </span>max_key = K::Native::from_usize(values.len()).unwrap();
-    create_sparse_dict_from_values(size, null_density, values, min_key..max_key)
-}
-
-<span class="doccomment">/// Creates a random (but fixed-seeded) dictionary array of a given size and null density
-/// with the provided values array and key range
-</span><span class="kw">pub fn </span>create_sparse_dict_from_values&lt;K&gt;(
-    size: usize,
-    null_density: f32,
-    values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    key_range: Range&lt;K::Native&gt;,
-) -&gt; DictionaryArray&lt;K&gt;
-<span class="kw">where
-    </span>K: ArrowDictionaryKeyType,
-    Standard: Distribution&lt;K::Native&gt;,
-    K::Native: SampleUniform,
-{
     <span class="kw">let </span><span class="kw-2">mut </span>rng = seedable_rng();
     <span class="kw">let </span>data_type = DataType::Dictionary(
         Box::new(K::DATA_TYPE),
         Box::new(values.data_type().clone()),
     );
 
-    <span class="kw">let </span>keys: Buffer = (<span class="number">0</span>..size)
-        .map(|<span class="kw">_</span>| rng.gen_range(key_range.clone()))
-        .collect();
+    <span class="kw">let </span>min_key = K::Native::from_usize(<span class="number">0</span>).unwrap();
+    <span class="kw">let </span>max_key = K::Native::from_usize(values.len()).unwrap();
+    <span class="kw">let </span>keys: Buffer = (<span class="number">0</span>..size).map(|<span class="kw">_</span>| rng.gen_range(min_key..max_key)).collect();
 
     <span class="kw">let </span>nulls: <span class="prelude-ty">Option</span>&lt;Buffer&gt; = (null_density != <span class="number">0.</span>)
         .then(|| (<span class="number">0</span>..size).map(|<span class="kw">_</span>| rng.gen_bool(null_density <span class="kw">as _</span>)).collect());

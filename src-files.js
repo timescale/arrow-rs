@@ -16,7 +16,7 @@ var srcIndex = JSON.parse('{\
 "arrow_ord":["",[],["cmp.rs","comparison.rs","lib.rs","ord.rs","partition.rs","rank.rs","sort.rs"]],\
 "arrow_row":["",[],["dictionary.rs","fixed.rs","interner.rs","lib.rs","list.rs","variable.rs"]],\
 "arrow_schema":["",[],["datatype.rs","error.rs","ffi.rs","field.rs","fields.rs","lib.rs","schema.rs"]],\
-"arrow_select":["",[],["concat.rs","dictionary.rs","filter.rs","interleave.rs","lib.rs","nullif.rs","take.rs","window.rs","zip.rs"]],\
+"arrow_select":["",[],["concat.rs","filter.rs","interleave.rs","lib.rs","nullif.rs","take.rs","window.rs","zip.rs"]],\
 "arrow_stream_to_file":["",[],["arrow-stream-to-file.rs"]],\
 "arrow_string":["",[],["concat_elements.rs","length.rs","lib.rs","like.rs","predicate.rs","regexp.rs","substring.rs"]],\
 "flight_sql_client":["",[],["flight_sql_client.rs"]],\
